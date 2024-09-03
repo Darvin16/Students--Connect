@@ -20,12 +20,12 @@ app.get("/", () => {
   console.log("Server is running");
 });
 
-app.post("/admin/login", (req, res) => {
-    const { login_as, Employee_id, OTP, password } = req.body;
-    if (login_as === "admin") {
-    }
-    if (login_as === "staff") { }
-})
+app.post("/login/staff", (req, res) => {
+  console.log(req.body);
+});
+app.post("/login/admin", (req, res) => {
+  console.log(req.body);
+});
 
 app.listen(9000, () => {
   console.log("Server is running on port 9000");
