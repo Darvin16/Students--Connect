@@ -1,0 +1,23 @@
+.staff-login-container {
+    text-align: center;
+}
+
+.button-alignment {
+    text-align: right;
+}
+
+.login-form {
+    line-height: 3;
+}
+
+.staff-login {
+    background-color: bisque;
+}
+
+.admin-login {
+    background-color: palegoldenrod;
+}
+
+.login-container {
+    height: 100vh;
+}

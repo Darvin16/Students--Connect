@@ -1,16 +1,17 @@
 import React, { useContext } from "react";
 import { AppContext } from "../../Context/AppContext";
+import "./Login.css";
 
 function AdminLogin() {
   const { navigate, setAdminLoginForm, AdminLogin } = useContext(AppContext);
   return (
-    <div>
-      <div>
+    <div className="admin-login login-container">
+      <div className="button-alignment">
         <button onClick={() => navigate("/")}>Staff</button>
       </div>
-      <div>
+      <div className="staff-login-container">
         <h1>Admin Login</h1>
-        <form onSubmit={(e) => AdminLogin(e)}>
+        <form onSubmit={(e) => AdminLogin(e)} className="login-form">
           <div>
             <label htmlFor="email">Email:</label>
             <input

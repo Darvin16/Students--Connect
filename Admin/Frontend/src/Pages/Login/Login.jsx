@@ -6,13 +6,13 @@ export const Login = () => {
   const { setLoginForm,StaffLogin, navigate } = useContext(AppContext);
 
   return (
-    <div>
-      <div>
+    <div className="staff-login login-container" >
+      <div className="button-alignment">
         <button onClick={() => navigate("/adminlogin")}>Admin</button>
       </div>
-      <div>
+      <div className="staff-login-container">
         <h1>Staff Login</h1>
-        <form onSubmit={(e) => StaffLogin(e)}>
+        <form onSubmit={(e) => StaffLogin(e)} className="login-form">
           <div>
             <label htmlFor="employeeId">Employee Id:</label>
             <input
