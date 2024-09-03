@@ -8,7 +8,7 @@ app.use(express.urlencoded());
 app.use(cors());
 
 mongoose
-  .connect("https://localhost:27017/StudentConnect")
+  .connect("mongodb://localhost:27017/StudentConnect")
   .then(() => {
     console.log("Database connected successfully");
   })
