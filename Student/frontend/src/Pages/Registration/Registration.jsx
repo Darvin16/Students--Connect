@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "./registration.css";
 
 function Registration() {
   const [formData, setFormDate] = useState({
@@ -21,9 +22,9 @@ function Registration() {
   }
 
   return (
-    <div>
+    <div className="user">
       <form onSubmit={(e) => signup(e)}>
-        <div>
+        <div >
           <label htmlFor="E-mail">E-Mail:</label>
           <input
             type="email"
