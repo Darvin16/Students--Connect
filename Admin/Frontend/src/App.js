@@ -1,4 +1,4 @@
-import { Registration } from "./Pages/Registration/Registration";
+import { Login } from "./Pages/Login/Login";
 import { AppProvider } from "./Context/AppContext";
 
 function App() {

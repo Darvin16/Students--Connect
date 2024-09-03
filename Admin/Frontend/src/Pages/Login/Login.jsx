@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
-import "./Registration.css";
+import "./Login.css";
 import { AppContext } from "../../Context/AppContext";
 
-export const Registration = () => {
+export const Login = () => {
   const { setLoginForm,Login } = useContext(AppContext);
 
   return (
