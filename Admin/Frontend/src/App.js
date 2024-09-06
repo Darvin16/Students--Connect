@@ -10,6 +10,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/adminlogin" element={<AdminLogin />} />
+            <Route path="/home" element={<div>Admin Dashboard</div>} />
           </Routes>
         </AppProvider>
       </BrowserRouter>

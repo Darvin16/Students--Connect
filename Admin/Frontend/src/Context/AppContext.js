@@ -25,8 +25,15 @@ export const AppProvider = ({ children }) => {
     e.preventDefault();
     axios
       .post("http://localhost:9000/login/admin", adminLoginForm)
-      .then()
-      .catch();
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message)
+          navigate("/home");
+        } else {
+          alert(res.data.message)
+        }
+      })
+      .catch(err=>console.log(err));
   }
 
   return (
