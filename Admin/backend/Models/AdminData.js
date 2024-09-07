@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const AdminDataSchema = new mongoose.Schema({
   admin_email: String,
-  position: { type: String, default: "admin" },
+  role: { type: String, default: "admin" },
   password: String,
 });
 

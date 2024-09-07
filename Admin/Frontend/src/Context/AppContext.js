@@ -6,7 +6,7 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [adminData, setAdminData] = useState("adminhgjhgjh");
+  const [userData, setUserData] = useState();
   const [loginForm, setLoginForm] = useState({
     employeeId: "",
     position: "",
@@ -15,6 +15,47 @@ export const AppProvider = ({ children }) => {
     email: "",
     password: "",
   });
+  const [isAddingStaff, setIsAddingStaff] = useState(false);
+  const [addStaff, setAddStaff] = useState({
+    employeeId: "",
+    name: "",
+    email: "",
+    phone: "",
+    role: "",
+    blockName: "",
+    gender: "",
+  });
+  const [staffRecords, setStaffRecords] = useState([]);
+
+  async function fetchStaffRecords() {
+    await axios.post("http://localhost:9000/staff/get").then((res) => {
+      setStaffRecords(res.data.staffRecords);
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
+  function handleAddStaff(e) {
+    e.preventDefault();
+    axios
+      .post("http://localhost:9000/staff/add", addStaff)
+      .then((res) => {
+        if (res.data.success) {
+          alert(res.data.message);
+          fetchStaffRecords();
+        } else {
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred");
+        }
+      });
+  }
 
   function StaffLogin(e) {
     e.preventDefault();
@@ -26,25 +67,34 @@ export const AppProvider = ({ children }) => {
     axios
       .post("http://localhost:9000/login/admin", adminLoginForm)
       .then((res) => {
-        if (res.status === 200) {
-          alert(res.data.message)
-          navigate("/home");
+        if (res.data.success) {
+          alert(res.data.message);
+          setUserData(res.data.userData);
+          fetchStaffRecords();
+          navigate("/dashboard");
         } else {
-          alert(res.data.message)
+          alert(res.data.message);
         }
       })
-      .catch(err=>console.log(err));
+      .catch((err) => console.log(err));
   }
 
   return (
     <AppContext.Provider
       value={{
-        adminData,
+        userData,
+        addStaff,
+        setAddStaff,
+        fetchStaffRecords,
+        handleAddStaff,
+        staffRecords,
         setAdminLoginForm,
         setLoginForm,
         StaffLogin,
         AdminLogin,
         navigate,
+        isAddingStaff,
+        setIsAddingStaff,
       }}
     >
       {children}

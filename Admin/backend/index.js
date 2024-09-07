@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import express from "express";
 import cors from "cors";
 import adminData from "./Models/AdminData.js";
+import staffData from "./Models/StaffData.js";
 
 const app = express();
 app.use(express.json());
@@ -13,11 +14,11 @@ mongoose
   .then(() => {
     console.log("Database connected successfully");
     adminData.findOne({}).then((admin) => {
-      if (!admin) { 
+      if (!admin) {
         adminData.create({
           admin_email: "admin@gmail.com",
-          password:"123"
-        })
+          password: "123",
+        });
       }
     });
   })
@@ -29,20 +30,95 @@ app.get("/", () => {
   console.log("Server is running");
 });
 
+app.post("/staff/add", (req, res) => {
+  if (
+    !req.body.employeeId ||
+    !req.body.name ||
+    !req.body.email ||
+    !req.body.phone ||
+    !req.body.role ||
+    !req.body.gender
+  ) {
+    if (req.body.role !== "librarian" && !req.body.blockName) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Please fill all the fields" });
+    }
+    return res
+      .status(400)
+      .send({ success: false, message: "Please fill all the fields" });
+  }
+  staffData
+    .findOne({ employeeId: req.body.employeeId })
+    .then((staff) => {
+      if (!staff) {
+        staffData
+          .create({
+            employeeId: req.body.employeeId,
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            role: req.body.role,
+            blockName: req.body.block_name,
+            gender: req.body.gender,
+          })
+          .then(() => {
+            return res
+              .status(201)
+              .send({ success: true, message: "Staff Added Successfully" });
+          })
+          .catch((err) => {
+            console.log(err);
+            return res
+              .status(500)
+              .send({ success: false, message: "Error adding staff" });
+          });
+      } else {
+        return res
+          .status(409)
+          .send({ success: false, message: "Staff already exist!!!" });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send({ success: false, message: "Server Error" });
+    });
+});
+
+app.post("/staff/get", async (_, res) => {
+  try {
+    const staffRecords = await staffData.find({});
+    return res.status(200).send({ success: true, staffRecords: staffRecords });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ success: false, message: "Server Error" });
+  }
+});
+
 app.post("/login/staff", (req, res) => {
   console.log(req.body);
 });
 app.post("/login/admin", (req, res) => {
-  adminData.findOne({ admin_email: req.body.email }).then((admin) => {
-    if (admin && admin.password === req.body.password) {
-      return res.status(200).send({ success: true, message: "Logged In Successfully" });
-     } else {
-      return res.status(402).send({ success: false, message: "Invalid Credentials" });
-    }
-  }).catch(err => {
-    console.log(err);
-    return res.status(500).send({ success: false, message:"Error Occured, Please try again later" });
-  })
+  adminData
+    .findOne({ admin_email: req.body.email })
+    .then((admin) => {
+      if (admin && admin.password === req.body.password) {
+        return res.status(200).send({
+          success: true,
+          message: "Logged In Successfully",
+          userData: { email: admin.email, role: admin.role },
+        });
+      } else {
+        return res.send({ success: false, message: "Invalid Credentials" });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send({
+        success: false,
+        message: "Error Occured, Please try again later",
+      });
+    });
 });
 
 app.listen(9000, () => {
