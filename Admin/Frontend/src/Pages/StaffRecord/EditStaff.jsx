@@ -1,13 +1,12 @@
 import React, { useContext } from "react";
 import { AppContext } from "../../Context/AppContext";
 
-function AddStaff() {
-  const { addStaff, handleAddStaff, setAddStaff, setIsAddingStaff } =
-    useContext(AppContext);
+function EditStaff() {
+  const { editStaff, setEditStaff, handleEditStaff } = useContext(AppContext);
   return (
     <div>
-      <h1>Add staff</h1>
-      <form onSubmit={(e) => handleAddStaff(e)}>
+      <h1>Edit staff</h1>
+      <form onSubmit={(e) => handleEditStaff(e)}>
         <div>
           <label htmlFor="employeeId">Employee Id:</label>
           <input
@@ -15,8 +14,9 @@ function AddStaff() {
             name="employeeId"
             id="employeeId"
             onChange={(e) =>
-              setAddStaff((prev) => ({ ...prev, employeeId: e.target.value }))
+              setEditStaff((prev) => ({ ...prev, employeeId: e.target.value }))
             }
+            value={editStaff.employeeId}
             required
           />
         </div>
@@ -27,8 +27,9 @@ function AddStaff() {
             name="name"
             id="name"
             onChange={(e) =>
-              setAddStaff((prev) => ({ ...prev, name: e.target.value }))
+              setEditStaff((prev) => ({ ...prev, name: e.target.value }))
             }
+            value={editStaff.name}
             required
           />
         </div>
@@ -39,8 +40,9 @@ function AddStaff() {
             name="email"
             id="email"
             onChange={(e) =>
-              setAddStaff((prev) => ({ ...prev, email: e.target.value }))
+              setEditStaff((prev) => ({ ...prev, email: e.target.value }))
             }
+            value={editStaff.email}
             required
           />
         </div>
@@ -51,8 +53,9 @@ function AddStaff() {
             name="phone"
             id="phone"
             onChange={(e) =>
-              setAddStaff((prev) => ({ ...prev, phone: e.target.value }))
+              setEditStaff((prev) => ({ ...prev, phone: e.target.value }))
             }
+            value={editStaff.phone}
             required
           />
         </div>
@@ -62,8 +65,9 @@ function AddStaff() {
             name="role"
             id="role"
             onChange={(e) =>
-              setAddStaff((prev) => ({ ...prev, role: e.target.value }))
+              setEditStaff((prev) => ({ ...prev, role: e.target.value }))
             }
+            value={editStaff.role}
             required
           >
             <option value="">select role</option>
@@ -73,18 +77,19 @@ function AddStaff() {
             <option value="librarian">Librarian</option>
           </select>
         </div>
-        {addStaff.role !== "librarian" && addStaff.role !== "" && (
+        {editStaff.role !== "librarian" && addStaff.role !== "" && (
           <div>
             <label htmlFor="blockName">Block Name:</label>
             <select
               name="blockName"
               id="blockName"
               onChange={(e) =>
-                setAddStaff((prev) => ({
+                setEditStaff((prev) => ({
                   ...prev,
                   blockName: e.target.value,
                 }))
               }
+              value={editStaff.blockName}
               required
             >
               <option value="">Select Block</option>
@@ -110,8 +115,9 @@ function AddStaff() {
             id="male"
             value="male"
             onChange={(e) =>
-              setAddStaff((prev) => ({ ...prev, gender: e.target.value }))
+              setEditStaff((prev) => ({ ...prev, gender: e.target.value }))
             }
+            checked={editStaff.gender === "male"}
             required
           />
           <label htmlFor="male">Male</label>
@@ -121,15 +127,16 @@ function AddStaff() {
             id="female"
             value="female"
             onChange={(e) =>
-              setAddStaff((prev) => ({ ...prev, gender: e.target.value }))
+              setEditStaff((prev) => ({ ...prev, gender: e.target.value }))
             }
+            checked={editStaff.gender === "female"}
             required
           />
           <label htmlFor="female">Female</label>
         </div>
         <div>
           <button type="submit">Add</button>
-          <button type="reset" onClick={() => setIsAddingStaff(false)}>
+          <button type="reset" onClick={() => setEditStaff(null)}>
             Cancel
           </button>
         </div>
@@ -138,4 +145,4 @@ function AddStaff() {
   );
 }
 
-export default AddStaff;
+export default EditStaff;

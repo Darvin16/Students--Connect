@@ -25,14 +25,18 @@ export const AppProvider = ({ children }) => {
     blockName: "",
     gender: "",
   });
+  const [editStaff, setEditStaff] = useState(null);
   const [staffRecords, setStaffRecords] = useState([]);
 
   async function fetchStaffRecords() {
-    await axios.post("http://localhost:9000/staff/get").then((res) => {
-      setStaffRecords(res.data.staffRecords);
-    }).catch(err => {
-      console.log(err);
-    })
+    await axios
+      .post("http://localhost:9000/staff/get")
+      .then((res) => {
+        setStaffRecords(res.data.staffRecords);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function handleAddStaff(e) {
@@ -45,6 +49,27 @@ export const AppProvider = ({ children }) => {
           fetchStaffRecords();
         } else {
           alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred");
+        }
+      });
+  }
+
+  function handleEditStaff(e) {
+    e.preventDefault();
+    axios
+      .post("http://localhost:9000/staff/edit", editStaff)
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+          setEditStaff(false);
+          fetchStaffRecords();
         }
       })
       .catch((err) => {
@@ -95,6 +120,9 @@ export const AppProvider = ({ children }) => {
         navigate,
         isAddingStaff,
         setIsAddingStaff,
+        editStaff,
+        setEditStaff,
+        handleEditStaff,
       }}
     >
       {children}

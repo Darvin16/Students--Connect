@@ -39,11 +39,11 @@ app.post("/staff/add", (req, res) => {
     !req.body.role ||
     !req.body.gender
   ) {
-    if (req.body.role !== "librarian" && !req.body.blockName) {
-      return res
-        .status(400)
-        .send({ success: false, message: "Please fill all the fields" });
-    }
+    return res
+      .status(400)
+      .send({ success: false, message: "Please fill all the fields" });
+  }
+  if (req.body.role !== "librarian" && !req.body.blockName) {
     return res
       .status(400)
       .send({ success: false, message: "Please fill all the fields" });
@@ -82,6 +82,68 @@ app.post("/staff/add", (req, res) => {
     .catch((err) => {
       console.log(err);
       return res.status(500).send({ success: false, message: "Server Error" });
+    });
+});
+
+app.post("/staff/edit", (req, res) => {
+  const {
+    employeeId,
+    previousEmployeeId,
+    name,
+    email,
+    phone,
+    role,
+    blockName,
+    gender,
+  } = req.body;
+
+  if (
+    !employeeId ||
+    !previousEmployeeId ||
+    !name ||
+    !email ||
+    !phone ||
+    !role ||
+    !gender
+  ) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Please fill all the fields" });
+  }
+  if (role !== "librarian" && !blockName) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Please fill all the fields" });
+  }
+
+  staffData
+    .findOneAndUpdate(
+      { employeeId: previousEmployeeId },
+      {
+        $set: {
+          employeeId: employeeId,
+          name: name,
+          email: email,
+          phone: phone,
+          role: role,
+          blockName: blockName,
+          gender: gender,
+        },
+      }
+    )
+    .then((staff) => {
+      if (!staff) {
+        return res
+          .status(404)
+          .send({ success: false, message: "Staff not found" });
+      } else {
+        return res
+          .status(200)
+          .send({ success: true, message: "Staff updated successfully" });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
     });
 });
 

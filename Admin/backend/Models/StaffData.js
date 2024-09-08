@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const staffDataSchema = new mongoose.Schema({
   employeeId: String,
+  staffImage:String,
   name: String,
   email: String,
   phone: String,
