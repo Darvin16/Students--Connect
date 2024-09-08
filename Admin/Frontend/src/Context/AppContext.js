@@ -82,6 +82,22 @@ export const AppProvider = ({ children }) => {
       });
   }
 
+  function handleRemoveStaff(employeeId) {
+    axios.post("http://localhost:9000/staff/remove", { employeeId }).then((res) => {
+      if (res.status === 200) {
+        alert(res.data.message);
+        fetchStaffRecords();
+      }
+    }).catch(err => {
+      console.log(err);
+      if (err.response && err.response.data && err.response.data.message) {
+        alert(err.response.data.message);
+      } else {
+        alert("An error occurred");
+      }
+    })
+  }
+
   function StaffLogin(e) {
     e.preventDefault();
     axios.post("http://localhost:9000/login/staff", loginForm).then().catch();
@@ -123,6 +139,7 @@ export const AppProvider = ({ children }) => {
         editStaff,
         setEditStaff,
         handleEditStaff,
+        handleRemoveStaff,
       }}
     >
       {children}

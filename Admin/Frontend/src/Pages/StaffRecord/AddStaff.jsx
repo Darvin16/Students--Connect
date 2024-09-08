@@ -66,7 +66,7 @@ function AddStaff() {
             }
             required
           >
-            <option value="">select role</option>
+            <option value="">Select Role</option>
             <option value="warden">Warden</option>
             <option value="SRO">SRO</option>
             <option value="supervisor">Supervisor</option>
@@ -99,11 +99,7 @@ function AddStaff() {
           </div>
         )}
         <div>
-          <label
-            htmlFor="gender"
-          >
-            Gender:
-          </label>
+          <label htmlFor="gender">Gender:</label>
           <input
             type="radio"
             name="gender"

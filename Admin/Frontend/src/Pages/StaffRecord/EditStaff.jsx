@@ -70,14 +70,14 @@ function EditStaff() {
             value={editStaff.role}
             required
           >
-            <option value="">select role</option>
+            <option value="">Select Role</option>
             <option value="warden">Warden</option>
             <option value="SRO">SRO</option>
             <option value="supervisor">Supervisor</option>
             <option value="librarian">Librarian</option>
           </select>
         </div>
-        {editStaff.role !== "librarian" && addStaff.role !== "" && (
+        {editStaff.role !== "librarian" && editStaff.role !== "" && (
           <div>
             <label htmlFor="blockName">Block Name:</label>
             <select
@@ -135,7 +135,7 @@ function EditStaff() {
           <label htmlFor="female">Female</label>
         </div>
         <div>
-          <button type="submit">Add</button>
+          <button type="submit">Update</button>
           <button type="reset" onClick={() => setEditStaff(null)}>
             Cancel
           </button>

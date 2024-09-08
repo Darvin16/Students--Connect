@@ -59,7 +59,7 @@ app.post("/staff/add", (req, res) => {
             email: req.body.email,
             phone: req.body.phone,
             role: req.body.role,
-            blockName: req.body.block_name,
+            blockName: req.body.blockName,
             gender: req.body.gender,
           })
           .then(() => {
@@ -116,21 +116,67 @@ app.post("/staff/edit", (req, res) => {
       .send({ success: false, message: "Please fill all the fields" });
   }
 
+  if (employeeId !== previousEmployeeId) {
+    staffData
+      .findOne({ employeeId: employeeId })
+      .then((staff) => {
+        if (staff) {
+          return res
+            .status(409)
+            .send({ success: false, message: "Employee id already taken!!!" });
+        } else {
+          updateStaff();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    updateStaff();
+  }
+  function updateStaff() {
+    staffData
+      .findOneAndUpdate(
+        { employeeId: previousEmployeeId },
+        {
+          $set: {
+            employeeId: employeeId,
+            name: name,
+            email: email,
+            phone: phone,
+            role: role,
+            blockName: blockName,
+            gender: gender,
+          },
+        }
+      )
+      .then((staff) => {
+        if (!staff) {
+          return res
+            .status(404)
+            .send({ success: false, message: "Staff not found" });
+        } else {
+          return res
+            .status(200)
+            .send({ success: true, message: "Staff updated successfully" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+});
+
+app.post("/staff/remove", (req, res) => {
+  const { employeeId } = req.body;
+
+  if (!employeeId) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Please provide the employee id" });
+  }
   staffData
-    .findOneAndUpdate(
-      { employeeId: previousEmployeeId },
-      {
-        $set: {
-          employeeId: employeeId,
-          name: name,
-          email: email,
-          phone: phone,
-          role: role,
-          blockName: blockName,
-          gender: gender,
-        },
-      }
-    )
+    .findOneAndDelete({ employeeId: employeeId })
     .then((staff) => {
       if (!staff) {
         return res
@@ -139,7 +185,7 @@ app.post("/staff/edit", (req, res) => {
       } else {
         return res
           .status(200)
-          .send({ success: true, message: "Staff updated successfully" });
+          .send({ success: false, message: "Staff Removed From Database" });
       }
     })
     .catch((err) => {

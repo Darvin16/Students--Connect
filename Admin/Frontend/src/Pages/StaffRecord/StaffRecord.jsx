@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import AddStaff from "./AddStaff";
 import { AppContext } from "../../Context/AppContext";
 import EditStaff from "./EditStaff";
@@ -11,7 +11,10 @@ function StaffRecord() {
     setEditStaff,
     fetchStaffRecords,
     staffRecords,
+    handleRemoveStaff,
   } = useContext(AppContext);
+
+  const [removeStaff, setRemoveStaff] = useState(null);
 
   useEffect(() => {
     fetchStaffRecords();
@@ -22,15 +25,40 @@ function StaffRecord() {
         <button onClick={() => setIsAddingStaff(true)}>Add Staff</button>
       </div>
       {isAddingStaff && <AddStaff />}
-      {editStaff && <EditStaff/>}
+      {editStaff && <EditStaff />}
+      {removeStaff && (
+        <div>
+          <p>Are you sure you want to remove {removeStaff.name}?</p>
+          <button
+            onClick={() => {
+              handleRemoveStaff(removeStaff.employeeId);
+              setRemoveStaff(null);
+            }}
+          >
+            Yes
+          </button>
+          <button onClick={() => setRemoveStaff(null)}>No</button>
+        </div>
+      )}
       {staffRecords.map((staff) => {
         return (
           <div key={staff.employeeId}>
             <p>Employee ID: {staff.employeeId}</p>
             <p>Name: {staff.name}</p>
             <p>Role: {staff.role}</p>
+            <p>BlockName:{staff.blockName}</p>
             <div>
-              <button onClick={()=>setEditStaff({...staff,previousEmployeeId:staff.employeeId})}>Edit</button><button>Remove</button>
+              <button
+                onClick={() =>
+                  setEditStaff({
+                    ...staff,
+                    previousEmployeeId: staff.employeeId,
+                  })
+                }
+              >
+                Edit
+              </button>
+              <button onClick={() => setRemoveStaff(staff)}>Remove</button>
             </div>
           </div>
         );
