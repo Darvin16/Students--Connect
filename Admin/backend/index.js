@@ -3,11 +3,15 @@ import express from "express";
 import cors from "cors";
 import adminData from "./Models/AdminData.js";
 import staffData from "./Models/StaffData.js";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
+
+dotenv.config();
 
 mongoose
   .connect("mongodb://localhost:27017/StudentConnect")
@@ -28,6 +32,99 @@ mongoose
 
 app.get("/", () => {
   console.log("Server is running");
+});
+
+app.post("/login/staff", (req, res) => {
+  console.log(req.body);
+});
+app.post("/login/admin", (req, res) => {
+  adminData
+    .findOne({ admin_email: req.body.email })
+    .then((admin) => {
+      if (admin && admin.password === req.body.password) {
+        const authToken = jwt.sign(
+          { admin_email: admin.admin_email, role: admin.role },
+          process.env.secretKey
+        );
+        return res.status(200).send({
+          success: true,
+          message: "Logged In Successfully",
+          authToken: authToken,
+        });
+      } else {
+        return res.send({ success: false, message: "Invalid Credentials" });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send({
+        success: false,
+        message: "Error Occured, Please try again later",
+      });
+    });
+});
+
+app.use((req, res, next) => {
+  const authToken = req.headers.authtoken;
+  if (authToken) {
+    jwt.verify(authToken, process.env.secretKey, (err, decoded) => {
+      if (err) {
+        return res
+          .status(401)
+          .send({ success: false, message: "Invalid Token" });
+      }
+
+      req.user = decoded;
+      next();
+    });
+  } else {
+    return res.sendStatus(401);
+  }
+});
+
+app.post("/fetch/user", (req, res) => {
+  const { user } = req;
+  if (user.role === "admin") {
+    adminData
+      .findOne({ admin_email: user.admin_email })
+      .select("-_id -__v -password")
+      .then((userData) => {
+        if (userData) {
+          return res
+            .status(200)
+            .send({
+              success: true,
+              message: "User Fetched Successfully",
+              user: userData,
+            });
+        } else {
+          return res
+            .status(404)
+            .send({ success: false, message: "User not found" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    staffData.findOne({ employeeId: user.employeeId }).select("-_id -__v").then((userData) => {
+      if (userData) {
+        return res
+          .status(200)
+          .send({
+            success: true,
+            message: "User Fetched Successfully",
+            user: userData,
+          });
+      } else {
+        return res
+          .status(404)
+          .send({ success: false, message: "User not found" });
+      }
+    }).catch(err => {
+      console.log(err);
+    })
+  }
 });
 
 app.post("/staff/add", (req, res) => {
@@ -201,32 +298,6 @@ app.post("/staff/get", async (_, res) => {
     console.log(err);
     return res.status(500).send({ success: false, message: "Server Error" });
   }
-});
-
-app.post("/login/staff", (req, res) => {
-  console.log(req.body);
-});
-app.post("/login/admin", (req, res) => {
-  adminData
-    .findOne({ admin_email: req.body.email })
-    .then((admin) => {
-      if (admin && admin.password === req.body.password) {
-        return res.status(200).send({
-          success: true,
-          message: "Logged In Successfully",
-          userData: { email: admin.email, role: admin.role },
-        });
-      } else {
-        return res.send({ success: false, message: "Invalid Credentials" });
-      }
-    })
-    .catch((err) => {
-      console.log(err);
-      return res.status(500).send({
-        success: false,
-        message: "Error Occured, Please try again later",
-      });
-    });
 });
 
 app.listen(9000, () => {

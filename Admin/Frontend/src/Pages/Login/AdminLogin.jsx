@@ -3,11 +3,12 @@ import { AppContext } from "../../Context/AppContext";
 import "./Login.css";
 
 function AdminLogin() {
-  const { navigate, setAdminLoginForm, AdminLogin } = useContext(AppContext);
+  const { navigate, setAdminLoginForm, AdminLogin, adminLoginForm } =
+    useContext(AppContext);
   return (
     <div className="admin-login login-container">
       <div className="button-alignment">
-        <button onClick={() => navigate("/")}>Staff</button>
+        <button onClick={() => navigate("/login")}>Staff</button>
       </div>
       <div className="staff-login-container">
         <h1>Admin Login</h1>
@@ -35,6 +36,21 @@ function AdminLogin() {
               }
               required
             />
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              name="rememberMe"
+              id="rememberMe"
+              checked={adminLoginForm.rememberMe}
+              onChange={() => {
+                setAdminLoginForm((al) => ({
+                  ...al,
+                  rememberMe: !al.rememberMe,
+                }));
+              }}
+            />
+            <label htmlFor="rememberMe">Remember Me</label>
           </div>
           <div>
             <button type="submit">Submit</button>
