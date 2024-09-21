@@ -5,7 +5,7 @@ import { AppContext } from "../../Context/AppContext";
 export const Login = () => {
   const { setLoginForm,StaffLogin, navigate } = useContext(AppContext);
 
-  return (
+  return ( 
     <div className="staff-login login-container" >
       <div className="button-alignment">
         <button onClick={() => navigate("/adminlogin")}>Admin</button>
