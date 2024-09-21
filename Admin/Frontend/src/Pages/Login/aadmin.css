@@ -3,14 +3,6 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #eaf4ff;
-    /* Light blue background */
-    margin: 0;
-    padding: 0;
-}
-
 /* Main container for the admin login page */
 .admin-login {
     position: relative;
@@ -38,7 +30,7 @@ body {
 }
 
 /* Button styles */
-button {
+.login-container button {
     background-color: #007bff;
     /* Button color */
     color: white;
@@ -49,7 +41,7 @@ button {
     transition: background-color 0.3s, transform 0.2s;
 }
 
-button:hover {
+.login-container button:hover {
     background-color: #0056b3;
     /* Darker color on hover */
     transform: translateY(-2px);
@@ -57,7 +49,7 @@ button:hover {
 }
 
 /* Header style */
-h1 {
+.login-container h1 {
     text-align: center;
     margin-bottom: 20px;
     color: #333;
@@ -72,14 +64,14 @@ h1 {
 }
 
 /* Input field and select styles */
-label {
+.login-container label {
     margin-bottom: 5px;
     color: #555;
 }
 
-input[type="text"],
-input[type="password"],
-input[type="email"]{
+.login-container input[type="text"],
+.login-container input[type="password"],
+.login-container input[type="email"]{
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -88,7 +80,7 @@ input[type="email"]{
     font-size: 16px;
     transition: border-color 0.3s;
 }
-input[type="checkbox"] {
+.login-container input[type="checkbox"] {
     padding: 12px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -97,31 +89,31 @@ input[type="checkbox"] {
     transition: border-color 0.3s;
 }
 
-input:focus {
+.login-container input:focus {
     border-color: #007bff;
     /* Change border color on focus */
     outline: none;
 }
 
 /* Checkbox styling */
-label[for="rememberMe"] {
+.login-container label[for="rememberMe"] {
     display: inline-block;
     margin-left: 5px;
     /* Spacing for the label */
 }
 
 /* Link styling */
-p {
+.login-container p {
     margin-top: 15px;
     text-align: center;
 }
 
-a {
+.login-container a {
     color: #007bff;
     text-decoration: none;
 }
 
-a:hover {
+.login-container a:hover {
     text-decoration: underline;
 }
 
@@ -135,7 +127,7 @@ a:hover {
 }
 
 /* Checkbox styling */
-input[type="checkbox"] {
+.login-container input[type="checkbox"] {
     margin-left: 2px;
     /* Space between the checkbox and label */
 }
