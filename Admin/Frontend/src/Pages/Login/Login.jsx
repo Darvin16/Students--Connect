@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import "./Login.css";
 import { AppContext } from "../../Context/AppContext";
+import { Link } from "react-router-dom";
 
 export const Login = () => {
   const { setLoginForm,StaffLogin, navigate } = useContext(AppContext);
@@ -46,6 +47,7 @@ export const Login = () => {
             <button type="submit">Submit</button>
           </div>
         </form>
+        <p>Don't have an Account? <Link to="/signup">Sign up</Link></p>
       </div>
     </div>
   );

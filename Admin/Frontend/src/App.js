@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import ProtectRoutes from "./Component/ProtectRoutes";
 import { useContext, useEffect } from "react";
+import Signup from "./Pages/Signup/Signup";
 
 function RootRedirect() {
   const { authToken, navigate } = useContext(AppContext);
@@ -28,6 +29,7 @@ function App() {
           <Routes>
             <Route path="/" element={<RootRedirect />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="/adminlogin" element={<AdminLogin />} />
             <Route element={<ProtectRoutes />}>
               <Route path="/dashboard/*" element={<Dashboard />} />

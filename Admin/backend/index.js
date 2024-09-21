@@ -37,6 +37,102 @@ app.get("/", () => {
 app.post("/login/staff", (req, res) => {
   console.log(req.body);
 });
+
+app.post("/signup/staff", (req, res) => {
+  const {
+    employeeId,
+    name,
+    phone,
+    email,
+    role,
+    gender,
+    password,
+    confirmPassword,
+    blockName,
+  } = req.body;
+
+  if (password !== confirmPassword) {
+    return res
+      .status(400)
+      .send({
+        success: false,
+        message: "Password and Confirm Password doesn't match",
+      });
+  }
+
+  if (
+    !employeeId ||
+    !name ||
+    !phone ||
+    !email ||
+    !role ||
+    !gender ||
+    !password ||
+    !confirmPassword
+  ) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Please fill all the fields" });
+  }
+
+  if (role !== "librarian" && !blockName) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Please select a block name" });
+  }
+
+  staffData
+    .findOne({ employeeId: employeeId })
+    .then((staff) => {
+      if (!staff) {
+        return res
+          .status(401)
+          .send({ success: false, message: "Staff Not Found in Database" });
+      } else {
+        if (
+          staff.name &&
+          staff.email &&
+          staff.phone &&
+          staff.role &&
+          staff.gender &&
+          staff.password
+        ) {
+          return res
+            .status(400)
+            .send({
+              success: false,
+              message: "Account already exists , Please Login",
+            });
+        }
+
+        staff.name = name;
+        staff.phone = phone;
+        staff.email = email;
+        staff.role = role;
+        staff.gender = gender;
+        staff.password = password;
+        staff.blockName = blockName || null;
+
+        staff
+          .save()
+          .then(() => {
+            return res
+              .status(200)
+              .send({
+                success: true,
+                message: "Staff Account Created Successfully",
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 app.post("/login/admin", (req, res) => {
   adminData
     .findOne({ admin_email: req.body.email })
@@ -90,13 +186,11 @@ app.post("/fetch/user", (req, res) => {
       .select("-_id -__v -password")
       .then((userData) => {
         if (userData) {
-          return res
-            .status(200)
-            .send({
-              success: true,
-              message: "User Fetched Successfully",
-              user: userData,
-            });
+          return res.status(200).send({
+            success: true,
+            message: "User Fetched Successfully",
+            user: userData,
+          });
         } else {
           return res
             .status(404)
@@ -107,44 +201,39 @@ app.post("/fetch/user", (req, res) => {
         console.log(err);
       });
   } else {
-    staffData.findOne({ employeeId: user.employeeId }).select("-_id -__v").then((userData) => {
-      if (userData) {
-        return res
-          .status(200)
-          .send({
+    staffData
+      .findOne({ employeeId: user.employeeId })
+      .select("-_id -__v")
+      .then((userData) => {
+        if (userData) {
+          return res.status(200).send({
             success: true,
             message: "User Fetched Successfully",
             user: userData,
           });
-      } else {
-        return res
-          .status(404)
-          .send({ success: false, message: "User not found" });
-      }
-    }).catch(err => {
-      console.log(err);
-    })
+        } else {
+          return res
+            .status(404)
+            .send({ success: false, message: "User not found" });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 });
 
 app.post("/staff/add", (req, res) => {
-  if (
-    !req.body.employeeId ||
-    !req.body.name ||
-    !req.body.email ||
-    !req.body.phone ||
-    !req.body.role ||
-    !req.body.gender
-  ) {
+  if (!req.body.employeeId) {
     return res
       .status(400)
-      .send({ success: false, message: "Please fill all the fields" });
+      .send({ success: false, message: "Please Enter the Employee Id" });
   }
-  if (req.body.role !== "librarian" && !req.body.blockName) {
-    return res
-      .status(400)
-      .send({ success: false, message: "Please fill all the fields" });
-  }
+  // if (req.body.role !== "librarian" && !req.body.blockName) {
+  //   return res
+  //     .status(400)
+  //     .send({ success: false, message: "Please fill all the fields" });
+  // }
   staffData
     .findOne({ employeeId: req.body.employeeId })
     .then((staff) => {
@@ -152,12 +241,6 @@ app.post("/staff/add", (req, res) => {
         staffData
           .create({
             employeeId: req.body.employeeId,
-            name: req.body.name,
-            email: req.body.email,
-            phone: req.body.phone,
-            role: req.body.role,
-            blockName: req.body.blockName,
-            gender: req.body.gender,
           })
           .then(() => {
             return res

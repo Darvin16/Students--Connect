@@ -25,7 +25,6 @@ function StaffRecord() {
         <button onClick={() => setIsAddingStaff(true)}>Add Staff</button>
       </div>
       {isAddingStaff && <AddStaff />}
-      {editStaff && <EditStaff />}
       {removeStaff && (
         <div>
           <p>Are you sure you want to remove {removeStaff.name}?</p>
@@ -48,16 +47,6 @@ function StaffRecord() {
             <p>Role: {staff.role}</p>
             <p>BlockName:{staff.blockName}</p>
             <div>
-              <button
-                onClick={() =>
-                  setEditStaff({
-                    ...staff,
-                    previousEmployeeId: staff.employeeId,
-                  })
-                }
-              >
-                Edit
-              </button>
               <button onClick={() => setRemoveStaff(staff)}>Remove</button>
             </div>
           </div>

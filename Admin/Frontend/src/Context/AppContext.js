@@ -20,15 +20,10 @@ export const AppProvider = ({ children }) => {
   const [isAddingStaff, setIsAddingStaff] = useState(false);
   const [addStaff, setAddStaff] = useState({
     employeeId: "",
-    name: "",
-    email: "",
-    phone: "",
-    role: "",
-    blockName: "",
-    gender: "",
   });
   const [editStaff, setEditStaff] = useState(null);
   const [staffRecords, setStaffRecords] = useState([]);
+  const [signupForm, setSignupForm] = useState({});
 
   
   useEffect(() => {
@@ -144,6 +139,23 @@ export const AppProvider = ({ children }) => {
     axios.post("http://localhost:9000/login/staff", loginForm).then().catch();
   }
 
+  function StaffSignup(e) {
+    e.preventDefault();
+    axios.post("http://localhost:9000/signup/staff", signupForm).then((res) => {
+      if (res.status === 200) {
+        alert(res.data.message);
+        navigate("/login");
+      }
+    }).catch((err) => {
+      console.log(err);
+      if (err.response && err.response.data && err.response.data.message) {
+        alert(err.response.data.message);
+      } else {
+        alert("An error occurred");
+      }
+    });
+  }
+
   function AdminLogin(e) {
     e.preventDefault();
     axios
@@ -196,6 +208,9 @@ export const AppProvider = ({ children }) => {
         handleEditStaff,
         handleRemoveStaff,
         authToken,
+        signupForm,
+        setSignupForm,
+        StaffSignup,
       }}
     >
       {children}
