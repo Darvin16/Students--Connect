@@ -1,13 +1,15 @@
 import React, { useContext } from "react";
 import { AppContext } from "../../Context/AppContext";
+import "./signup.css";
 
 function Signup() {
-  const { signupForm, setSignupForm, StaffSignup,navigate } = useContext(AppContext);
+  const { signupForm, setSignupForm, StaffSignup, navigate } = useContext(AppContext);
+
   return (
-    <div>
-      <h1>Sign up</h1>
-      <form onSubmit={(e) => StaffSignup(e)}>
-        <div>
+    <div className="signup-container">
+      <h1 className="signup-title">Sign Up</h1>
+      <form className="signup-form" onSubmit={(e) => StaffSignup(e)}>
+        <div className="form-group">
           <label htmlFor="employeeId">Employee Id:</label>
           <input
             type="text"
@@ -19,7 +21,7 @@ function Signup() {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="name">Name:</label>
           <input
             type="text"
@@ -31,7 +33,7 @@ function Signup() {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="email">Email:</label>
           <input
             type="email"
@@ -43,7 +45,7 @@ function Signup() {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="phone">Phone:</label>
           <input
             type="tel"
@@ -57,7 +59,7 @@ function Signup() {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="role">Role:</label>
           <select
             name="role"
@@ -75,7 +77,7 @@ function Signup() {
           </select>
         </div>
         {signupForm.role !== "librarian" && (
-          <div>
+          <div className="form-group">
             <label htmlFor="blockName">Block Name:</label>
             <select
               name="blockName"
@@ -99,32 +101,34 @@ function Signup() {
             </select>
           </div>
         )}
-        <div>
-          <label htmlFor="gender">Gender:</label>
-          <input
-            type="radio"
-            name="gender"
-            id="male"
-            value="male"
-            onChange={(e) =>
-              setSignupForm((prev) => ({ ...prev, gender: e.target.value }))
-            }
-            required
-          />
-          <label htmlFor="male">Male</label>
-          <input
-            type="radio"
-            name="gender"
-            id="female"
-            value="female"
-            onChange={(e) =>
-              setSignupForm((prev) => ({ ...prev, gender: e.target.value }))
-            }
-            required
-          />
-          <label htmlFor="female">Female</label>
+        <div className="form-group">
+          <label>Gender:</label>
+          <div className="radio-group">
+            <input
+              type="radio"
+              name="gender"
+              id="male"
+              value="male"
+              onChange={(e) =>
+                setSignupForm((prev) => ({ ...prev, gender: e.target.value }))
+              }
+              required
+            />
+            <label htmlFor="male">Male</label>
+            <input
+              type="radio"
+              name="gender"
+              id="female"
+              value="female"
+              onChange={(e) =>
+                setSignupForm((prev) => ({ ...prev, gender: e.target.value }))
+              }
+              required
+            />
+            <label htmlFor="female">Female</label>
+          </div>
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="password">Password:</label>
           <input
             type="password"
@@ -136,7 +140,7 @@ function Signup() {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label htmlFor="confirmpassword">Confirm Password:</label>
           <input
             type="password"
@@ -151,13 +155,13 @@ function Signup() {
             required
           />
         </div>
-        <div>
-          <button type="submit">Submit</button>
+        <div className="form-group">
+          <button type="submit" className="submit-button">Submit</button>
         </div>
-          </form>
-          <div>
-              <button onClick={()=>navigate("/login")}>Login</button>
-          </div>
+      </form>
+      <div className="login-prompt">
+        <button onClick={() => navigate("/login")} className="login-button">Login</button>
+      </div>
     </div>
   );
 }
