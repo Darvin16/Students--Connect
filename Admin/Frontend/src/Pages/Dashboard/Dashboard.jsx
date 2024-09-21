@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Link, Routes, Route } from "react-router-dom";
 import StaffRecord from "../StaffRecord/StaffRecord";
 import { AppContext } from "../../Context/AppContext";
+import StudentRecord from "../StudentRecord/StudentRecord";
 
 function Dashboard() {
   const { userData, logout } = useContext(AppContext);
@@ -25,14 +26,12 @@ function Dashboard() {
       {userData?.role === "warden" && (
         <>
           <Link to="/dashboard/warden/record/student">Student Record</Link>
-          <p></p>
           <Link to="/dashboard/warden/record/library">Library Record</Link>
-          <p></p>
           <Link to="/dashboard/warden/record/leave">Leave Record</Link>
           <Routes>
             <Route
               path="/warden/record/student"
-              element={<div>Warden student Record</div>}
+              element={<StudentRecord/>}
             />
             <Route
               path="/warden/record/library"

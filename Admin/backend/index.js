@@ -5,7 +5,8 @@ import adminData from "./Models/AdminData.js";
 import staffData from "./Models/StaffData.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import bcrypt, { hash } from "bcrypt";
+import bcrypt from "bcrypt";
+import Student from "./Routes/Student.js";
 
 const app = express();
 app.use(express.json());
@@ -438,6 +439,8 @@ app.post("/staff/remove", (req, res) => {
       console.log(err);
     });
 });
+
+app.use("/student", Student);
 
 app.post("/staff/get", async (_, res) => {
   try {

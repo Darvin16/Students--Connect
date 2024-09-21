@@ -26,9 +26,12 @@ export const AppProvider = ({ children }) => {
   const [addStaff, setAddStaff] = useState({
     employeeId: "",
   });
+  const [studentId, setStudentId] = useState("");
   const [editStaff, setEditStaff] = useState(null);
   const [staffRecords, setStaffRecords] = useState([]);
+  const [studentRecords, setStudentRecords] = useState([]);
   const [signupForm, setSignupForm] = useState({});
+  const [selectedStudents, setSelectedStudents] = useState([]);
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -36,6 +39,12 @@ export const AppProvider = ({ children }) => {
       console.log(userData);
     }
   }, [authToken, userData]);
+
+  useEffect(() => {
+    if (authToken) {
+      fetchStudentRecords();
+    }
+  }, [authToken]);
 
   function fetchUser() {
     axios
@@ -72,6 +81,25 @@ export const AppProvider = ({ children }) => {
       )
       .then((res) => {
         setStaffRecords(res.data.staffRecords);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function fetchStudentRecords() {
+    axios
+      .post(
+        "http://localhost:9000/student/get",
+        {},
+        {
+          headers: { authToken: authToken },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          setStudentRecords(res.data.studentRecords);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -138,6 +166,59 @@ export const AppProvider = ({ children }) => {
         if (res.status === 200) {
           alert(res.data.message);
           fetchStaffRecords();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred");
+        }
+      });
+  }
+
+  function handleAddStudent(e, studentId) {
+    e.preventDefault();
+    axios
+      .post(
+        "http://localhost:9000/student/add",
+        { studentId },
+        {
+          headers: { authToken: authToken },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+          setStudentId("");
+          fetchStudentRecords();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred");
+        }
+      });
+  }
+
+  function handleDeleteStudent() {
+    axios
+      .delete(
+        "http://localhost:9000/student/delete",
+        {
+          data: { selectedStudents },
+          headers: { authToken: authToken },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+          fetchStudentRecords();
+          setSelectedStudents([]);
         }
       })
       .catch((err) => {
@@ -247,11 +328,18 @@ export const AppProvider = ({ children }) => {
         setEditStaff,
         handleEditStaff,
         handleRemoveStaff,
+        handleAddStudent,
         authToken,
         signupForm,
         setSignupForm,
         StaffSignup,
         loginForm,
+        studentId,
+        setStudentId,
+        studentRecords,
+        selectedStudents,
+        setSelectedStudents,
+        handleDeleteStudent,
       }}
     >
       {children}
