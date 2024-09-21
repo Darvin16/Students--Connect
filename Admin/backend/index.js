@@ -5,6 +5,7 @@ import adminData from "./Models/AdminData.js";
 import staffData from "./Models/StaffData.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import bcrypt, { hash } from "bcrypt";
 
 const app = express();
 app.use(express.json());
@@ -35,7 +36,63 @@ app.get("/", () => {
 });
 
 app.post("/login/staff", (req, res) => {
-  console.log(req.body);
+  const { employeeId, password } = req.body;
+
+  if (!employeeId || !password) {
+    return res.status(400).send({
+      success: false,
+      message: "Please enter both employeeId and password",
+    });
+  }
+
+  staffData
+    .findOne({ employeeId: employeeId })
+    .then((staff) => {
+      if (!staff) {
+        return res
+          .status(400)
+          .send({ success: false, message: "Invalid Credentials" });
+      } else {
+        if (!staff.password) {
+          return res
+            .status(400)
+            .send({
+              success: false,
+              message: "Password not set , Please sign up first",
+            });
+        }
+
+        bcrypt.compare(password, staff.password, (err, isMatch) => {
+          if (err) {
+            return res.status(500).send({
+              success: false,
+              message: "Error in password comparition",
+            });
+          }
+
+          if (isMatch) {
+            const authToken = jwt.sign(
+              { employeeId: staff.employeeId, role: staff.role },
+              process.env.secretKey
+            );
+
+            return res.status(200).send({
+              success: true,
+              message: "Logged In Successfully",
+              token: authToken,
+            });
+          } else {
+            return res.status(400).send({
+              success: false,
+              message: "Incorrect Password",
+            });
+          }
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 app.post("/signup/staff", (req, res) => {
@@ -52,12 +109,10 @@ app.post("/signup/staff", (req, res) => {
   } = req.body;
 
   if (password !== confirmPassword) {
-    return res
-      .status(400)
-      .send({
-        success: false,
-        message: "Password and Confirm Password doesn't match",
-      });
+    return res.status(400).send({
+      success: false,
+      message: "Password and Confirm Password doesn't match",
+    });
   }
 
   if (
@@ -97,35 +152,50 @@ app.post("/signup/staff", (req, res) => {
           staff.gender &&
           staff.password
         ) {
-          return res
-            .status(400)
-            .send({
-              success: false,
-              message: "Account already exists , Please Login",
-            });
+          return res.status(400).send({
+            success: false,
+            message: "Account already exists , Please Login",
+          });
         }
 
-        staff.name = name;
-        staff.phone = phone;
-        staff.email = email;
-        staff.role = role;
-        staff.gender = gender;
-        staff.password = password;
-        staff.blockName = blockName || null;
-
-        staff
-          .save()
-          .then(() => {
-            return res
-              .status(200)
-              .send({
-                success: true,
-                message: "Staff Account Created Successfully",
-              });
-          })
-          .catch((err) => {
+        bcrypt.genSalt(10, (err, salt) => {
+          if (err) {
             console.log(err);
+            return res
+              .status(500)
+              .send({ success: false, message: "Error in generating salt" });
+          }
+
+          bcrypt.hash(password, salt, (err, hash) => {
+            if (err) {
+              console.log(err);
+              return res.status(500).send({
+                success: false,
+                message: "Error in hashing password",
+              });
+            }
+
+            staff.name = name;
+            staff.phone = phone;
+            staff.email = email;
+            staff.role = role;
+            staff.gender = gender;
+            staff.password = hash;
+            staff.blockName = blockName || null;
+
+            staff
+              .save()
+              .then(() => {
+                return res.status(200).send({
+                  success: true,
+                  message: "Staff Account Created Successfully",
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           });
+        });
       }
     })
     .catch((err) => {
@@ -229,11 +299,7 @@ app.post("/staff/add", (req, res) => {
       .status(400)
       .send({ success: false, message: "Please Enter the Employee Id" });
   }
-  // if (req.body.role !== "librarian" && !req.body.blockName) {
-  //   return res
-  //     .status(400)
-  //     .send({ success: false, message: "Please fill all the fields" });
-  // }
+
   staffData
     .findOne({ employeeId: req.body.employeeId })
     .then((staff) => {

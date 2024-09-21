@@ -4,10 +4,10 @@ import { AppContext } from "../../Context/AppContext";
 import { Link } from "react-router-dom";
 
 export const Login = () => {
-  const { setLoginForm,StaffLogin, navigate } = useContext(AppContext);
+  const { setLoginForm,StaffLogin,loginForm, navigate } = useContext(AppContext);
 
-  return ( 
-    <div className="staff-login login-container" >
+  return (
+    <div className="staff-login login-container">
       <div className="button-alignment">
         <button onClick={() => navigate("/adminlogin")}>Admin</button>
       </div>
@@ -27,27 +27,39 @@ export const Login = () => {
             />
           </div>
           <div>
-            <label htmlFor="employeePosition">Position:</label>
-            <select
-              name="employeePosition"
-              id="employeePosition"
+            <label htmlFor="password">Password:</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
               onChange={(e) =>
-                setLoginForm((l) => ({ ...l, position: e.target.value }))
+                setLoginForm((al) => ({ ...al, password: e.target.value }))
               }
               required
-            >
-              <option value=""></option>
-              <option value="warden">Warden</option>
-              <option value="SRO">SRO</option>
-              <option value="supervisor">Supervisor</option>
-              <option value="librarien">Librarien</option>
-            </select>
+            />
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              name="rememberMe"
+              id="rememberMe"
+              checked={loginForm.rememberMe}
+              onChange={() => {
+                setLoginForm((al) => ({
+                  ...al,
+                  rememberMe: !al.rememberMe,
+                }));
+              }}
+            />
+            <label htmlFor="rememberMe">Remember Me</label>
           </div>
           <div>
             <button type="submit">Submit</button>
           </div>
         </form>
-        <p>Don't have an Account? <Link to="/signup">Sign up</Link></p>
+        <p>
+          Don't have an Account? <Link to="/signup">Sign up</Link>
+        </p>
       </div>
     </div>
   );

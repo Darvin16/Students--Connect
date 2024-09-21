@@ -6,11 +6,16 @@ export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
-  const [authToken, setAuthToken] = useState(localStorage.getItem("authToken")||sessionStorage.getItem("authToken")||"");
+  const [authToken, setAuthToken] = useState(
+    localStorage.getItem("authToken") ||
+      sessionStorage.getItem("authToken") ||
+      ""
+  );
   const [userData, setUserData] = useState();
   const [loginForm, setLoginForm] = useState({
     employeeId: "",
-    position: "",
+    password: "",
+    rememberMe: false,
   });
   const [adminLoginForm, setAdminLoginForm] = useState({
     email: "",
@@ -25,7 +30,6 @@ export const AppProvider = ({ children }) => {
   const [staffRecords, setStaffRecords] = useState([]);
   const [signupForm, setSignupForm] = useState({});
 
-  
   useEffect(() => {
     if (authToken && !userData) {
       fetchUser();
@@ -35,9 +39,13 @@ export const AppProvider = ({ children }) => {
 
   function fetchUser() {
     axios
-      .post("http://localhost:9000/fetch/user",{}, {
-        headers: { authToken: authToken },
-      })
+      .post(
+        "http://localhost:9000/fetch/user",
+        {},
+        {
+          headers: { authToken: authToken },
+        }
+      )
       .then((res) => {
         if (res.status === 200) {
           setUserData(res.data.user);
@@ -55,9 +63,13 @@ export const AppProvider = ({ children }) => {
 
   async function fetchStaffRecords() {
     await axios
-      .post("http://localhost:9000/staff/get", {}, {
-        headers: { authToken: authToken },
-      })
+      .post(
+        "http://localhost:9000/staff/get",
+        {},
+        {
+          headers: { authToken: authToken },
+        }
+      )
       .then((res) => {
         setStaffRecords(res.data.staffRecords);
       })
@@ -115,9 +127,13 @@ export const AppProvider = ({ children }) => {
 
   function handleRemoveStaff(employeeId) {
     axios
-      .post("http://localhost:9000/staff/remove", { employeeId }, {
-        headers: { authToken: authToken },
-      })
+      .post(
+        "http://localhost:9000/staff/remove",
+        { employeeId },
+        {
+          headers: { authToken: authToken },
+        }
+      )
       .then((res) => {
         if (res.status === 200) {
           alert(res.data.message);
@@ -136,24 +152,47 @@ export const AppProvider = ({ children }) => {
 
   function StaffLogin(e) {
     e.preventDefault();
-    axios.post("http://localhost:9000/login/staff", loginForm).then().catch();
+    axios
+      .post("http://localhost:9000/login/staff", loginForm)
+      .then((res) => {
+        if (res.status === 200) {
+          setAuthToken(res.data.token);
+          if (loginForm.rememberMe) {
+            localStorage.setItem("authToken", res.data.token);
+          } else {
+            sessionStorage.setItem("authToken", res.data.token);
+          }
+          navigate("/dashboard");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred");
+        }
+      });
   }
 
   function StaffSignup(e) {
     e.preventDefault();
-    axios.post("http://localhost:9000/signup/staff", signupForm).then((res) => {
-      if (res.status === 200) {
-        alert(res.data.message);
-        navigate("/login");
-      }
-    }).catch((err) => {
-      console.log(err);
-      if (err.response && err.response.data && err.response.data.message) {
-        alert(err.response.data.message);
-      } else {
-        alert("An error occurred");
-      }
-    });
+    axios
+      .post("http://localhost:9000/signup/staff", signupForm)
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+          navigate("/login");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred");
+        }
+      });
   }
 
   function AdminLogin(e) {
@@ -211,6 +250,7 @@ export const AppProvider = ({ children }) => {
         signupForm,
         setSignupForm,
         StaffSignup,
+        loginForm,
       }}
     >
       {children}
