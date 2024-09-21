@@ -7,6 +7,7 @@ import ProtectRoutes from "./Component/ProtectRoutes";
 import { useContext, useEffect } from "react";
 import Signup from "./Pages/Signup/Signup";
 
+
 function RootRedirect() {
   const { authToken, navigate } = useContext(AppContext);
 
@@ -15,7 +16,7 @@ function RootRedirect() {
     if (authToken) {
       navigate("/dashboard");
     } else {
-      // navigate("/login");
+      navigate("/login");
     }
   }, [authToken, navigate]);
 
