@@ -1,3 +1,31 @@
+/* Reset some default styles */
+* {
+    box-sizing: border-box;
+}
+
+
+.button-alignment {
+    position: absolute;
+    top: 20px;
+    /* Adjust as necessary */
+    right: 20px;
+    /* Adjust as necessary */
+    z-index: 1;
+    /* Ensure it's above other content */
+}
+
+/* Other button styles */
+.admin {
+    background-color: #007bff;
+    /* Button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
 body {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
@@ -5,7 +33,8 @@ body {
     padding: 0;
 }
 
-.staff-login {
+/* Main container for the login page */
+.staff-login{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -13,18 +42,30 @@ body {
     height: 100vh;
 }
 
+/* Container for the login form */
 .login-container {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    width: 300px;
+    width: 400px;
+    margin: 0 auto;
 }
 
+.form-container {
+    background-color: darkblue;
+    padding: 10px 0px;
+    /* height: 100vh; */
+}
+
+/* Alignment for the admin button */
 .button-alignment {
+    width: 100%;
+    text-align: right;
     margin-bottom: 20px;
 }
 
+/* Style for buttons */
 button {
     background-color: #007bff;
     color: white;
@@ -39,22 +80,28 @@ button:hover {
     background-color: #0056b3;
 }
 
+/* Style for the staff login container */
 .staff-login-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
+/* Header style */
 h1 {
     text-align: center;
     margin-bottom: 20px;
     color: #333;
 }
 
+/* Form styling */
 .login-form {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
+/* Input field and select styles */
 label {
     margin-bottom: 5px;
     color: #555;
@@ -66,6 +113,7 @@ select {
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-bottom: 15px;
+    width: 100%;
 }
 
 input[type="text"]:focus,
@@ -74,6 +122,17 @@ select:focus {
     outline: none;
 }
 
-button[type="submit"] {
-    margin-top: 10px;
+/* Link styling */
+p {
+    margin-top: 15px;
+    text-align: center;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }

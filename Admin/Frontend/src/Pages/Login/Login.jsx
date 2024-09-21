@@ -4,12 +4,13 @@ import { AppContext } from "../../Context/AppContext";
 import { Link } from "react-router-dom";
 
 export const Login = () => {
-  const { setLoginForm,StaffLogin, navigate } = useContext(AppContext);
+  const { setLoginForm, StaffLogin, navigate } = useContext(AppContext);
 
-  return ( 
+  return (
+    <div className="form-container">
     <div className="staff-login login-container" >
       <div className="button-alignment">
-        <button onClick={() => navigate("/adminlogin")}>Admin</button>
+        <button className="admin" onClick={() => navigate("/adminlogin")}>Admin</button>
       </div>
       <div className="staff-login-container">
         <h1>Staff Login</h1>
@@ -49,6 +50,7 @@ export const Login = () => {
         </form>
         <p>Don't have an Account? <Link to="/signup">Sign up</Link></p>
       </div>
+    </div>
     </div>
   );
 };
