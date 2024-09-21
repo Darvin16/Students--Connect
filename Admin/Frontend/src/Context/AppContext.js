@@ -221,6 +221,7 @@ export const AppProvider = ({ children }) => {
     localStorage.removeItem("authToken");
     sessionStorage.removeItem("authToken");
     setAuthToken("");
+    setUserData(null);
     navigate("/login");
   }
 
