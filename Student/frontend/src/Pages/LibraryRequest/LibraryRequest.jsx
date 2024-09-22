@@ -1,11 +1,9 @@
-import React from 'react'
+import React, { useContext } from "react";
+import { AppContext } from "../../Context/AppContext";
 
 function LibraryRequest() {
-    return (
-        <div>
-            
-        </div>
-    )
+  const { userData } = useContext(AppContext);
+  return <div>{userData?.studentId}</div>;
 }
 
-export default LibraryRequest
+export default LibraryRequest;
