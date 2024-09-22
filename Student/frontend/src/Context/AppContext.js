@@ -1,11 +1,11 @@
-import { createContext, useState } from "react";
+import { createContext, useState ,useEffect} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState();
   const [authToken, setAuthToken] = useState(
     localStorage.getItem("authToken-st") ||
       sessionStorage.getItem("authToken-st") ||
@@ -20,8 +20,34 @@ export const AppProvider = ({ children }) => {
   const URL = "http://localhost:8000";
   const navigate = useNavigate();
 
-  if (!userData) {
-    console.log("user is not set");
+ useEffect(() => {
+   if (authToken && !userData) {
+     fetchUser();
+   }
+ }, [authToken, userData]);
+
+  function fetchUser() {
+    axios
+      .post(
+        `${URL}/fetch/user`,
+        {},
+        {
+          headers: { authToken: authToken },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          setUserData(res.data.user);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred in fetch user");
+        }
+      });
   }
 
   function Signup(e) {
@@ -76,7 +102,7 @@ export const AppProvider = ({ children }) => {
     sessionStorage.removeItem("authToken-st");
     setAuthToken("");
     navigate("/login");
-    setUserData({});
+    setUserData(null);
   }
 
   return (

@@ -36,7 +36,6 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     if (authToken && !userData) {
       fetchUser();
-      console.log(userData);
     }
   }, [authToken, userData]);
 
