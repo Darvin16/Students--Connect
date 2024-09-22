@@ -55,12 +55,10 @@ app.post("/login/staff", (req, res) => {
           .send({ success: false, message: "Invalid Credentials" });
       } else {
         if (!staff.password) {
-          return res
-            .status(400)
-            .send({
-              success: false,
-              message: "Password not set , Please sign up first",
-            });
+          return res.status(400).send({
+            success: false,
+            message: "Password not set , Please sign up first",
+          });
         }
 
         bcrypt.compare(password, staff.password, (err, isMatch) => {
@@ -109,13 +107,6 @@ app.post("/signup/staff", (req, res) => {
     blockName,
   } = req.body;
 
-  if (password !== confirmPassword) {
-    return res.status(400).send({
-      success: false,
-      message: "Password and Confirm Password doesn't match",
-    });
-  }
-
   if (
     !employeeId ||
     !name ||
@@ -135,6 +126,13 @@ app.post("/signup/staff", (req, res) => {
     return res
       .status(400)
       .send({ success: false, message: "Please select a block name" });
+  }
+
+  if (password !== confirmPassword) {
+    return res.status(400).send({
+      success: false,
+      message: "Password and Confirm Password doesn't match",
+    });
   }
 
   staffData

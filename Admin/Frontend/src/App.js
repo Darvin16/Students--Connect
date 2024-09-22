@@ -12,7 +12,6 @@ function RootRedirect() {
   const { authToken, navigate } = useContext(AppContext);
 
   useEffect(() => {
-    console.log(authToken);
     if (authToken) {
       navigate("/dashboard");
     } else {
