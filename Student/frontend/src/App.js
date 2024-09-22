@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Pages/SignUp_Login/Login";
 import Signup from "./Pages/SignUp_Login/Signup";
 import { AppContext, AppProvider } from "./Context/AppContext";
+import Dashboard from "./Pages/Dashboard/Dashboard";
 
 function RootDirect() {
   const { authToken, navigate } = useContext(AppContext);
@@ -30,7 +31,7 @@ function App() {
             <Route
             // element={ }
             >
-              <Route path="/dashboard" element={<div>Dashboard</div>} />
+              <Route path="/dashboard/*" element={<Dashboard/>} />
             </Route>
           </Routes>
         </AppProvider>

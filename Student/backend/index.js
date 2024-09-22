@@ -68,7 +68,7 @@ app.post("/signup", (req, res) => {
     .findOne({ studentId: studentId })
     .then((student) => {
       if (!student) {
-        return res.send({
+        return res.status(404).send({
           success: false,
           message: "User Not Exist in the Database",
         });
@@ -206,6 +206,52 @@ app.post("/login", (req, res) => {
         success: false,
         message: "Error Occured while finding student",
       });
+    });
+});
+
+app.use((req, res, next) => {
+  const authToken = req.headers.authtoken;
+  if (authToken) {
+    jwt.verify(authToken, process.env.secretKey, (err, decoded) => {
+      if (err) {
+        return res
+          .status(401)
+          .send({ success: false, message: "Invalid Token" });
+      }
+
+      req.user = decoded;
+      next();
+    });
+  } else {
+    return res.sendStatus(401)
+  }
+});
+
+app.post("/fetch/user", (req, res) => {
+  const { user } = req;
+
+  studentsData
+    .findOne({ studentId: user.studentId })
+    .select("-_id -__v")
+    .then((userData) => {
+      if (userData) {
+        return res.status(200).send({
+          success: true,
+          message: "User Fetched Successfully",
+          user: userData,
+        });
+      } else {
+        return res
+          .status(404)
+          .send({ success: false, message: "User not found" });
+      }
+    })
+    .catch((err) => {
+        console.log(err);
+        return res.status(500).send({
+            success: false,
+            message: "Error Occured while finding user",
+        })
     });
 });
 

@@ -268,6 +268,10 @@ app.post("/fetch/user", (req, res) => {
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).send({
+          success: false,
+          message: "Error Occured while finding user",
+        });
       });
   } else {
     staffData
@@ -288,6 +292,10 @@ app.post("/fetch/user", (req, res) => {
       })
       .catch((err) => {
         console.log(err);
+        return res.status(500).send({
+          success: false,
+          message: "Error Occured while finding user",
+        });
       });
   }
 });
