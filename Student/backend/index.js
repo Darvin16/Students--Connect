@@ -1,12 +1,17 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 import studentsData from "./Models/StudentsData.js";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
+
+dotenv.config();
 
 mongoose
   .connect("mongodb://localhost:27017/StudentConnect")
@@ -18,35 +23,192 @@ mongoose
   });
 
 app.get("/", (req, res) => {
-    res.send("Server Started");
-})
+  res.send("Server Started");
+});
 
 app.post("/signup", (req, res) => {
-    studentsData.findOne({ email: req.body.email }).then(student => {
-        if (student) {
-            return res.send({ success: false, message: "Student already exists, Please Login" });
-        } else {
-            const newStudent = new studentsData({
-                email:req.body.email,
-                studentName:req.body.studentName,
-                password:req.body.password,
-            })
+  const {
+    studentId,
+    name,
+    phone,
+    email,
+    department,
+    roomNumber,
+    gender,
+    password,
+    confirmPassword,
+    blockName,
+  } = req.body;
 
-            newStudent.save().then(ack => {
-                if (ack) {
-                    return res.send({ success: true, message: "Student Added Successfully" });
-                } else {
-                    return res.send({ success: false, message: "Failed to add student" });
-                }
-            }).catch(err => {
-                return res.send({ success: false, message: "Failed to add student Error Occured" });
-            })
+  if (
+    !studentId ||
+    !name ||
+    !phone ||
+    !email ||
+    !department ||
+    !blockName ||
+    !roomNumber ||
+    !gender ||
+    !password ||
+    !confirmPassword
+  ) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Please fill all the fields" });
+  }
+
+  if (password !== confirmPassword) {
+    return res.status(400).send({
+      success: false,
+      message: "Password and Confirm Password doesn't match",
+    });
+  }
+
+  studentsData
+    .findOne({ studentId: studentId })
+    .then((student) => {
+      if (!student) {
+        return res.send({
+          success: false,
+          message: "User Not Exist in the Database",
+        });
+      } else {
+        if (
+          student.name &&
+          student.email &&
+          student.phone &&
+          student.department &&
+          student.blockName &&
+          student.roomNumber &&
+          student.gender &&
+          student.password
+        ) {
+          return res.status(400).send({
+            success: false,
+            message: "Account already exists , Please Login",
+          });
+        }
+
+        bcrypt.genSalt(10, (err, salt) => {
+          if (err) {
+            console.log(err);
+            return res
+              .status(500)
+              .send({ success: false, message: "Error Occured" });
+          }
+
+          bcrypt.hash(password, salt, (err, hash) => {
+            if (err) {
+              console.log(err);
+              return res
+                .status(500)
+                .send({ success: false, message: "Error Occured" });
             }
-    }).catch(err => {
-        console.log(err);
+
+            student.name = name;
+            student.email = email;
+            student.phone = phone;
+            student.department = department;
+            student.blockName = blockName;
+            student.roomNumber = roomNumber;
+            student.gender = gender;
+            student.password = hash;
+
+            student
+              .save()
+              .then((ack) => {
+                if (ack) {
+                  return res.status(200).send({
+                    success: true,
+                    message: "Account Created Successfully",
+                  });
+                } else {
+                  return res.status(404).send({
+                    success: false,
+                    message: "Failed to Create Account, please try again",
+                  });
+                }
+              })
+              .catch((err) => {
+                return res.status(500).send({
+                  success: false,
+                  message: "Error Occured while saving records",
+                });
+              });
+          });
+        });
+      }
     })
-})
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send({ success: false, message: "Error Occured" });
+    });
+});
+
+app.post("/login", (req, res) => {
+  const { studentId, password } = req.body;
+
+  if (!studentId || !password) {
+    return res.status(400).send({
+      success: false,
+      message: "Please enter both student Id and Password",
+    });
+  }
+
+  studentsData
+    .findOne({ studentId: studentId })
+    .then((student) => {
+      if (!student) {
+        return res.status(404).send({
+          success: false,
+          message: "Student not found",
+        });
+      } else {
+        if (!student.password) {
+          return res.status(400).send({
+            success: false,
+            message: "Password not set , Please sign up first",
+          });
+        }
+
+        bcrypt.compare(password, student.password, (err, isMatch) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).send({
+              success: false,
+              message: "Error Occured while comparing password",
+            });
+          }
+
+          if (!isMatch) {
+            return res.status(401).send({
+              success: false,
+              message: "Invalid Password",
+            });
+          } else {
+            const authToken = jwt.sign(
+              { studentId: student.studentId, department: student.department },
+              process.env.secretKey
+            );
+
+            return res.status(200).send({
+              success: true,
+              message: "Login Successfull",
+              token: authToken,
+            });
+          }
+        });
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send({
+        success: false,
+        message: "Error Occured while finding student",
+      });
+    });
+});
 
 app.listen(8000, () => {
-    console.log("Server is running on port 8000");
-})
+  console.log("Server is running on port 8000");
+});
