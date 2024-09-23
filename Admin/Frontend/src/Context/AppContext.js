@@ -23,9 +23,9 @@ export const AppProvider = ({ children }) => {
     rememberMe: false,
   });
   const [isAddingStaff, setIsAddingStaff] = useState(false);
-  const [addStaff, setAddStaff] = useState({
-    employeeId: "",
-  });
+  const [staffEntryCount, setStaffEntryCount] = useState(0);
+  const [addStaff, setAddStaff] = useState([]);
+  const [addStaffResult,setAddStaffResult]=useState([])
   const [studentId, setStudentId] = useState("");
   const [editStaff, setEditStaff] = useState(null);
   const [staffRecords, setStaffRecords] = useState([]);
@@ -112,8 +112,10 @@ export const AppProvider = ({ children }) => {
         headers: { authToken: authToken },
       })
       .then((res) => {
-        if (res.data.success) {
+        if (res.status===200) {
           alert(res.data.message);
+          setAddStaffResult(res.data.results);
+          console.log(res.data.results)
           fetchStaffRecords();
         } else {
           alert(res.data.message);
@@ -339,6 +341,10 @@ export const AppProvider = ({ children }) => {
         selectedStudents,
         setSelectedStudents,
         handleDeleteStudent,
+        staffEntryCount,
+        setStaffEntryCount,
+        addStaffResult,
+        setAddStaffResult,
       }}
     >
       {children}

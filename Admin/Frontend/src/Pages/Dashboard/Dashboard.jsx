@@ -3,6 +3,7 @@ import { Link, Routes, Route } from "react-router-dom";
 import StaffRecord from "../StaffRecord/StaffRecord";
 import { AppContext } from "../../Context/AppContext";
 import StudentRecord from "../StudentRecord/StudentRecord";
+import AdminPage from "../LandPage/Admin/AdminPage";
 
 function Dashboard() {
   const { userData, logout } = useContext(AppContext);
@@ -18,6 +19,7 @@ function Dashboard() {
           <br />
           <Link to="/dashboard/record/student">Student Record</Link>
           <Routes>
+            <Route path="/" element={<AdminPage />} />
             <Route path="/record/staff" element={<StaffRecord />} />
             <Route path="/record/student" element={<div>Student Record</div>} />
           </Routes>
