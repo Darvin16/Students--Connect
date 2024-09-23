@@ -4,6 +4,7 @@ import StaffRecord from "../StaffRecord/StaffRecord";
 import { AppContext } from "../../Context/AppContext";
 import StudentRecord from "../StudentRecord/StudentRecord";
 import AdminPage from "../LandPage/Admin/AdminPage";
+import WardenPage from "../LandPage/Warden/WardenPage";
 
 function Dashboard() {
   const { userData, logout } = useContext(AppContext);
@@ -31,6 +32,7 @@ function Dashboard() {
           <Link to="/dashboard/warden/record/library">Library Record</Link>
           <Link to="/dashboard/warden/record/leave">Leave Record</Link>
           <Routes>
+            <Route path="/" element={<WardenPage />} />
             <Route
               path="/warden/record/student"
               element={<StudentRecord/>}

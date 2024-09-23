@@ -315,7 +315,7 @@ app.post("/staff/add", (req, res) => {
       .findOne({ employeeId: employeeId })
       .then((staff) => {
         if (!staff) {
-         return staffData
+          return staffData
             .create({
               employeeId: employeeId,
               createdOn: date,
@@ -351,7 +351,6 @@ app.post("/staff/add", (req, res) => {
 
   Promise.all(promises)
     .then((results) => {
-      console.log(results);
       return res.status(200).send({
         success: true,
         message: "Staff Addition Successfully Completed",
@@ -448,29 +447,28 @@ app.post("/staff/edit", (req, res) => {
   }
 });
 
-app.post("/staff/remove", (req, res) => {
-  const { employeeId } = req.body;
+app.delete("/staff/remove", (req, res) => {
+  const { selectedStaffs } = req.body;
 
-  if (!employeeId) {
+  if (selectedStaffs.length===0) {
     return res
       .status(400)
       .send({ success: false, message: "Please provide the employee id" });
   }
+
   staffData
-    .findOneAndDelete({ employeeId: employeeId })
-    .then((staff) => {
-      if (!staff) {
-        return res
-          .status(404)
-          .send({ success: false, message: "Staff not found" });
-      } else {
-        return res
-          .status(200)
-          .send({ success: false, message: "Staff Removed From Database" });
-      }
+    .deleteMany({ employeeId: { $in: selectedStaffs } })
+    .then((ack) => {
+      return res.status(200).send({
+        success: true,
+        message: `Staff Record${ack.deletedCount > 1 ? "s" : ""} Deleted`,
+      });
     })
     .catch((err) => {
       console.log(err);
+      return res
+        .status(500)
+        .send({ success: false, message: "Error in Deleting Records" });
     });
 });
 

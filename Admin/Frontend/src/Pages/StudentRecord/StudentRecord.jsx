@@ -1,15 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { AppContext } from "../../Context/AppContext";
 
 function StudentRecord() {
   const {
     handleAddStudent,
-    studentId,
-    setStudentId,
     studentRecords,
     selectedStudents,
     setSelectedStudents,
     handleDeleteStudent,
+    fetchStudentRecords,
   } = useContext(AppContext);
 
   function handleSelectStudent(id) {
@@ -19,6 +18,11 @@ function StudentRecord() {
       setSelectedStudents([...selectedStudents, id]);
     }
   }
+
+  useEffect(() => {
+    fetchStudentRecords();
+  }, []);
+
   return (
     <div>
       <h2>Student Records</h2>
@@ -26,27 +30,9 @@ function StudentRecord() {
         <button onClick={() => handleDeleteStudent()}>Delete</button>
       )}
       <div>
-        <form onSubmit={(e) => handleAddStudent(e, studentId)}>
-          <div>
-            <label htmlFor="studentId">Student Id: </label>
-            <input
-              type="text"
-              name="studentId"
-              id="studentId"
-              value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <button type="submit">Add</button>
-          </div>
-        </form>
-      </div>
-      <div>
-        {studentRecords.map((student, index) => {
+        {studentRecords.map((student) => {
           return (
-            <div key={index}>
+            <div key={student.studentId}>
               <input
                 type="checkbox"
                 name="deleteCheckbox"

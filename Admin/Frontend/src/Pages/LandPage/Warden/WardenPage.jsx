@@ -1,42 +1,42 @@
 import React, { useContext, useState } from "react";
 import { AppContext } from "../../../Context/AppContext";
 
-function AdminPage() {
+function WardenPage() {
   const [entryBox, setEntryBox] = useState(false);
   const {
-    staffEntryCount,
-    setStaffEntryCount,
-    addStaff,
-    setAddStaff,
-    handleAddStaff,
-    addStaffResult,
-    setAddStaffResult,
+    studentEntryCount,
+    setStudentEntryCount,
+    addStudent,
+    setAddStudent,
+    handleAddStudent,
+    addStudentResult,
+    setAddStudentResult,
   } = useContext(AppContext);
 
   function genInputBox() {
-    return Array.from({ length: staffEntryCount }, (_, i) => (
+    return Array.from({ length: studentEntryCount }, (_, i) => (
       <tr key={i}>
         <td>
-          <label htmlFor={`employeeId-${i}`}>{i + 1}: </label>
+          <label htmlFor={`studentId-${i}`}>{i + 1}: </label>
         </td>
         <td>
           <input
             type="text"
-            name="employeeId"
-            id={`employeeId-${i}`}
-            value={addStaff[i] || ""}
+            name="studentId"
+            id={`studentId-${i}`}
+            value={addStudent[i] || ""}
             onChange={(e) => {
-              let updatedArray = [...addStaff];
+              let updatedArray = [...addStudent];
               updatedArray[i] = e.target.value;
-              setAddStaff(updatedArray);
+              setAddStudent(updatedArray);
             }}
             required
           />
         </td>
-        {addStaffResult.length > 0 && addStaffResult[i] && (
+        {addStudentResult.length > 0 && addStudentResult[i] && (
           <>
             <td>
-              {new Date(addStaffResult[i].createdOn).toLocaleString("en-Gb", {
+              {new Date(addStudentResult[i].createdOn).toLocaleString("en-Gb", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -46,7 +46,7 @@ function AdminPage() {
                 hour12: true,
               })}
             </td>
-            <td>{addStaffResult[i].status}</td>
+            <td>{addStudentResult[i].status}</td>
           </>
         )}
       </tr>
@@ -55,7 +55,7 @@ function AdminPage() {
 
   return (
     <div>
-      <h2>Admin Dashboard</h2>
+      <h2>Warden Dashboard</h2>
       <div>
         <div></div>
         <div></div>
@@ -75,8 +75,8 @@ function AdminPage() {
               type="number"
               id="noOfEntries"
               name="noOfEntries"
-              value={staffEntryCount}
-              onChange={(e) => setStaffEntryCount(e.target.value)}
+              value={studentEntryCount}
+              onChange={(e) => setStudentEntryCount(e.target.value)}
               required
               min={1}
             />
@@ -92,21 +92,21 @@ function AdminPage() {
         <button
           onClick={() => {
             setEntryBox((prev) => !prev);
-            setStaffEntryCount(0);
-            setAddStaff([]);
-            setAddStaffResult([]);
+            setStudentEntryCount(0);
+            setAddStudent([]);
+            setAddStudentResult([]);
           }}
         >
           + Add Staff Entry
         </button>
       </div>
-      {staffEntryCount > 0 && !entryBox && (
-        <form onSubmit={(e) => handleAddStaff(e)}>
+      {studentEntryCount > 0 && !entryBox && (
+        <form onSubmit={(e) => handleAddStudent(e)}>
           <table className="add-staff-table">
             <thead>
               <tr>
-                <th>Staff Entry</th>
-                <th>Employee ID</th>
+                <th>Student Entry</th>
+                <th>Student ID</th>
                 <th>Created On</th>
                 <th>Status</th>
               </tr>
@@ -118,9 +118,9 @@ function AdminPage() {
             <button
               type="reset"
               onClick={() => {
-                setStaffEntryCount(0);
-                setAddStaff([]);
-                setAddStaffResult([]);
+                setStudentEntryCount(0);
+                setAddStudent([]);
+                setAddStudentResult([]);
               }}
             >
               Close
@@ -132,4 +132,4 @@ function AdminPage() {
   );
 }
 
-export default AdminPage;
+export default WardenPage;
