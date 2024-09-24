@@ -4,6 +4,7 @@ import Login from "./Pages/SignUp_Login/Login";
 import Signup from "./Pages/SignUp_Login/Signup";
 import { AppContext, AppProvider } from "./Context/AppContext";
 import Dashboard from "./Pages/Dashboard/Dashboard";
+import ProtectRoutes from "./Component/ProtectRoutes";
 
 function RootDirect() {
   const { authToken, navigate } = useContext(AppContext);
@@ -28,10 +29,8 @@ function App() {
             <Route path="/" element={<RootDirect />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route
-            // element={ }
-            >
-              <Route path="/dashboard/*" element={<Dashboard/>} />
+            <Route element={<ProtectRoutes />}>
+              <Route path="/dashboard/*" element={<Dashboard />} />
             </Route>
           </Routes>
         </AppProvider>

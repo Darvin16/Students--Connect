@@ -22,16 +22,18 @@ export const AppProvider = ({ children }) => {
     password: "",
     rememberMe: false,
   });
-  const [isAddingStaff, setIsAddingStaff] = useState(false);
-  const [addStaff, setAddStaff] = useState({
-    employeeId: "",
-  });
-  const [studentId, setStudentId] = useState("");
+  const [staffEntryCount, setStaffEntryCount] = useState(0);
+  const [addStaff, setAddStaff] = useState([]);
+  const [addStaffResult, setAddStaffResult] = useState([]);
+  const [selectedStaffs, setSelectedStaffs] = useState([]);
   const [editStaff, setEditStaff] = useState(null);
+  const [studentEntryCount, setStudentEntryCount] = useState(0);
+  const [addStudent, setAddStudent] = useState([]);
+  const [addStudentResult, setAddStudentResult] = useState([]);
+  const [selectedStudents, setSelectedStudents] = useState([]);
   const [staffRecords, setStaffRecords] = useState([]);
   const [studentRecords, setStudentRecords] = useState([]);
   const [signupForm, setSignupForm] = useState({});
-  const [selectedStudents, setSelectedStudents] = useState([]);
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -112,8 +114,9 @@ export const AppProvider = ({ children }) => {
         headers: { authToken: authToken },
       })
       .then((res) => {
-        if (res.data.success) {
+        if (res.status === 200) {
           alert(res.data.message);
+          setAddStaffResult(res.data.results);
           fetchStaffRecords();
         } else {
           alert(res.data.message);
@@ -152,19 +155,17 @@ export const AppProvider = ({ children }) => {
       });
   }
 
-  function handleRemoveStaff(employeeId) {
+  function handleRemoveStaff() {
     axios
-      .post(
-        "http://localhost:9000/staff/remove",
-        { employeeId },
-        {
-          headers: { authToken: authToken },
-        }
-      )
+      .delete("http://localhost:9000/staff/remove", {
+        data: { selectedStaffs },
+        headers: { authToken: authToken },
+      })
       .then((res) => {
         if (res.status === 200) {
           alert(res.data.message);
           fetchStaffRecords();
+          setSelectedStaffs([]);
         }
       })
       .catch((err) => {
@@ -177,21 +178,19 @@ export const AppProvider = ({ children }) => {
       });
   }
 
-  function handleAddStudent(e, studentId) {
+  function handleAddStudent(e) {
     e.preventDefault();
     axios
-      .post(
-        "http://localhost:9000/student/add",
-        { studentId },
-        {
-          headers: { authToken: authToken },
-        }
-      )
+      .post("http://localhost:9000/student/add", addStudent, {
+        headers: { authToken: authToken },
+      })
       .then((res) => {
         if (res.status === 200) {
           alert(res.data.message);
-          setStudentId("");
+          setAddStudentResult(res.data.results);
           fetchStudentRecords();
+        } else {
+          alert(res.data.message);
         }
       })
       .catch((err) => {
@@ -206,13 +205,10 @@ export const AppProvider = ({ children }) => {
 
   function handleDeleteStudent() {
     axios
-      .delete(
-        "http://localhost:9000/student/delete",
-        {
-          data: { selectedStudents },
-          headers: { authToken: authToken },
-        }
-      )
+      .delete("http://localhost:9000/student/delete", {
+        data: { selectedStudents },
+        headers: { authToken: authToken },
+      })
       .then((res) => {
         if (res.status === 200) {
           alert(res.data.message);
@@ -311,6 +307,10 @@ export const AppProvider = ({ children }) => {
         userData,
         addStaff,
         setAddStaff,
+        selectedStaffs,
+        setSelectedStaffs,
+        addStudentResult,
+        setAddStudentResult,
         fetchStaffRecords,
         handleAddStaff,
         logout,
@@ -321,8 +321,8 @@ export const AppProvider = ({ children }) => {
         StaffLogin,
         AdminLogin,
         navigate,
-        isAddingStaff,
-        setIsAddingStaff,
+        addStudent,
+        setAddStudent,
         editStaff,
         setEditStaff,
         handleEditStaff,
@@ -333,12 +333,17 @@ export const AppProvider = ({ children }) => {
         setSignupForm,
         StaffSignup,
         loginForm,
-        studentId,
-        setStudentId,
         studentRecords,
         selectedStudents,
         setSelectedStudents,
         handleDeleteStudent,
+        studentEntryCount,
+        setStudentEntryCount,
+        staffEntryCount,
+        setStaffEntryCount,
+        addStaffResult,
+        setAddStaffResult,
+        fetchStudentRecords,
       }}
     >
       {children}

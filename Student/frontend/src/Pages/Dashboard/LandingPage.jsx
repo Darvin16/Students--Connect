@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import { AppContext } from "../../Context/AppContext";
 
-function LibraryRequest() {
+function LandingPage() {
   const { userData } = useContext(AppContext);
-  return <div>{userData?.studentId}</div>;
+
+  return <div>hi {userData.name}</div>;
 }
 
-export default LibraryRequest;
+export default LandingPage;

@@ -301,40 +301,67 @@ app.post("/fetch/user", (req, res) => {
 });
 
 app.post("/staff/add", (req, res) => {
-  if (!req.body.employeeId) {
+  const employeeIds = req.body;
+  const date = Date.now();
+
+  if (employeeIds.length === 0) {
     return res
       .status(400)
       .send({ success: false, message: "Please Enter the Employee Id" });
   }
 
-  staffData
-    .findOne({ employeeId: req.body.employeeId })
-    .then((staff) => {
-      if (!staff) {
-        staffData
-          .create({
-            employeeId: req.body.employeeId,
-          })
-          .then(() => {
-            return res
-              .status(201)
-              .send({ success: true, message: "Staff Added Successfully" });
-          })
-          .catch((err) => {
-            console.log(err);
-            return res
-              .status(500)
-              .send({ success: false, message: "Error adding staff" });
-          });
-      } else {
-        return res
-          .status(409)
-          .send({ success: false, message: "Staff already exist!!!" });
-      }
+  const promises = employeeIds.map((employeeId) => {
+    return staffData
+      .findOne({ employeeId: employeeId })
+      .then((staff) => {
+        if (!staff) {
+          return staffData
+            .create({
+              employeeId: employeeId,
+              createdOn: date,
+            })
+            .then(() => {
+              return {
+                createdOn: date,
+                status: "Activated",
+              };
+            })
+            .catch((err) => {
+              console.log(err);
+              return {
+                createdOn: date,
+                status: "Error",
+              };
+            });
+        } else {
+          return {
+            createdOn: staff.createdOn,
+            status: "Duplicate",
+          };
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        return {
+          createdOn: date,
+          status: "Error",
+        };
+      });
+  });
+
+  Promise.all(promises)
+    .then((results) => {
+      return res.status(200).send({
+        success: true,
+        message: "Staff Addition Successfully Completed",
+        results: results,
+      });
     })
     .catch((err) => {
       console.log(err);
-      return res.status(500).send({ success: false, message: "Server Error" });
+      return res
+        .status(500)
+        .send({ success: false, message: "Internal Server Error" });
     });
 });
 
@@ -420,29 +447,28 @@ app.post("/staff/edit", (req, res) => {
   }
 });
 
-app.post("/staff/remove", (req, res) => {
-  const { employeeId } = req.body;
+app.delete("/staff/remove", (req, res) => {
+  const { selectedStaffs } = req.body;
 
-  if (!employeeId) {
+  if (selectedStaffs.length===0) {
     return res
       .status(400)
       .send({ success: false, message: "Please provide the employee id" });
   }
+
   staffData
-    .findOneAndDelete({ employeeId: employeeId })
-    .then((staff) => {
-      if (!staff) {
-        return res
-          .status(404)
-          .send({ success: false, message: "Staff not found" });
-      } else {
-        return res
-          .status(200)
-          .send({ success: false, message: "Staff Removed From Database" });
-      }
+    .deleteMany({ employeeId: { $in: selectedStaffs } })
+    .then((ack) => {
+      return res.status(200).send({
+        success: true,
+        message: `Staff Record${ack.deletedCount > 1 ? "s" : ""} Deleted`,
+      });
     })
     .catch((err) => {
       console.log(err);
+      return res
+        .status(500)
+        .send({ success: false, message: "Error in Deleting Records" });
     });
 });
 

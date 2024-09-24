@@ -11,6 +11,8 @@ const studentsDataSchema = new mongoose.Schema({
   roomNumber: String,
   gender: String,
   password: String,
+  createdOn: Number,
+  academicYear: Number,
 });
 
 const studentsData = mongoose.model("studentsData", studentsDataSchema);

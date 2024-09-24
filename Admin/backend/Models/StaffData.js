@@ -10,6 +10,7 @@ const staffDataSchema = new mongoose.Schema({
   blockName: String,
   gender: String,
   password: String,
+  createdOn:Number,
 });
 
 const staffData = mongoose.model("staffdata", staffDataSchema);

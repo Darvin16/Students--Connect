@@ -5,53 +5,52 @@ import EditStaff from "./EditStaff";
 
 function StaffRecord() {
   const {
-    isAddingStaff,
-    setIsAddingStaff,
     editStaff,
     setEditStaff,
     fetchStaffRecords,
     staffRecords,
+    selectedStaffs,
+    setSelectedStaffs,
     handleRemoveStaff,
   } = useContext(AppContext);
 
-  const [removeStaff, setRemoveStaff] = useState(null);
+  function handleSelectStaff(id) {
+    if (selectedStaffs.includes(id)) {
+      setSelectedStaffs(selectedStaffs.filter((staffId) => staffId !== id));
+    } else {
+      setSelectedStaffs([...selectedStaffs, id]);
+    }
+  }
 
   useEffect(() => {
     fetchStaffRecords();
   }, []);
+
   return (
     <div>
-      <div>
-        <button onClick={() => setIsAddingStaff(true)}>Add Staff</button>
-      </div>
-      {isAddingStaff && <AddStaff />}
-      {removeStaff && (
-        <div>
-          <p>Are you sure you want to remove {removeStaff.name}?</p>
-          <button
-            onClick={() => {
-              handleRemoveStaff(removeStaff.employeeId);
-              setRemoveStaff(null);
-            }}
-          >
-            Yes
-          </button>
-          <button onClick={() => setRemoveStaff(null)}>No</button>
-        </div>
+      <h2>Staff Records</h2>
+      {selectedStaffs.length > 0 && (
+        <button onClick={() => handleRemoveStaff()}>Delete</button>
       )}
-      {staffRecords.map((staff) => {
-        return (
-          <div key={staff.employeeId}>
-            <p>Employee ID: {staff.employeeId}</p>
-            <p>Name: {staff.name}</p>
-            <p>Role: {staff.role}</p>
-            <p>BlockName:{staff.blockName}</p>
-            <div>
-              <button onClick={() => setRemoveStaff(staff)}>Remove</button>
+      <div>
+        {staffRecords.map((staff) => {
+          return (
+            <div key={staff.employeeId}>
+              <input
+                type="checkbox"
+                name="deleteCheckbox"
+                id="deleteCheckbox"
+                checked={selectedStaffs.includes(staff.employeeId)}
+                onChange={() => handleSelectStaff(staff.employeeId)}
+              />
+              <p>Employee ID: {staff.employeeId}</p>
+              <p>Name: {staff.name}</p>
+              <p>Role: {staff.role}</p>
+              <p>BlockName:{staff.blockName}</p>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }

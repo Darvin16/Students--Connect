@@ -4,42 +4,67 @@ import studentsData from "../Models/StudentsData.js";
 const router = express.Router();
 
 router.post("/add", (req, res) => {
-  const { studentId } = req.body;
+  const studentIds = req.body;
+  const date = Date.now();
 
-  if (!studentId) {
-    return res.status(500).json({ message: "Student ID is required" });
+  if (studentIds.length === 0) {
+    return res
+      .status(500)
+      .send({ success: false, message: "Student ID is required" });
   }
 
-  studentsData
-    .findOne({ studentId: studentId })
-    .then((student) => {
-      if (student) {
-        return res
-          .status(409)
-          .send({ success: false, message: "Student Alresdy exists" });
-      }
+  const promises = studentIds.map((studentId) => {
+    return studentsData
+      .findOne({ studentId: studentId })
+      .then((student) => {
+        if (student) {
+          return {
+            createdOn: student.createdOn,
+            status: "Duplicate",
+          };
+        }
 
-      studentsData
-        .create({
-          studentId: studentId,
-        })
-        .then((ack) => {
-          return res
-            .status(200)
-            .send({ success: true, message: "Student added successfully" });
-        })
-        .catch((err) => {
-          console.log(err);
-          return res
-            .status(500)
-            .send({ success: false, message: "Error adding student" });
-        });
+        return studentsData
+          .create({
+            studentId: studentId,
+            createdOn: date,
+          })
+          .then(() => {
+            return {
+              createdOn: date,
+              status: "Activated",
+            };
+          })
+          .catch((err) => {
+            console.log(err);
+            return {
+              createdOn: date,
+              status: "Error",
+            };
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+        return {
+          createdOn: date,
+          status: "Error",
+        };
+      });
+  });
+
+  Promise.all(promises)
+    .then((results) => {
+      return res.status(200).send({
+        success: true,
+        message: "Student Addition Successfully Completed",
+        results: results,
+      });
     })
     .catch((err) => {
       console.log(err);
       return res
         .status(500)
-        .send({ success: false, message: "Error finding student" });
+        .send({ success: false, message: "Internal Server Error" });
     });
 });
 
@@ -68,15 +93,19 @@ router.post("/get", async (_, res) => {
 router.delete("/delete", (req, res) => {
   const { selectedStudents } = req.body;
 
+  if (selectedStudents.length === 0) {
+    return res
+      .status(400)
+      .send({ success: false, message: "No students selected" });
+  }
+
   studentsData
     .deleteMany({ studentId: { $in: selectedStudents } })
     .then((ack) => {
-      return res
-        .status(200)
-        .send({
-          success: true,
-          message: `Student Record${ack.deletedCount > 1 ? "s" : ""} Deleted`,
-        });
+      return res.status(200).send({
+        success: true,
+        message: `Student Record${ack.deletedCount > 1 ? "s" : ""} Deleted`,
+      });
     })
     .catch((err) => {
       console.log(err);
