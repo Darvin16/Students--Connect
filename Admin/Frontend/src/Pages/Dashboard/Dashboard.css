@@ -1,4 +1,65 @@
-.dashboard-nav {
+.dashboard-header{
+    padding: 0px 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.dashboard-heading{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.dashboard-nav{
     position: sticky;
-    top: 0;
+    left: 0;
+    top:0px;
+    background-color: hsl(210, 29%, 24%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+    width: 200px;
+    animation: nav-op 0.5s ease;
+    overflow: hidden;
+    text-wrap: nowrap;
+    height: 100vh;
+    padding-top: 50px;
+    color: white;
+}
+@keyframes nav-op {
+    from{
+        width: 0;
+    }
+    to{
+        width: 200px;
+    }
+}
+.dashboard-nav a{
+ color: white;
+ text-decoration: none;
+ margin-left: 10px;
+}
+.dashboard-nav a:hover{
+    text-decoration: underline;
+}
+.dashboard-nav button{
+    padding: 10px;
+    margin-top: 20%;
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+}
+.dashboard-nav svg{
+    font-size: larger;
+}
+.dashboard-nav-group{
+    display: flex;
+    align-items: center;
+}
+.dashboard-container{
+    display: flex;
+    background-color: #f4f5f9;
+    min-height: 95vh;
+}
+.dashboard-components{
+    flex: 1;
 }

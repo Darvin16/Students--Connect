@@ -1,89 +1,87 @@
 /* Layout for the dashboard */
-.dashboard-container {
-    display: flex;
-    background-color: #f4f5f9;
-    height: 100vh;
+.staff-container {
+  display: flex;
+  background-color: #f4f5f9;
+  min-height: 100vh;
 }
 
-.sidebar {
-    width: 250px;
-    background-color: #2c3e50;
-    padding: 20px;
-    color: white;
-    height: 100%;
+.staff-records-filter {
+  display: flex;
+  margin: 10px 0;
+  gap: 10px;
+  align-items: center;
 }
-
-.sidebar-title {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
+.staff-records-filter #staffSearch,
+.staff-records-filter select {
+  border: none;
+  outline: none;
 }
-
-.sidebar-menu {
-    list-style-type: none;
-    padding: 0;
+.staff-records-filter select {
+  padding: 10px;
+  border-radius: 5px;
 }
-
-.sidebar-menu li {
-    margin: 15px 0;
-    cursor: pointer;
+.staff-records-filter #staffSearch {
+  flex: 1;
 }
-
-.sidebar-menu li:hover {
-    text-decoration: underline;
+.staff-records-filter .staffSearch-holder {
+  flex: 1;
+  background-color: white;
+  border-radius: 20px;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
 }
-
 /* Main content styling */
 .main-content {
-    flex-grow: 1;
-    padding: 20px;
+  flex-grow: 1;
+  padding: 20px;
 }
 
 h2 {
-    color: #333;
+  color: #333;
 }
 
 .staff-records-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
 }
 
 .staff-card {
-    background-color: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    position: relative;
-    display: flex;
-    align-items: center;
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .delete-checkbox {
-    position: absolute;
-    top: 10px;
-    left: 10px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
 
 .staff-info {
-    margin-left: 30px;
+  margin-left: 30px;
 }
 
 .staff-info p {
-    margin: 5px 0;
+  margin: 5px 0;
 }
 
 /* Button Styles */
 .delete-btn {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 20px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
 }
 
 .delete-btn:hover {
-    background-color: #c0392b;
+  background-color: #c0392b;
 }

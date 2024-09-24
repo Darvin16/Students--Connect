@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../../Context/AppContext";
-import "./StaffRecord.css"; // Add this file for custom styling
+import "./StaffRecord.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 function StaffRecord() {
   const {
@@ -10,6 +12,12 @@ function StaffRecord() {
     setSelectedStaffs,
     handleRemoveStaff,
   } = useContext(AppContext);
+  const [search, setSearch] = useState("");
+  const [position, setPosition] = useState("");
+
+  useEffect(() => {
+    fetchStaffRecords();
+  }, []);
 
   function handleSelectStaff(id) {
     if (selectedStaffs.includes(id)) {
@@ -19,37 +27,54 @@ function StaffRecord() {
     }
   }
 
-  useEffect(() => {
-    fetchStaffRecords();
-  }, []);
+  function filterStaffs() {
+    let filteredStaffs = [...staffRecords];
 
+    if (search) {
+      filteredStaffs = filteredStaffs.filter((staff) =>
+        staff.employeeId.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    if (position) {
+      filteredStaffs = filteredStaffs.filter(
+        (staffs) => staffs.role === position
+      );
+    }
+
+    return filteredStaffs;
+  }
   return (
-    <div className="dashboard-container">
-      {/* Sidebar */}
-      <div className="sidebar">
-        <h3 className="sidebar-title">Algectra</h3>
-        <ul className="sidebar-menu">
-          <li>Dashboard</li>
-          <li>Attendance</li>
-          <li>Calendar</li>
-          <li>Leave</li>
-          <li>Posts</li>
-          <li>Employees</li>
-          <li>Reports</li>
-          <li>Configuration</li>
-        </ul>
-      </div>
-
-      {/* Main Content */}
+    <div className="staff-container">
       <div className="main-content">
         <h2>Staff Records</h2>
+        <hr />
+        <div className="staff-records-filter">
+          <div className="staffSearch-holder">
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+            <input
+              type="search"
+              name="staffSearch"
+              id="staffSearch"
+              placeholder="Search here"
+              onChange={(e)=>setSearch(e.target.value)}
+            />
+          </div>
+          <select name="position-filter" id="position-filter" onChange={(e)=>setPosition(e.target.value)}>
+            <option value="">Position</option>
+            <option value="warden">Warden</option>
+            <option value="SRO">SRO</option>
+            <option value="supervisor">Supervisor</option>
+            <option value="librarian">Librarian</option>
+          </select>
+        </div>
         {selectedStaffs.length > 0 && (
           <button onClick={() => handleRemoveStaff()} className="delete-btn">
             Delete Selected
           </button>
         )}
         <div className="staff-records-container">
-          {staffRecords.map((staff) => {
+          {filterStaffs().map((staff) => {
             return (
               <div key={staff.employeeId} className="staff-card">
                 <input

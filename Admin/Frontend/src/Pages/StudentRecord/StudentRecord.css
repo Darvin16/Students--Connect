@@ -1,0 +1,83 @@
+.student-record-page {
+  padding: 10px;
+    background-image: linear-gradient(to bottom right,hsl(300, 76%, 82%),lightblue,violet);
+    min-height: 100vh;
+}
+
+/* Filter */
+
+.student-records-filter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.student-records-filter {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.student-records-filter #studentSearch,
+.student-records-filter select {
+  border: none;
+  outline: none;
+}
+.student-records-filter select {
+  padding: 10px;
+  border-radius: 5px;
+}
+.student-records-filter #studentSearch {
+  flex: 1;
+}
+.student-records-filter .studentSearch-holder {
+  flex: 1;
+  background-color: white;
+  border-radius: 20px;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.student-records-filter-container .filterby-year input {
+  border: none;
+  outline: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.student-records-filter-container .student-record-delete {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.student-records-filter-container .student-record-delete button {
+  padding: 5px;
+  font-weight: bold;
+  color: white;
+  border: none;
+  background-color: red;
+  border-radius: 5px;
+}
+.student-delete-cancel {
+  background-color: gray !important;
+}
+/* Main */
+.student-record-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 0;
+}
+.student-record-container-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  padding: 10px;
+  border-radius: 5px;
+  background-color: white;
+}
+.student-record-container-group input{
+    width: 20px;
+    height: 20px;
+}
+.student-record-container-group-title {
+  background-color: transparent;
+}

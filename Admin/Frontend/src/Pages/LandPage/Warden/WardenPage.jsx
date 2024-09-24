@@ -24,6 +24,7 @@ function WardenPage() {
             type="text"
             name="studentId"
             id={`studentId-${i}`}
+            className="input-field"
             value={addStudent[i] || ""}
             onChange={(e) => {
               let updatedArray = [...addStudent];
@@ -46,7 +47,16 @@ function WardenPage() {
                 hour12: true,
               })}
             </td>
-            <td>{addStudentResult[i].status}</td>
+            <td className={`add-staff`}>
+              <p
+                className={`
+                  ${addStudentResult[i].status === "Activated" && "Activated"}
+              ${addStudentResult[i].status === "Duplicate" && "Duplicate"} 
+              ${addStudentResult[i].status === "Error" && "Error"}`}
+              >
+                {addStudentResult[i].status}
+              </p>
+            </td>
           </>
         )}
       </tr>
@@ -54,16 +64,19 @@ function WardenPage() {
   }
 
   return (
-    <div>
-      <h2>Warden Dashboard</h2>
-      <div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+    <div className="admin-dashboard">
+      <em>
+        <h2>Warden Dashboard</h2>
+      </em>
+      <div className="dashboard-cards">
+        <div className="card">Leave Request</div>
+        <div className="card">Student Enrolled</div>
+        <div className="card">Library Requests</div>
+        <div className="card">Total Student List</div>
       </div>
+
       {entryBox && (
-        <div>
+        <div className="entry-box">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -80,16 +93,23 @@ function WardenPage() {
               required
               min={1}
             />
-            <button type="submit">Enter</button>
-            <button type="reset" onClick={() => setEntryBox(false)}>
+            <button type="submit" className="btn">
+              Enter
+            </button>
+            <button
+              type="reset"
+              className="btn cancel"
+              onClick={() => setEntryBox(false)}
+            >
               Cancel
             </button>
           </form>
         </div>
       )}
-      <div>
-        <h3>Staff Records</h3>
+      <div className="staff-records">
+        <h3>Student Records</h3>
         <button
+          className="btn add-staff-btn"
           onClick={() => {
             setEntryBox((prev) => !prev);
             setStudentEntryCount(0);
@@ -97,7 +117,7 @@ function WardenPage() {
             setAddStudentResult([]);
           }}
         >
-          + Add Staff Entry
+          + Add Student Entry
         </button>
       </div>
       {studentEntryCount > 0 && !entryBox && (
@@ -113,10 +133,13 @@ function WardenPage() {
             </thead>
             <tbody>{genInputBox()}</tbody>
           </table>
-          <div>
-            <button type="submit">Add</button>
+          <div className="form-buttons">
+            <button type="submit" className="btn">
+              Add
+            </button>
             <button
               type="reset"
+              className="btn cancel"
               onClick={() => {
                 setStudentEntryCount(0);
                 setAddStudent([]);

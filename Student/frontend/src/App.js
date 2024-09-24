@@ -13,7 +13,7 @@ function RootDirect() {
     if (authToken) {
       navigate("/dashboard");
     } else {
-      //navigate("/login");
+      navigate("/login");
     }
   }, [authToken, navigate]);
 

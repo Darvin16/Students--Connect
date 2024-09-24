@@ -48,7 +48,16 @@ function AdminPage() {
                 hour12: true,
               })}
             </td>
-            <td>{addStaffResult[i].status}</td>
+            <td className={`add-staff`}>
+              <p
+                className={`
+                  ${addStaffResult[i].status === "Activated" && "Activated"}
+              ${addStaffResult[i].status === "Duplicate" && "Duplicate"} 
+              ${addStaffResult[i].status === "Error" && "Error"}`}
+              >
+                {addStaffResult[i].status}
+              </p>
+            </td>
           </>
         )}
       </tr>
@@ -57,12 +66,15 @@ function AdminPage() {
 
   return (
     <div className="admin-dashboard">
-      <h2>Admin Dashboard</h2>
+      <em>
+        <h2>Admin Dashboard</h2>
+      </em>
       <div className="dashboard-cards">
         <div className="card">Total Staff</div>
         <div className="card">Active Entries</div>
         <div className="card">Pending Approvals</div>
-        <div className="card">New Requests</div>
+        <div className="card">Library Requests</div>
+        <div className="card">Leave Requests</div>
       </div>
 
       {entryBox && (
@@ -83,8 +95,14 @@ function AdminPage() {
               required
               min={1}
             />
-            <button type="submit" className="btn">Enter</button>
-            <button type="reset" className="btn cancel" onClick={() => setEntryBox(false)}>
+            <button type="submit" className="btn">
+              Enter
+            </button>
+            <button
+              type="reset"
+              className="btn cancel"
+              onClick={() => setEntryBox(false)}
+            >
               Cancel
             </button>
           </form>
@@ -120,7 +138,9 @@ function AdminPage() {
             <tbody>{genInputBox()}</tbody>
           </table>
           <div className="form-buttons">
-            <button type="submit" className="btn">Add</button>
+            <button type="submit" className="btn">
+              Add
+            </button>
             <button
               type="reset"
               className="btn cancel"

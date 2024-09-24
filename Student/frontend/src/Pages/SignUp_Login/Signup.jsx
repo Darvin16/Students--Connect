@@ -63,8 +63,7 @@ function Signup() {
         </div>
         <div>
           <label htmlFor="department">Department:</label>
-          <input
-            type="text"
+          <select
             name="department"
             id="department"
             onChange={(e) => {
@@ -73,6 +72,82 @@ function Signup() {
                 department: e.target.value,
               }));
             }}
+            required
+          >
+            <option value="">Select Department</option>
+            <optgroup label="Bachelor's Degrees">
+              <option value="B.Tech">B.Tech</option>
+              <option value="B.Sc">B.Sc</option>
+              <option value="B.C.A">B.C.A</option>
+              <option value="B.Arch">B.Arch</option>
+              <option value="B.Des">B.Des</option>
+              <option value="B.Pharm">B.Pharm</option>
+              <option value="B.B.A">B.B.A</option>
+              <option value="B.M.S">B.M.S</option>
+              <option value="B.Com">B.Com</option>
+              <option value="B.I.T">B.I.T</option>
+              <option value="B.Voc">B.Voc</option>
+              <option value="B.S">B.S</option>
+              <option value="B.F.A">B.F.A</option>
+              <option value="B.L">B.L</option>
+              <option value="B.Ed">B.Ed</option>
+              <option value="B.P.Ed">B.P.Ed</option>
+              <option value="B.F.Sc">B.F.Sc</option>
+              <option value="B.D.S">B.D.S</option>
+              <option value="B.H.M">B.H.M</option>
+              <option value="B.S.W">B.S.W</option>
+            </optgroup>
+            <optgroup label="Master's Degrees">
+              <option value="M.Sc">M.Sc</option>
+              <option value="M.C.A">M.C.A</option>
+              <option value="M.Arch">M.Arch</option>
+              <option value="M.Des">M.Des</option>
+              <option value="M.B.A">M.B.A</option>
+              <option value="M.S">M.S</option>
+              <option value="M.Pharm">M.Pharm</option>
+              <option value="M.Com">M.Com</option>
+              <option value="M.Phil">M.Phil</option>
+              <option value="M.Voc">M.Voc</option>
+              <option value="M.F.A">M.F.A</option>
+              <option value="M.Ed">M.Ed</option>
+              <option value="M.P.Ed">M.P.Ed</option>
+              <option value="M.L">M.L</option>
+              <option value="M.F.Sc">M.F.Sc</option>
+              <option value="M.D">M.D</option>
+              <option value="M.Tech">M.Tech</option>
+              <option value="M.Sc">M.Sc</option>
+            </optgroup>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="branchName">Branch Name:</label>
+          <input
+            type="text"
+            name="branchName"
+            id="branchName"
+            onChange={(e) => {
+              setSignupForm((prev) => ({
+                ...prev,
+                branchName: e.target.value,
+              }));
+            }}
+            placeholder="AI,CSE,ECE,etc..."
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="academic-year">Academic Year:</label>
+          <input
+            type="text"
+            name="academic-year"
+            id="academic-year"
+            onChange={(e) => {
+              setSignupForm((prev) => ({
+                ...prev,
+                academicYear: e.target.value,
+              }));
+            }}
+            placeholder="2024"
             required
           />
         </div>

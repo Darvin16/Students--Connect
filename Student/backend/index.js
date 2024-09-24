@@ -33,6 +33,8 @@ app.post("/signup", (req, res) => {
     phone,
     email,
     department,
+    branchName,
+    academicYear,
     roomNumber,
     gender,
     password,
@@ -46,6 +48,8 @@ app.post("/signup", (req, res) => {
     !phone ||
     !email ||
     !department ||
+    !branchName ||
+    !academicYear ||
     !blockName ||
     !roomNumber ||
     !gender ||
@@ -78,6 +82,8 @@ app.post("/signup", (req, res) => {
           student.email &&
           student.phone &&
           student.department &&
+          student.branchName &&
+          student.academicYear &&
           student.blockName &&
           student.roomNumber &&
           student.gender &&
@@ -109,6 +115,8 @@ app.post("/signup", (req, res) => {
             student.email = email;
             student.phone = phone;
             student.department = department;
+            student.branchName = branchName;
+            student.academicYear = academicYear;
             student.blockName = blockName;
             student.roomNumber = roomNumber;
             student.gender = gender;

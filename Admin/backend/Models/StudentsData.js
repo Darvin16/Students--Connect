@@ -7,12 +7,13 @@ const studentsDataSchema = new mongoose.Schema({
   email: String,
   phone: Number,
   department: String,
+  branchName: String,
   blockname: String,
   roomNumber: String,
   gender: String,
   password: String,
   createdOn: Number,
-  academicYear:Number,
+  academicYear: { type: Number, default: 0 },
 });
 
 const studentsData = mongoose.model("studentsData", studentsDataSchema);
