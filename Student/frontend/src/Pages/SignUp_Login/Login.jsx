@@ -1,40 +1,45 @@
 import React, { useContext } from "react";
 import { AppContext } from "../../Context/AppContext";
 import { Link } from "react-router-dom";
+import "./StudentLogin.css";
 
-function Login() {
+const Login = () => {
   const { setLoginForm, Login } = useContext(AppContext);
   return (
-    <div>
-      <form onSubmit={(e) => Login(e)}>
-        <div>
-          <label htmlFor="studentId">Student Id:</label>
-          <input
-            type="text"
-            name="studentId"
-            id="studentId"
-            onChange={(e) =>
-              setLoginForm((prev) => ({
-                ...prev,
-                studentId: e.target.value,
-              }))
-            }
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            onChange={(e) =>
-              setLoginForm((prev) => ({ ...prev, password: e.target.value }))
-            }
-            required
-          />
-        </div>
-        <div>
+    <div className="login-container">
+      <div className="login-box">
+        <h2>Student Login</h2>
+        <form className="login-form" onSubmit={(e) => Login(e)}>
+          <div className="login-input-container">
+            <input
+              type="text"
+              placeholder="Enter your username"
+              className="login-input"
+              name="studentId"
+              id="studentId"
+              onChange={(e) =>
+                setLoginForm((prev) => ({
+                  ...prev,
+                  studentId: e.target.value,
+                }))
+              }
+              required
+            />
+          </div>
+          <div className="login-input-container">
+            <input
+              type="password"
+              placeholder="Enter your password"
+              className="login-input"
+              name="password"
+              id="password"
+              onChange={(e) =>
+                setLoginForm((prev) => ({ ...prev, password: e.target.value }))
+              }
+              required
+            />
+          </div>
+          <div>
           <input
             type="checkbox"
             name="rememberMe"
@@ -48,17 +53,18 @@ function Login() {
           />
           <label htmlFor="rememberMe">Remeber Me</label>
         </div>
-        <div>
-          <button type="submit">Submit</button>
-        </div>
-      </form>
-      <div>
-        <p>
-          Doesn't have an account? <Link to="/signup">Sign up</Link>
+          <p className="forgot-password">Forgot password?</p>
+          <button className="login-button" type="submit">Login</button>
+        </form>
+
+        <p className="login-divider">Or Sign Up Using</p>
+
+        <p className="signup-link">
+          <Link to="/signup">Sign Up</Link>
         </p>
       </div>
     </div>
   );
-}
+};
 
 export default Login;

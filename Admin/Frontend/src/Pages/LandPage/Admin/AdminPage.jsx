@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { AppContext } from "../../../Context/AppContext";
+import "./AdminPage.css"; // CSS file for styling
 
 function AdminPage() {
   const [entryBox, setEntryBox] = useState(false);
@@ -24,6 +25,7 @@ function AdminPage() {
             type="text"
             name="employeeId"
             id={`employeeId-${i}`}
+            className="input-field"
             value={addStaff[i] || ""}
             onChange={(e) => {
               let updatedArray = [...addStaff];
@@ -54,23 +56,24 @@ function AdminPage() {
   }
 
   return (
-    <div>
+    <div className="admin-dashboard">
       <h2>Admin Dashboard</h2>
-      <div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
+      <div className="dashboard-cards">
+        <div className="card">Total Staff</div>
+        <div className="card">Active Entries</div>
+        <div className="card">Pending Approvals</div>
+        <div className="card">New Requests</div>
       </div>
+
       {entryBox && (
-        <div>
+        <div className="entry-box">
           <form
             onSubmit={(e) => {
               e.preventDefault();
               setEntryBox(false);
             }}
           >
-            <label htmlFor="noOfEntries">No. of Entries : </label>
+            <label htmlFor="noOfEntries">No. of Entries: </label>
             <input
               type="number"
               id="noOfEntries"
@@ -80,16 +83,18 @@ function AdminPage() {
               required
               min={1}
             />
-            <button type="submit">Enter</button>
-            <button type="reset" onClick={() => setEntryBox(false)}>
+            <button type="submit" className="btn">Enter</button>
+            <button type="reset" className="btn cancel" onClick={() => setEntryBox(false)}>
               Cancel
             </button>
           </form>
         </div>
       )}
-      <div>
-        <h3>Staff Records</h3>
+
+      <div className="staff-records">
+        <h3>Staff Entries</h3>
         <button
+          className="btn add-staff-btn"
           onClick={() => {
             setEntryBox((prev) => !prev);
             setStaffEntryCount(0);
@@ -100,8 +105,9 @@ function AdminPage() {
           + Add Staff Entry
         </button>
       </div>
+
       {staffEntryCount > 0 && !entryBox && (
-        <form onSubmit={(e) => handleAddStaff(e)}>
+        <form onSubmit={(e) => handleAddStaff(e)} className="staff-form">
           <table className="add-staff-table">
             <thead>
               <tr>
@@ -113,10 +119,11 @@ function AdminPage() {
             </thead>
             <tbody>{genInputBox()}</tbody>
           </table>
-          <div>
-            <button type="submit">Add</button>
+          <div className="form-buttons">
+            <button type="submit" className="btn">Add</button>
             <button
               type="reset"
+              className="btn cancel"
               onClick={() => {
                 setStaffEntryCount(0);
                 setAddStaff([]);

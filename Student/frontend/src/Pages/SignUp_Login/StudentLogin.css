@@ -1,0 +1,96 @@
+/* StudentLogin.css */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.login-box {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 320px;
+}
+
+h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.login-form {
+    margin-bottom: 20px;
+}
+
+.login-input-container {
+    margin-bottom: 20px;
+}
+
+.login-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    outline: none;
+}
+
+.login-input:focus {
+    border-color: #6e8efb;
+}
+
+.forgot-password {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 20px;
+    cursor: pointer;
+    text-align: right;
+}
+
+.login-button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background: linear-gradient(135deg, #5b79e1, #956fd1);
+}
+
+.login-divider {
+    font-size: 14px;
+    color: #aaa;
+    margin: 20px 0;
+}
+
+.signup-link a {
+    color: #6e8efb;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
