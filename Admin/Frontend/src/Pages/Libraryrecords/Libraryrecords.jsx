@@ -59,7 +59,7 @@ const LibraryRequests = () => {
                       <button
                         className="btn btn-success me-1"
                         onClick={() =>
-                          handleLibraryRequest(request.requestId, "accepted")
+                          handleLibraryRequest(request.requestId, "approved")
                         }
                       >
                         Approve
