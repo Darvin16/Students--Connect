@@ -8,7 +8,8 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  background-color: lightgray;
+  /* background: linear-gradient(135deg, #6e8efb, #a777e3); */
 }
 
 .login-container {
@@ -25,7 +26,7 @@
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 320px;
+  width: 250px;
 }
 
 .login-box h2 {
@@ -38,6 +39,11 @@
   margin-bottom: 20px;
 }
 
+.login-form input{
+  border: none;
+  border-bottom: 1px solid #777;
+}
+
 .login-input-container {
   margin-bottom: 20px;
 }
@@ -46,7 +52,7 @@
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  /* border-radius: 5px; */
   font-size: 14px;
   outline: none;
 }
@@ -55,6 +61,14 @@
   border-color: #6e8efb;
 }
 
+.login-input-checkbox{
+  text-align: left;
+  margin-bottom: 10px;
+  padding-left: 10px;
+  display: flex;
+  gap:10px;
+  align-items: center;
+}
 .forgot-password {
   font-size: 12px;
   color: #999;
@@ -64,12 +78,13 @@
 }
 
 .login-button {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  width: 60%;
+  padding: 10px;
+  background-color: black;
+  /* background: linear-gradient(135deg, #6e8efb, #a777e3); */
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 50px;
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease;
@@ -86,7 +101,8 @@
 }
 
 .signup-link a {
-  color: #6e8efb;
+  /* color: #6e8efb; */
+  color: black;
   text-decoration: none;
   font-weight: bold;
 }

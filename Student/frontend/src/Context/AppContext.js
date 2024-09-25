@@ -50,6 +50,25 @@ export const AppProvider = ({ children }) => {
       });
   }
 
+  function sendLibraryRequest(requestData) {
+    axios.post(`${URL}/library/request`, requestData, {
+      headers: {
+        authToken: authToken,
+      }
+    }).then(res => {
+      if (res.status === 200) {
+        alert(res.data.message);
+      }
+    }).catch(err => {
+      console.log(err)
+      if (err.response && err.response.data && err.response.data.message) {
+        alert(err.response.data.message);
+      } else {
+        alert("An error occurred in send library request");
+      }
+    })
+  }
+
   function Signup(e) {
     e.preventDefault();
 
@@ -118,6 +137,7 @@ export const AppProvider = ({ children }) => {
         Signup,
         Login,
         Logout,
+        sendLibraryRequest,
       }}
     >
       {children}

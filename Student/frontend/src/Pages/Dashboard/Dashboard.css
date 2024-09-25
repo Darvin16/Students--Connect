@@ -1,0 +1,52 @@
+.dashboard-header {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 0px 10px;
+  text-wrap: nowrap;
+}
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+.dashboard-nav {
+  position: sticky;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 200px;
+  background-color: #6482ad;
+  animation: nav-op 0.5s ease;
+  overflow: hidden;
+}
+@keyframes nav-op {
+    from{
+        width: 0;
+        text-wrap: nowrap;
+    }
+    to{
+        width: 200px;
+        text-wrap: nowrap;
+    }
+}
+.dashboard-nav a {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+}
+.dashboard-nav a:hover{
+    background-color: white;
+    color: black;
+}
+.dashboard-nav button{
+  background-color: white;
+  border: none;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+  margin-top: 40vh;
+}
+.dashboard-components{
+  flex: 1;
+}
