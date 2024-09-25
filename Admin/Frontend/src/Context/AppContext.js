@@ -34,6 +34,7 @@ export const AppProvider = ({ children }) => {
   const [staffRecords, setStaffRecords] = useState([]);
   const [studentRecords, setStudentRecords] = useState([]);
   const [signupForm, setSignupForm] = useState({});
+  const [libraryRequests, setLibraryRequests] = useState([]);
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -44,6 +45,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     if (authToken) {
       fetchStudentRecords();
+      fetchLibraryRequests();
     }
   }, [authToken]);
 
@@ -63,11 +65,6 @@ export const AppProvider = ({ children }) => {
       })
       .catch((err) => {
         console.log(err);
-        if (err.response && err.response.data && err.response.data.message) {
-          alert(err.response.data.message);
-        } else {
-          alert("An error occurred in fetch user");
-        }
       });
   }
 
@@ -104,6 +101,52 @@ export const AppProvider = ({ children }) => {
       })
       .catch((err) => {
         console.log(err);
+      });
+  }
+
+  function fetchLibraryRequests() {
+    axios
+      .post(
+        "http://localhost:9000/fetch/library/requests",
+        {},
+        {
+          headers: { authToken: authToken },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          setLibraryRequests(res.data.libraryRequests);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleLibraryRequest(requestId, status) {
+    axios
+      .post(
+        "http://localhost:9000/update/library/requests",
+        { requestId, status },
+        {
+          headers: {
+            authToken: authToken,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+          fetchLibraryRequests();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An Error Occured");
+        }
       });
   }
 
@@ -344,6 +387,9 @@ export const AppProvider = ({ children }) => {
         addStaffResult,
         setAddStaffResult,
         fetchStudentRecords,
+        libraryRequests,
+        fetchLibraryRequests,
+        handleLibraryRequest,
       }}
     >
       {children}

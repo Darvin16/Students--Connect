@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import Student from "./Routes/Student.js";
+import libraryRequest from "./Models/LibraryRequest.js";
 
 const app = express();
 app.use(express.json());
@@ -300,6 +301,96 @@ app.post("/fetch/user", (req, res) => {
   }
 });
 
+app.post("/fetch/library/requests", async (req, res) => {
+  try {
+    const user = req.user;
+    const libraryRecords = await libraryRequest.find({});
+    if (user.role !== "admin") {
+      const staff = await staffData.findOne({ employeeId: user.employeeId });
+      const startOfDay = new Date();
+      startOfDay.setHours(0, 0, 0, 0);
+
+      if (staff) {
+        const libraryRequests = await libraryRequest.find({
+          studentBlockName: staff.blockName,
+          requestDate: { $gte: startOfDay },
+        });
+
+        return res.status(200).send({
+          success: true,
+          message: "Request fetched Successfully",
+          libraryRecords: libraryRecords,
+          libraryRequests: libraryRequests,
+        });
+      }
+    }
+
+    return res.status(200).send({
+      success: true,
+      message: "Request fetched Successfully",
+      libraryRecords: libraryRecords,
+      libraryRequests: [],
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      success: false,
+      message: "Error Occured while fetching library requests",
+    });
+  }
+});
+
+app.post("/update/library/requests", async (req, res) => {
+  try {
+    const user = req.user;
+    const { requestId, status } = req.body;
+    const staff = await staffData.findOne({ employeeId: user.employeeId });
+    const request = await libraryRequest.findOne({ requestId: requestId });
+    
+    if (!request) {
+      return res.status(404).send({
+        success: false,
+        message: "Request not found",
+      });
+    }
+
+    if (!staff) {
+      return res.status(403).send({
+        success: false,
+        message: "You are not authorized to update this request",
+      });
+    }
+
+    if (user.role === "warden") {
+      request.wardenApproval.status = status;
+      request.wardenApproval.by = staff.employeeId;
+      request.wardenApproval.wardenName = staff.name;
+      request.wardenApproval.time = Date.now();
+    } else if (user.role === "SRO") {
+      request.SROApproval.status = status;
+      request.SROApproval.by = staff.employeeId;
+      request.SROApproval.wardenName = staff.name;
+      request.SROApproval.time = Date.now();
+    }
+
+    const ack = await request.save();
+
+    if (ack) {
+      return res.status(200).send({
+        success: true,
+        message: "Library Request Updated Successfully",
+      });
+    } else {
+      return res.status(500).send({
+        success: false,
+        message: "Error Occured while updating library request",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 app.post("/staff/add", (req, res) => {
   const employeeIds = req.body;
   const date = Date.now();
@@ -450,7 +541,7 @@ app.post("/staff/edit", (req, res) => {
 app.delete("/staff/remove", (req, res) => {
   const { selectedStaffs } = req.body;
 
-  if (selectedStaffs.length===0) {
+  if (selectedStaffs.length === 0) {
     return res
       .status(400)
       .send({ success: false, message: "Please provide the employee id" });
