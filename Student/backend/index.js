@@ -276,7 +276,6 @@ app.post("/fetch/user", (req, res) => {
 
 app.post("/library/request", async (req, res) => {
   const {
-    studentId,
     name,
     phone,
     department,
@@ -288,10 +287,7 @@ app.post("/library/request", async (req, res) => {
     terms_conditions,
   } = req.body;
 
-  console.log(req.body);
-
   if (
-    !studentId ||
     !name ||
     !phone ||
     !department ||
@@ -316,7 +312,7 @@ app.post("/library/request", async (req, res) => {
   startOfDay.setHours(0, 0, 0, 0);
 
   const existingRequest = await libraryRequest.findOne({
-    studentId: studentId,
+    studentId: req.user.studentId,
     requestDate: { $gte: startOfDay },
   });
 
@@ -330,7 +326,7 @@ app.post("/library/request", async (req, res) => {
   await libraryRequest
     .create({
       requestId:generateUniqueId(12),
-      studentId: studentId,
+      studentId: req.user.studentId,
       studentName: name,
       studentBlockName: blockName,
       studentRoomNumber: roomNumber,
@@ -342,7 +338,6 @@ app.post("/library/request", async (req, res) => {
       requestDate: Date.now(),
     })
     .then((ack) => {
-      console.log(ack);
       return res.status(200).send({
         success: true,
         message: "Request Submitted Successfully",

@@ -8,7 +8,6 @@ function LibraryRequest() {
   const [libraryRequestData, setLibraryRequestData] = useState({
     phone: "",
     name: "",
-    studentId: "",
     academicYear: "",
     department: "",
     branchName: "",
@@ -22,11 +21,9 @@ function LibraryRequest() {
 
   useEffect(() => {
     if (autofill && userData) {
-      // When autofill is clicked, fill form fields with userData
       setLibraryRequestData({
         phone: userData.phone || "",
         name: userData.name || "",
-        studentId: userData.studentId || "",
         academicYear: userData.academicYear || "",
         department: userData.department || "",
         branchName: userData.branchName || "",
@@ -38,7 +35,6 @@ function LibraryRequest() {
     }
   }, [autofill, userData]);
 
-  console.log(libraryRequestData);
   return (
     <div className="library-request-page">
       <div className="library-request-header">
@@ -86,22 +82,6 @@ function LibraryRequest() {
                   setLibraryRequestData((prev) => ({
                     ...prev,
                     name: e.target.value,
-                  }))
-                }
-                required
-              />
-            </div>
-            <div className="library-request-group">
-              <label htmlFor="student_id">Student Id:</label>
-              <input
-                type="text"
-                name="student_id"
-                id="student_id"
-                value={libraryRequestData.studentId}
-                onChange={(e) =>
-                  setLibraryRequestData((prev) => ({
-                    ...prev,
-                    studentId: e.target.value,
                   }))
                 }
                 required
@@ -290,7 +270,7 @@ function LibraryRequest() {
             </div>
             <div className="library-request-preview-group">
               <p>Student Id:</p>
-              <p>{libraryRequestData.studentId}</p>
+              <p>{userData?.studentId}</p>
             </div>
             <div className="library-request-preview-group">
               <p>Contact No:</p>
