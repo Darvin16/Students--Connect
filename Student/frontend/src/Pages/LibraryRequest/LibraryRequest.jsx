@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AppContext } from "../../Context/AppContext";
 import "./LibraryRequest.css";
+import "bootstrap/dist/css/bootstrap.min.css"; // Add Bootstrap
 
 function LibraryRequest() {
   const { userData, sendLibraryRequest } = useContext(AppContext);
@@ -36,31 +37,36 @@ function LibraryRequest() {
   }, [autofill, userData]);
 
   return (
-    <div className="library-request-page">
-      <div className="library-request-header">
+    <div className="library-request-page container">
+      <div className="library-request-header text-center my-4">
         <h2>Raise Request</h2>
         <hr />
       </div>
       <div className="library-request-form-container">
-        <div className="library-request-form-header">
+        <div className="library-request-form-header d-flex justify-content-between align-items-center">
           <h3>Student Details</h3>
-          <button onClick={() => setAutofill(true)}>Auto-fill</button>
+          <button
+            className="btn btn-primary"
+            onClick={() => setAutofill(prev => !prev)}
+          >
+            Auto-fill
+          </button>
         </div>
+
         <form
-          className="library-request-form"
+          className="library-request-form row g-3"
           onSubmit={(e) => {
             e.preventDefault();
             setShowPreview(true);
           }}
         >
-          <div className="library-request-form-group-1">
-            <div className="library-request-group">
-              <label htmlFor="contact_no">Contact No:</label>
+            <div className="col-md-6">
+              <label htmlFor="contact_no" className="form-label">Contact No:</label>
               <input
                 type="text"
                 name="contact_no"
                 id="contact_no"
-                minLength={10}
+                className="form-control"
                 value={libraryRequestData.phone}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
@@ -71,12 +77,14 @@ function LibraryRequest() {
                 required
               />
             </div>
-            <div className="library-request-group">
-              <label htmlFor="name">Student Name:</label>
+
+            <div className="col-md-6">
+              <label htmlFor="name" className="form-label">Student Name:</label>
               <input
                 type="text"
                 name="name"
                 id="name"
+                className="form-control"
                 value={libraryRequestData.name}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
@@ -87,12 +95,14 @@ function LibraryRequest() {
                 required
               />
             </div>
-            <div className="library-request-group">
-              <label htmlFor="academic_year">Academic Year:</label>
+
+            <div className="col-md-6">
+              <label htmlFor="academic_year" className="form-label" >Academic Year:</label>
               <input
                 type="text"
                 name="academic_year"
                 id="academic_year"
+                className="form-control"
                 value={libraryRequestData.academicYear}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
@@ -103,11 +113,13 @@ function LibraryRequest() {
                 required
               />
             </div>
-            <div className="library-request-group">
-              <label htmlFor="department">Department:</label>
+            <div className="col-md-6">
+              <label htmlFor="department" className="form-label">Department:</label>
               <select
                 name="department"
                 id="department"
+                className="form-select"
+
                 value={libraryRequestData.department}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
@@ -163,12 +175,14 @@ function LibraryRequest() {
                 </optgroup>
               </select>
             </div>
-            <div className="library-request-group">
-              <label htmlFor="branch">Branch:</label>
+            <div className="col-md-6">
+              <label htmlFor="branch" className="form-label">Branch:</label>
               <input
                 type="text"
                 name="branch"
                 id="branch"
+                className="form-control"
+
                 value={libraryRequestData.branchName}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
@@ -179,11 +193,13 @@ function LibraryRequest() {
                 required
               />
             </div>
-            <div className="library-request-group">
-              <label htmlFor="block_name">Block Name:</label>
+            <div className="col-md-6">
+              <label htmlFor="block_name" className="form-label">Block Name:</label>
               <select
                 name="blockName"
                 id="blockName"
+                className="form-select"
+
                 value={libraryRequestData.blockName}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
@@ -203,12 +219,14 @@ function LibraryRequest() {
                 <option value="G-paari">G - Paari</option>
               </select>
             </div>
-            <div className="library-request-group">
-              <label htmlFor="room_no">Room No:</label>
+            <div className="col-md-6">
+              <label htmlFor="room_no" className="form-label">Room No:</label>
               <input
                 type="text"
                 name="room_no"
                 id="room_no"
+                className="form-control"
+
                 value={libraryRequestData.roomNumber}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
@@ -219,13 +237,13 @@ function LibraryRequest() {
                 required
               />
             </div>
-          </div>
-          <div className="library-request-form-group-2">
-            <div className="library-request-group-2">
-              <label htmlFor="description">Description:</label>
+            <div className="col-12">
+              <label htmlFor="description" className="form-label">Description:</label>
               <textarea
                 name="description"
                 id="description"
+                className="form-control"
+
                 value={libraryRequestData.description}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
@@ -236,11 +254,12 @@ function LibraryRequest() {
                 required
               ></textarea>
             </div>
-            <div className="library-request-group-2">
+            <div className="col-12 form-check">
               <input
                 type="checkbox"
                 name="terms_conditions"
                 id="terms_conditions"
+                className="form-check-input"
                 checked={libraryRequestData.terms_conditions}
                 onChange={() =>
                   setLibraryRequestData((prev) => ({
@@ -250,54 +269,48 @@ function LibraryRequest() {
                 }
                 required
               />
-              <label htmlFor="terms_conditions">
+              <label htmlFor="terms_conditions" className="form-check-label">
                 I have read and agree to the terms and conditions
               </label>
             </div>
-            <div className="library-request-group-2">
-              <button type="submit">Preview</button>
+            <div className="col-12 d-flex justify-content-end">
+              <button type="submit" className="btn btn-success">Preview</button>
             </div>
-          </div>
+      
         </form>
-      </div>
+      </div >
       {showPreview && (
-        <div className="library-request-preview">
+        <div className="library-request-preview mt-5">
           <h3>Check Your Details</h3>
-          <div className="library-request-preview-form">
-            <div className="library-request-preview-group">
-              <p>Student Name:</p>
-              <p>{libraryRequestData.name}</p>
+          <div className="row g-3">
+            <div className="col-md-6">
+              <p><strong>Student Name:</strong> {libraryRequestData.name}</p>
             </div>
-            <div className="library-request-preview-group">
-              <p>Student Id:</p>
-              <p>{userData?.studentId}</p>
+            <div className="col-md-6">
+              <p><strong>Student Id: </strong>{userData?.studentId}</p>
             </div>
-            <div className="library-request-preview-group">
-              <p>Contact No:</p>
-              <p>{libraryRequestData.phone}</p>
+            <div className="col-md-6">
+              <p><strong>Contact No:</strong> {libraryRequestData.phone}</p>
             </div>
-            <div className="library-request-preview-group">
-              <p>Block Name:</p>
-              <p>{libraryRequestData.blockName}</p>
+            <div className="col-md-6">
+              <p><strong>Block Name:</strong> {libraryRequestData.blockName}</p>
             </div>
-            <div className="library-request-preview-group">
-              <p>Room No:</p>
-              <p>{libraryRequestData.roomNumber}</p>
+            <div className="col-md-6">
+              <p><strong>Room No:</strong> {libraryRequestData.roomNumber}</p>
             </div>
-            <div className="library-request-preview-group">
-              <p>Department:</p>
-              <p>{libraryRequestData.department}</p>
+            <div className="col-md-6">
+              <p><strong>Department:</strong> {libraryRequestData.department}</p>
             </div>
-            <div className="library-request-preview-group">
-              <p>Branch:</p>
-              <p>{libraryRequestData.branchName}</p>
+            <div className="col-md-6">
+              <p><strong>Branch:</strong> {libraryRequestData.branchName}</p>
             </div>
-            <div className="library-request-preview-group">
-              <p>Reason:</p>
-              <p>{libraryRequestData.description}</p>
+            <div className="col-md-12">
+              <p><strong>Description: </strong> {libraryRequestData.description}</p>
             </div>
-            <div className="library-request-preview-group">
+            <div className="d-flex justify-content-between">
               <button
+              className="btn btn-primary"
+
                 onClick={() => {
                   sendLibraryRequest(libraryRequestData);
                   setAutofill(false);
@@ -319,6 +332,8 @@ function LibraryRequest() {
                 Send
               </button>
               <button
+              className="btn btn-secondary"
+
                 onClick={() => {
                   setAutofill(false);
                   setShowPreview(false);
@@ -341,8 +356,9 @@ function LibraryRequest() {
             </div>
           </div>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 }
 

@@ -287,6 +287,8 @@ app.post("/library/request", async (req, res) => {
     terms_conditions,
   } = req.body;
 
+  console.log(req.body);
+
   if (
     !name ||
     !phone ||
