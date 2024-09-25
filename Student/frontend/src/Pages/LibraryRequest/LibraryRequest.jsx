@@ -5,18 +5,40 @@ import "./LibraryRequest.css";
 function LibraryRequest() {
   const { userData, sendLibraryRequest } = useContext(AppContext);
 
-  const [libraryRequestData, setLibraryRequestData] = useState({});
+  const [libraryRequestData, setLibraryRequestData] = useState({
+    phone: "",
+    name: "",
+    studentId: "",
+    academicYear: "",
+    department: "",
+    branchName: "",
+    blockName: "",
+    roomNumber: "",
+    description: "",
+    terms_conditions: false,
+  });
   const [autofill, setAutofill] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
-    if (userData) {
-      setLibraryRequestData({ ...userData });
+    if (autofill && userData) {
+      // When autofill is clicked, fill form fields with userData
+      setLibraryRequestData({
+        phone: userData.phone || "",
+        name: userData.name || "",
+        studentId: userData.studentId || "",
+        academicYear: userData.academicYear || "",
+        department: userData.department || "",
+        branchName: userData.branchName || "",
+        blockName: userData.blockName || "",
+        roomNumber: userData.roomNumber || "",
+        description: "",
+        terms_conditions: false,
+      });
     }
-  }, [userData]);
+  }, [autofill, userData]);
 
   console.log(libraryRequestData);
-
   return (
     <div className="library-request-page">
       <div className="library-request-header">
@@ -42,7 +64,8 @@ function LibraryRequest() {
                 type="text"
                 name="contact_no"
                 id="contact_no"
-                value={autofill ? libraryRequestData.phone : ""}
+                minLength={10}
+                value={libraryRequestData.phone}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
                     ...prev,
@@ -58,7 +81,7 @@ function LibraryRequest() {
                 type="text"
                 name="name"
                 id="name"
-                value={autofill ? libraryRequestData.name : ""}
+                value={libraryRequestData.name}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
                     ...prev,
@@ -74,7 +97,7 @@ function LibraryRequest() {
                 type="text"
                 name="student_id"
                 id="student_id"
-                value={autofill ? libraryRequestData.studentId : ""}
+                value={libraryRequestData.studentId}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
                     ...prev,
@@ -85,11 +108,27 @@ function LibraryRequest() {
               />
             </div>
             <div className="library-request-group">
+              <label htmlFor="academic_year">Academic Year:</label>
+              <input
+                type="text"
+                name="academic_year"
+                id="academic_year"
+                value={libraryRequestData.academicYear}
+                onChange={(e) =>
+                  setLibraryRequestData((prev) => ({
+                    ...prev,
+                    academicYear: e.target.value,
+                  }))
+                }
+                required
+              />
+            </div>
+            <div className="library-request-group">
               <label htmlFor="department">Department:</label>
               <select
                 name="department"
                 id="department"
-                value={autofill ? libraryRequestData.department : ""}
+                value={libraryRequestData.department}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
                     ...prev,
@@ -150,7 +189,7 @@ function LibraryRequest() {
                 type="text"
                 name="branch"
                 id="branch"
-                value={autofill ? libraryRequestData.branchName : ""}
+                value={libraryRequestData.branchName}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
                     ...prev,
@@ -165,7 +204,7 @@ function LibraryRequest() {
               <select
                 name="blockName"
                 id="blockName"
-                value={autofill ? libraryRequestData.blockName : ""}
+                value={libraryRequestData.blockName}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
                     ...prev,
@@ -190,7 +229,7 @@ function LibraryRequest() {
                 type="text"
                 name="room_no"
                 id="room_no"
-                value={autofill ? libraryRequestData.roomNumber : ""}
+                value={libraryRequestData.roomNumber}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
                     ...prev,
@@ -207,7 +246,7 @@ function LibraryRequest() {
               <textarea
                 name="description"
                 id="description"
-                value={libraryRequestData.description || ""}
+                value={libraryRequestData.description}
                 onChange={(e) =>
                   setLibraryRequestData((prev) => ({
                     ...prev,
@@ -283,7 +322,18 @@ function LibraryRequest() {
                   sendLibraryRequest(libraryRequestData);
                   setAutofill(false);
                   setShowPreview(false);
-                  setLibraryRequestData({ ...userData });
+                  setLibraryRequestData({
+                    phone: "",
+                    name: "",
+                    studentId: "",
+                    academicYear: "",
+                    department: "",
+                    branchName: "",
+                    blockName: "",
+                    roomNumber: "",
+                    description: "",
+                    terms_conditions: false,
+                  });
                 }}
               >
                 Send
@@ -292,7 +342,18 @@ function LibraryRequest() {
                 onClick={() => {
                   setAutofill(false);
                   setShowPreview(false);
-                  setLibraryRequestData({ ...userData });
+                  setLibraryRequestData({
+                    phone: "",
+                    name: "",
+                    studentId: "",
+                    academicYear: "",
+                    department: "",
+                    branchName: "",
+                    blockName: "",
+                    roomNumber: "",
+                    description: "",
+                    terms_conditions: false,
+                  });
                 }}
               >
                 Cancel

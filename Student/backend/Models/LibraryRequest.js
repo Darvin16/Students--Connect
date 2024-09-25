@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const libraryRequestSchema = new mongoose.Schema({
+  requestId: String,
   studentId: String,
   studentName: String,
   studentBlockName: String,

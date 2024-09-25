@@ -27,6 +27,16 @@ app.get("/", (req, res) => {
   res.send("Server Started");
 });
 
+function generateUniqueId(n) {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let id = "";
+  for (let i = 0; i < n; i++) {
+    id += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return id;
+}
+
 app.post("/signup", (req, res) => {
   const {
     studentId,
@@ -278,6 +288,8 @@ app.post("/library/request", async (req, res) => {
     terms_conditions,
   } = req.body;
 
+  console.log(req.body);
+
   if (
     !studentId ||
     !name ||
@@ -302,7 +314,7 @@ app.post("/library/request", async (req, res) => {
 
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
-  
+
   const existingRequest = await libraryRequest.findOne({
     studentId: studentId,
     requestDate: { $gte: startOfDay },
@@ -317,6 +329,7 @@ app.post("/library/request", async (req, res) => {
 
   await libraryRequest
     .create({
+      requestId:generateUniqueId(12),
       studentId: studentId,
       studentName: name,
       studentBlockName: blockName,
