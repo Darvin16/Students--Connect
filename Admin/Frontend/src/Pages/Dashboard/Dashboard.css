@@ -1,65 +1,40 @@
-.dashboard-header{
-    padding: 0px 20px;
-    display: flex;
-    justify-content: space-between;
-}
-.dashboard-heading{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.dashboard-nav{
-    position: sticky;
-    left: 0;
-    top:0px;
-    background-color: hsl(210, 29%, 24%);
+.dashboard-page {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 10px;
-    width: 200px;
-    animation: nav-op 0.5s ease;
-    overflow: hidden;
-    text-wrap: nowrap;
-    height: 100vh;
-    padding-top: 50px;
-    color: white;
+    height: 100vh; /* Full height for the dashboard */
 }
-@keyframes nav-op {
-    from{
-        width: 0;
+
+.dashboard-components {
+    flex-grow: 1; /* Take up remaining space */
+    padding: 20px;
+}
+
+/* Optional styling for the navbar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.nav-item {
+    margin-right: 10px; /* Space between nav items */
+}
+
+/* Adjust the logout button */
+.btn {
+    background-color: transparent; /* Optional styling */
+    color: #007bff; /* Bootstrap primary color */
+}
+
+/* Optional styles for mobile view */
+@media (max-width: 576px) {
+    .navbar-nav .nav-link {
+        text-align: center; /* Center text in mobile */
+        padding: 10px 0; /* Increase padding for touch targets */
     }
-    to{
-        width: 200px;
+}
+
+/* Additional styles for larger screens */
+@media (min-width: 992px) {
+    .dashboard-components {
+        padding: 40px; /* More padding for desktop */
     }
-}
-.dashboard-nav a{
- color: white;
- text-decoration: none;
- margin-left: 10px;
-}
-.dashboard-nav a:hover{
-    text-decoration: underline;
-}
-.dashboard-nav button{
-    padding: 10px;
-    margin-top: 20%;
-    border-radius: 5px;
-    border: none;
-    font-weight: bold;
-}
-.dashboard-nav svg{
-    font-size: larger;
-}
-.dashboard-nav-group{
-    display: flex;
-    align-items: center;
-}
-.dashboard-container{
-    display: flex;
-    background-color: #f4f5f9;
-    min-height: 95vh;
-}
-.dashboard-components{
-    flex: 1;
 }
