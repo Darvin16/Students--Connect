@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import studentsData from "./Models/StudentsData.js";
+import libraryRequest from "./Models/LibraryRequest.js";
 
 const app = express();
 app.use(express.json());
@@ -231,7 +232,7 @@ app.use((req, res, next) => {
       next();
     });
   } else {
-    return res.sendStatus(401)
+    return res.sendStatus(401);
   }
 });
 
@@ -240,7 +241,7 @@ app.post("/fetch/user", (req, res) => {
 
   studentsData
     .findOne({ studentId: user.studentId })
-    .select("-_id -__v")
+    .select("-_id -__v -password")
     .then((userData) => {
       if (userData) {
         return res.status(200).send({
@@ -255,11 +256,90 @@ app.post("/fetch/user", (req, res) => {
       }
     })
     .catch((err) => {
-        console.log(err);
-        return res.status(500).send({
-            success: false,
-            message: "Error Occured while finding user",
-        })
+      console.log(err);
+      return res.status(500).send({
+        success: false,
+        message: "Error Occured while finding user",
+      });
+    });
+});
+
+app.post("/library/request", async (req, res) => {
+  const {
+    studentId,
+    name,
+    phone,
+    department,
+    branchName,
+    blockName,
+    roomNumber,
+    description,
+    academicYear,
+    terms_conditions,
+  } = req.body;
+
+  if (
+    !studentId ||
+    !name ||
+    !phone ||
+    !department ||
+    !branchName ||
+    !blockName ||
+    !roomNumber ||
+    !academicYear ||
+    !description
+  ) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Missing Required Data" });
+  }
+  if (!terms_conditions) {
+    return res.status(400).send({
+      success: false,
+      message: "Please accept the Terms and Conditions",
+    });
+  }
+
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  
+  const existingRequest = await libraryRequest.findOne({
+    studentId: studentId,
+    requestDate: { $gte: startOfDay },
+  });
+
+  if (existingRequest) {
+    return res.status(409).send({
+      success: false,
+      message: "You have already submitted a request today.",
+    });
+  }
+
+  await libraryRequest
+    .create({
+      studentId: studentId,
+      studentName: name,
+      studentBlockName: blockName,
+      studentRoomNumber: roomNumber,
+      studentDepartment: department,
+      studentBranchName: branchName,
+      studentAcademicYear: academicYear,
+      studentContactNo: phone,
+      description: description,
+      requestDate: Date.now(),
+    })
+    .then((ack) => {
+      console.log(ack);
+      return res.status(200).send({
+        success: true,
+        message: "Request Submitted Successfully",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res
+        .status(500)
+        .send({ success: false, message: "Error Submitting Request" });
     });
 });
 

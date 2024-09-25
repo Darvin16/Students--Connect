@@ -14,7 +14,7 @@ const Login = () => {
             <div className="login-input-container">
               <input
                 type="text"
-                placeholder="Enter your username"
+                placeholder="Student Id"
                 className="login-input"
                 name="studentId"
                 id="studentId"
@@ -30,7 +30,7 @@ const Login = () => {
             <div className="login-input-container">
               <input
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Password"
                 className="login-input"
                 name="password"
                 id="password"
@@ -43,7 +43,7 @@ const Login = () => {
                 required
               />
             </div>
-            <div>
+            <div className="login-input-checkbox">
               <input
                 type="checkbox"
                 name="rememberMe"
@@ -57,7 +57,7 @@ const Login = () => {
               />
               <label htmlFor="rememberMe">Remeber Me</label>
             </div>
-            <p className="forgot-password">Forgot password?</p>
+            {/* <p className="forgot-password">Forgot password?</p> */}
             <button className="login-button" type="submit">
               Login
             </button>
