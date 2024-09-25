@@ -310,19 +310,34 @@ app.post("/fetch/library/requests", async (req, res) => {
       const startOfDay = new Date();
       startOfDay.setHours(0, 0, 0, 0);
 
-      if (staff) {
-        const libraryRequests = await libraryRequest.find({
+      if (!staff) {
+        return res
+          .status(404)
+          .send({ success: false, message: "User not found" });
+      }
+
+      let libraryRequests;
+
+      if (user.role === "SRO") {
+        libraryRequests = await libraryRequest.find({
+          studentBlockName: staff.blockName,
+          requestDate: { $gte: startOfDay },
+          "wardenApproval.status": "approved", // Only fetch requests approved by the warden
+        });
+      } else {
+        libraryRequests = await libraryRequest.find({
           studentBlockName: staff.blockName,
           requestDate: { $gte: startOfDay },
         });
-
-        return res.status(200).send({
-          success: true,
-          message: "Request fetched Successfully",
-          libraryRecords: libraryRecords,
-          libraryRequests: libraryRequests,
-        });
       }
+
+
+      return res.status(200).send({
+        success: true,
+        message: "Request fetched Successfully",
+        libraryRecords: libraryRecords,
+        libraryRequests: libraryRequests,
+      });
     }
 
     return res.status(200).send({
@@ -346,7 +361,7 @@ app.post("/update/library/requests", async (req, res) => {
     const { requestId, status } = req.body;
     const staff = await staffData.findOne({ employeeId: user.employeeId });
     const request = await libraryRequest.findOne({ requestId: requestId });
-    
+
     if (!request) {
       return res.status(404).send({
         success: false,
