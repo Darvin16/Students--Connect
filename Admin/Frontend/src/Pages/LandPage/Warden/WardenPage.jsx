@@ -4,6 +4,7 @@ import { AppContext } from "../../../Context/AppContext";
 function WardenPage() {
   const [entryBox, setEntryBox] = useState(false);
   const {
+    userData,
     studentEntryCount,
     setStudentEntryCount,
     addStudent,
@@ -66,7 +67,7 @@ function WardenPage() {
   return (
     <div className="admin-dashboard">
       <em>
-        <h2>Warden Dashboard</h2>
+        <h2>{userData?.role} Dashboard</h2>
       </em>
       <div className="dashboard-cards">
         <div className="card">Leave Request</div>

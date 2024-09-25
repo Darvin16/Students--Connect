@@ -5,7 +5,7 @@ import { AppContext } from "../../Context/AppContext";
 import { useEffect } from "react";
 
 const LibraryRequests = () => {
-  const { libraryRequests, fetchLibraryRequests, handleLibraryRequest } =
+  const { userData,libraryRequests, fetchLibraryRequests, handleLibraryRequest } =
     useContext(AppContext);
 
   useEffect(() => {
@@ -52,27 +52,68 @@ const LibraryRequests = () => {
                       hour12: true,
                     })}
                   </td>
-                  {request.wardenApproval ? (
-                    <td>{request.wardenApproval.status}</td>
+                  {userData.role === "warden" ? (
+                    <>
+                      {request.wardenApproval ? (
+                        <td>{request.wardenApproval.status}</td>
+                      ) : (
+                        <td>
+                          <button
+                            className="btn btn-success me-1"
+                            onClick={() =>
+                              handleLibraryRequest(
+                                request.requestId,
+                                "approved"
+                              )
+                            }
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className="btn btn-danger"
+                            onClick={() =>
+                              handleLibraryRequest(
+                                request.requestId,
+                                "rejected"
+                              )
+                            }
+                          >
+                            Reject
+                          </button>
+                        </td>
+                      )}
+                    </>
                   ) : (
-                    <td>
-                      <button
-                        className="btn btn-success me-1"
-                        onClick={() =>
-                          handleLibraryRequest(request.requestId, "approved")
-                        }
-                      >
-                        Approve
-                      </button>
-                      <button
-                        className="btn btn-danger"
-                        onClick={() =>
-                          handleLibraryRequest(request.requestId, "rejected")
-                        }
-                      >
-                        Reject
-                      </button>
-                    </td>
+                    <>
+                      {request.SROApproval ? (
+                        <td>{request.SROApproval.status}</td>
+                      ) : (
+                        <td>
+                          <button
+                            className="btn btn-success me-1"
+                            onClick={() =>
+                              handleLibraryRequest(
+                                request.requestId,
+                                "approved"
+                              )
+                            }
+                          >
+                            Approve
+                          </button>
+                          <button
+                            className="btn btn-danger"
+                            onClick={() =>
+                              handleLibraryRequest(
+                                request.requestId,
+                                "rejected"
+                              )
+                            }
+                          >
+                            Reject
+                          </button>
+                        </td>
+                      )}
+                    </>
                   )}
                 </tr>
               ))}

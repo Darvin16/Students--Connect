@@ -331,7 +331,6 @@ app.post("/fetch/library/requests", async (req, res) => {
         });
       }
 
-
       return res.status(200).send({
         success: true,
         message: "Request fetched Successfully",
@@ -384,7 +383,7 @@ app.post("/update/library/requests", async (req, res) => {
     } else if (user.role === "SRO") {
       request.SROApproval.status = status;
       request.SROApproval.by = staff.employeeId;
-      request.SROApproval.wardenName = staff.name;
+      request.SROApproval.SROName = staff.name;
       request.SROApproval.time = Date.now();
     }
 
