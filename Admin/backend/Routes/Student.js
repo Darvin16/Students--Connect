@@ -80,9 +80,11 @@ router.post("/get", async (req, res) => {
       const staff = await staffData.findOne({
         employeeId: user.employeeId,
       });
-      const filterStudentRecords = await studentsData.find({
-        blockname: staff.blockName,
-      });
+      const filterStudentRecords = await studentsData
+        .find({
+          blockname: staff.blockName,
+        })
+        .select("-_id -__v -password");
 
       if (!staff) {
         return res.status(403).send({
