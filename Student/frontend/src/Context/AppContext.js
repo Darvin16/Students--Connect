@@ -69,11 +69,11 @@ export const AppProvider = ({ children }) => {
       .then((res) => {
         if (res.status === 200) {
           setLibraryRequestForm(res.data.libraryRequestForm);
-          console.log(res.data.libraryRequestForm);
         }
       })
       .catch((err) => {
         console.log(err);
+        setLibraryRequestForm();
       });
   }
 

@@ -19,6 +19,7 @@ import Libraryrecords from "../Libraryrecords/Libraryrecords";
 import "./Dashboard.css";
 import AdminStudentRecords from "../StudentRecord/AdminStudentRecords";
 import LibraryRecordsHistory from "../Libraryrecords/LibraryRecordsHistory";
+import LibrarianPage from "../LandPage/Librarian/LibrarianPage";
 
 function Dashboard() {
   const { userData, logout } = useContext(AppContext);
@@ -148,6 +149,28 @@ function Dashboard() {
                   </li>
                 </>
               )}
+              {userData?.role === "librarian" && (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/dashboard/">
+                      <FontAwesomeIcon icon={faPenToSquare} /> Dashboard
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link"
+                      to="/dashboard/librarian/library/requests"
+                    >
+                      <FontAwesomeIcon icon={faBookAtlas} /> Library Request
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/dashboard/profile">
+                      <FontAwesomeIcon icon={faCircleInfo} /> Profile
+                    </Link>
+                  </li>
+                </>
+              )}
               <li className="nav-item">
                 <button className="nav-link btn" onClick={() => logout()}>
                   Logout
@@ -191,7 +214,7 @@ function Dashboard() {
           {userData?.role === "SRO" && (
             <>
               <Route path="/" element={<WardenPage />} />
-              <Route path="/sro/record/student" element={<StudentRecord/>} />
+              <Route path="/sro/record/student" element={<StudentRecord />} />
               <Route path="/sro/record/library" element={<Libraryrecords />} />
               <Route path="/sro/record/leave" element={<></>} />
               <Route path="/sro/profile" element={<></>} />
@@ -199,7 +222,11 @@ function Dashboard() {
           )}
           {userData?.role === "librarian" && (
             <>
-              <Route path="/" element={<div />} />
+              <Route path="/" element={<LibrarianPage />} />
+              <Route
+                path="/librarian/library/requests"
+                element={<Libraryrecords />}
+              />
             </>
           )}
         </Routes>

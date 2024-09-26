@@ -56,8 +56,8 @@ function LibraryRecordsHistory() {
                       })}
                     </td>
                         <td>
-                            <p>Warden: {request.wardenApprovel?.status}</p>
-                            <p>SRO: {request.SROApprovel?.status}</p>
+                            <p>Warden: {request.wardenApproval?.status}</p>
+                            <p>SRO: {request.SROApproval?.status}</p>
                    </td>
                   </tr>
                 ))}

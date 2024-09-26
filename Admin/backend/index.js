@@ -329,6 +329,13 @@ app.post("/fetch/library/requests", async (req, res) => {
           "wardenApproval.status": "approved", // Only fetch requests approved by the warden
           "cancelRequest.status": false,
         });
+      } else if (user.role === "librarian") {
+        libraryRequests = await libraryRequest.find({
+          requestDate: { $gte: startOfDay },
+          "wardenApproval.status": "approved", // Only fetch requests approved by the warden
+          "SROApproval.status": "approved", // Only fetch requests approved by the SRO
+          "cancelRequest.status": false,
+        });
       } else {
         libraryRequests = await libraryRequest.find({
           studentBlockName: staff.blockName,
@@ -391,6 +398,42 @@ app.post("/update/library/requests", async (req, res) => {
       request.SROApproval.by = staff.employeeId;
       request.SROApproval.SROName = staff.name;
       request.SROApproval.time = Date.now();
+    } else if (user.role === "librarian") {
+      if (status === "in") {
+        if (Object.keys(request.in).length === 0) {
+          return res.status(400).send({
+            success: false,
+            message: "Student is already in the library",
+          });
+        }
+        const currentHour = new Date().getHours();
+
+        let resttime;
+        if (currentHour < 21) {
+          resttime = 30 * 60 * 1000; // 30 minutes in milliseconds
+        } else {
+          resttime = 15 * 60 * 1000; // 15 minutes in milliseconds
+        }
+        request.in.by = staff.employeeId;
+        request.in.librarianName = staff.name;
+        request.in.time = Date.now();
+
+        // Calculate delay time
+        const delaytime = Date.now() - request.SROApproval.time;
+        if (resttime < delaytime) {
+          request.delayTime = delaytime - resttime;
+        }
+      } else if (status === "out") {
+        if (Object.keys(request.out).length === 0) {
+          return res.status(400).send({
+            success: false,
+            message: "Student is already out of the library",
+          });
+        }
+        request.out.by = staff.employeeId;
+        request.out.librarianName = staff.name;
+        request.out.time = Date.now();
+      }
     }
 
     const ack = await request.save();
