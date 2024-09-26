@@ -7,6 +7,8 @@ function Signup() {
   const { signupForm, setSignupForm, Signup } = useContext(AppContext);
   const [showHostelInfo, setShowHostelInfo] = useState(false); // State for toggling
 
+  console.log(signupForm);
+
   return (
     <div className={`container ${styles.signupPage}`}>
       <div className={styles.signupContainer}>
@@ -189,7 +191,7 @@ function Signup() {
                   name="academic-year"
                   id="academic-year"
                   value={signupForm.academicYear}
-                  placeholder="2024"
+                  placeholder={new Date.getFullYear()}
                   onChange={(e) => {
                     setSignupForm((prev) => ({
                       ...prev,
