@@ -7,6 +7,7 @@ export const Login = () => {
   const { setLoginForm,StaffLogin,loginForm, navigate } = useContext(AppContext);
 
   return (
+    <div className="form-container">
     <div className="staff-login login-container">
       <div className="button-alignment">
         <button className="admin" onClick={() => navigate("/adminlogin")}>Admin</button>
@@ -61,6 +62,7 @@ export const Login = () => {
           Don't have an Account? <Link to="/signup">Sign up</Link>
         </p>
       </div>
+    </div>
     </div>
   );
 };

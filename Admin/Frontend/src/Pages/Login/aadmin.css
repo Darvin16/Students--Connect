@@ -5,7 +5,7 @@
 
 /* Main container for the admin login page */
 .admin-login {
-    position: relative;
+    /* position: relative; */
     /* Allow absolute positioning of child elements */
 }
 

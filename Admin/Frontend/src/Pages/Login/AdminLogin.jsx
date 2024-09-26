@@ -9,7 +9,7 @@ function AdminLogin() {
     <div className="form-container">
       <div className="admin-login login-container">
         <div className="button-alignment">
-          <button onClick={() => navigate("/login")}>Staff</button>
+          <button className="admin" onClick={() => navigate("/login")}>Staff</button>
         </div>
         <div className="staff-login-container">
           <h1>Admin Login</h1>
