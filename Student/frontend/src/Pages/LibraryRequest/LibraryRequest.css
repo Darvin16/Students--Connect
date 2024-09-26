@@ -47,3 +47,40 @@
   background-color: #fff;
   /* color: white; */
 }
+
+
+/* Form */
+
+.library-request-page {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+h3 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+p {
+  margin: 5px 0;
+}
+
+.cancel-button {
+  background-color: #e74c3c;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  background-color: #c0392b;
+}

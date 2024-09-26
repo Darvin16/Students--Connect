@@ -274,6 +274,36 @@ app.post("/fetch/user", (req, res) => {
     });
 });
 
+app.post("/fetch/library/request", async (req, res) => {
+  try {
+    const { user } = req;
+    const startOfDay = new Date().setHours(0, 0, 0, 0);
+    const libraryRequestForm = await libraryRequest.findOne({
+      studentId: user.studentId,
+      requestDate: { $gte: startOfDay },
+    });
+
+    if (libraryRequestForm) {
+      return res.status(200).send({
+        success: true,
+        message: "Library Request Fetched Successfully",
+        libraryRequestForm: libraryRequestForm,
+      });
+    } else {
+      return res.status(404).send({
+        success: false,
+        message: "Library Request not found",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+});
+
 app.post("/library/request", async (req, res) => {
   const {
     name,
@@ -327,7 +357,7 @@ app.post("/library/request", async (req, res) => {
 
   await libraryRequest
     .create({
-      requestId:generateUniqueId(12),
+      requestId: generateUniqueId(12),
       studentId: req.user.studentId,
       studentName: name,
       studentBlockName: blockName,
@@ -351,6 +381,27 @@ app.post("/library/request", async (req, res) => {
         .status(500)
         .send({ success: false, message: "Error Submitting Request" });
     });
+});
+
+app.post("/library/request/cancel", async (req, res) => {
+  try {
+    const { requestId, reason } = req.body;
+    const request = await libraryRequest.findOne({ requestId: requestId });
+    if (!request) {
+      return res.status(404).send({
+        success: false,
+        message: "Request Not Found",
+      });
+    }
+
+    request.cancelRequest.status = true;
+    request.cancelRequest.time = Date.now();
+    request.cancelRequest.reason = reason;
+    await request.save();
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({ success: false, message: "Server Error" });
+  }
 });
 
 app.listen(8000, () => {

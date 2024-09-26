@@ -1,4 +1,4 @@
-import { createContext, useState ,useEffect} from "react";
+import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -19,12 +19,19 @@ export const AppProvider = ({ children }) => {
   });
   const URL = "http://localhost:8000";
   const navigate = useNavigate();
+  const [libraryRequestForm, setLibraryRequestForm] = useState({});
 
- useEffect(() => {
-   if (authToken && !userData) {
-     fetchUser();
-   }
- }, [authToken, userData]);
+  useEffect(() => {
+    if (authToken && !userData) {
+      fetchUser();
+    }
+  }, [authToken, userData]);
+
+  useEffect(() => {
+    if (authToken) {
+      fetchLibraryRequestForm();
+    }
+  }, [authToken]);
 
   function fetchUser() {
     axios
@@ -50,23 +57,70 @@ export const AppProvider = ({ children }) => {
       });
   }
 
+  function fetchLibraryRequestForm() {
+    axios
+      .post(
+        `${URL}/fetch/library/request`,
+        {},
+        {
+          headers: { authToken: authToken },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          setLibraryRequestForm(res.data.libraryRequestForm);
+          console.log(res.data.libraryRequestForm)
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   function sendLibraryRequest(requestData) {
-    axios.post(`${URL}/library/request`, requestData, {
-      headers: {
-        authToken: authToken,
-      }
-    }).then(res => {
-      if (res.status === 200) {
-        alert(res.data.message);
-      }
-    }).catch(err => {
-      console.log(err)
-      if (err.response && err.response.data && err.response.data.message) {
-        alert(err.response.data.message);
-      } else {
-        alert("An error occurred in send library request");
-      }
-    })
+    axios
+      .post(`${URL}/library/request`, requestData, {
+        headers: {
+          authToken: authToken,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred in send library request");
+        }
+      });
+  }
+
+  function cancelLibraryRequest(requestId, reason) {
+    axios
+      .post(
+        `${URL}/library/request/cancel`,
+        { requestId, reason },
+        {
+          headers: { authToken: authToken },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred in cancel library request");
+        }
+      });
   }
 
   function Signup(e) {
@@ -138,6 +192,9 @@ export const AppProvider = ({ children }) => {
         Login,
         Logout,
         sendLibraryRequest,
+        libraryRequestForm,
+        fetchLibraryRequestForm,
+        cancelLibraryRequest,
       }}
     >
       {children}

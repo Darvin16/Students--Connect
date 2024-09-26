@@ -4,7 +4,14 @@ import "./LibraryRequest.css";
 import "bootstrap/dist/css/bootstrap.min.css"; // Add Bootstrap
 
 function LibraryRequest() {
-  const { userData, sendLibraryRequest } = useContext(AppContext);
+  const {
+    userData,
+    sendLibraryRequest,
+    libraryRequestForm,
+    fetchLibraryRequestForm,
+    authToken,
+    cancelLibraryRequest,
+  } = useContext(AppContext);
 
   const [libraryRequestData, setLibraryRequestData] = useState({
     phone: "",
@@ -19,6 +26,8 @@ function LibraryRequest() {
   });
   const [autofill, setAutofill] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [cancelRequest, setCancelRequest] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
 
   useEffect(() => {
     if (autofill && userData) {
@@ -36,6 +45,203 @@ function LibraryRequest() {
     }
   }, [autofill, userData]);
 
+  useEffect(() => {
+    if (authToken && !libraryRequestForm) {
+      fetchLibraryRequestForm();
+    }
+  }, [authToken, libraryRequestForm]);
+
+  if (libraryRequestForm) {
+    return (
+      <div className="library-request-page">
+        <h2>Library Request Form</h2>
+
+        <div className="request-details">
+          <div className="section">
+            <h3>Student Details</h3>
+            <p>
+              <strong>Student ID:</strong> {libraryRequestForm.studentId}
+            </p>
+            <p>
+              <strong>Name:</strong> {libraryRequestForm.studentName}
+            </p>
+            <p>
+              <strong>Block Name:</strong> {libraryRequestForm.studentBlockName}
+            </p>
+            <p>
+              <strong>Room Number:</strong>{" "}
+              {libraryRequestForm.studentRoomNumber}
+            </p>
+            <p>
+              <strong>Department:</strong>{" "}
+              {libraryRequestForm.studentDepartment}
+            </p>
+            <p>
+              <strong>Branch:</strong> {libraryRequestForm.studentBranchName}
+            </p>
+            <p>
+              <strong>Academic Year:</strong>{" "}
+              {libraryRequestForm.studentAcademicYear}
+            </p>
+            <p>
+              <strong>Contact No:</strong> {libraryRequestForm.studentContactNo}
+            </p>
+          </div>
+
+          <div className="section">
+            <h3>Request Details</h3>
+            <p>
+              <strong>Request ID:</strong> {libraryRequestForm.requestId}
+            </p>
+            <p>
+              <strong>Request Date:</strong>{" "}
+              {new Date(libraryRequestForm.requestDate).toLocaleString()}
+            </p>
+            <p>
+              <strong>Description:</strong> {libraryRequestForm.description}
+            </p>
+          </div>
+
+          <div className="section">
+            <h3>Warden Approval</h3>
+            <p>
+              <strong>Status:</strong>{" "}
+              {libraryRequestForm.wardenApproval?.status}
+            </p>
+            <p>
+              <strong>Approved By:</strong>{" "}
+              {libraryRequestForm.wardenApproval?.by}
+            </p>
+            <p>
+              <strong>Approval Time:</strong>{" "}
+              {new Date(
+                libraryRequestForm.wardenApproval?.time
+              ).toLocaleString()}
+            </p>
+            <p>
+              <strong>Warden Name:</strong>{" "}
+              {libraryRequestForm.wardenApproval?.wardenName}
+            </p>
+          </div>
+
+          <div className="section">
+            <h3>SRO Approval</h3>
+            <p>
+              <strong>Status:</strong> {libraryRequestForm.SROApproval?.status}
+            </p>
+            <p>
+              <strong>Approved By:</strong> {libraryRequestForm.SROApproval?.by}
+            </p>
+            <p>
+              <strong>Approval Time:</strong>{" "}
+              {new Date(libraryRequestForm.SROApproval?.time).toLocaleString()}
+            </p>
+            <p>
+              <strong>SRO Name:</strong>{" "}
+              {libraryRequestForm.SROApproval?.SROName}
+            </p>
+          </div>
+
+          <div className="section">
+            <h3>Library Log</h3>
+            <p>
+              <strong>Check In Time:</strong>{" "}
+              {new Date(libraryRequestForm.in?.time).toLocaleString()}
+            </p>
+            <p>
+              <strong>Checked In By:</strong> {libraryRequestForm.in?.by}
+            </p>
+            <p>
+              <strong>Librarian (In):</strong>{" "}
+              {libraryRequestForm.in?.librarianName}
+            </p>
+
+            <p>
+              <strong>Check Out Time:</strong>{" "}
+              {new Date(libraryRequestForm.out?.time).toLocaleString()}
+            </p>
+            <p>
+              <strong>Checked Out By:</strong> {libraryRequestForm.out?.by}
+            </p>
+            <p>
+              <strong>Librarian (Out):</strong>{" "}
+              {libraryRequestForm.out?.librarianName}
+            </p>
+          </div>
+
+          <div className="section">
+            <h3>Delay & Cancellation</h3>
+            <p>
+              <strong>Delay Time:</strong> {libraryRequestForm.delayTime} hours
+            </p>
+            {libraryRequestForm.cancelRequest?.status ? (
+              <>
+                <p>
+                  <strong>Request Canceled:</strong> Yes
+                </p>
+                <p>
+                  <strong>Cancellation Reason:</strong>{" "}
+                  {libraryRequestForm.cancelRequest?.reason}
+                </p>
+                <p>
+                  <strong>Cancellation Time:</strong>{" "}
+                  {new Date(
+                    libraryRequestForm.cancelRequest?.time
+                  ).toLocaleString()}
+                </p>
+              </>
+            ) : (
+              <>
+                <p>
+                  <strong>Request Canceled:</strong> No
+                </p>
+                {!cancelRequest ? (
+                  <button
+                    className="cancel-button"
+                    onClick={() => setCancelRequest(true)}
+                  >
+                    Cancel Request
+                  </button>
+                ) : (
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      cancelLibraryRequest(
+                        libraryRequestForm.requestId,
+                        cancelReason
+                      );
+                      setCancelRequest(false);
+                      setCancelReason("");
+                    }}
+                  >
+                    <label htmlFor="cancel-reason">Reason:</label>
+                    <textarea
+                      name="cancel-reason"
+                      id="cancel-reason"
+                      value={cancelReason}
+                      onChange={(e) => setCancelReason(e.target.value)}
+                      required
+                    ></textarea>
+                    <button type="submit">Submit</button>
+                    <button
+                      type="reset"
+                      onClick={() => {
+                        setCancelReason("");
+                        setCancelRequest(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </form>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="library-request-page container">
       <div className="library-request-header text-center my-4">
@@ -47,7 +253,7 @@ function LibraryRequest() {
           <h3>Student Details</h3>
           <button
             className="btn btn-primary"
-            onClick={() => setAutofill(prev => !prev)}
+            onClick={() => setAutofill((prev) => !prev)}
           >
             Auto-fill
           </button>
@@ -60,257 +266,285 @@ function LibraryRequest() {
             setShowPreview(true);
           }}
         >
-            <div className="col-md-6">
-              <label htmlFor="contact_no" className="form-label">Contact No:</label>
-              <input
-                type="text"
-                name="contact_no"
-                id="contact_no"
-                className="form-control"
-                value={libraryRequestData.phone}
-                onChange={(e) =>
-                  setLibraryRequestData((prev) => ({
-                    ...prev,
-                    phone: e.target.value,
-                  }))
-                }
-                required
-              />
-            </div>
+          <div className="col-md-6">
+            <label htmlFor="contact_no" className="form-label">
+              Contact No:
+            </label>
+            <input
+              type="text"
+              name="contact_no"
+              id="contact_no"
+              className="form-control"
+              value={libraryRequestData.phone}
+              onChange={(e) =>
+                setLibraryRequestData((prev) => ({
+                  ...prev,
+                  phone: e.target.value,
+                }))
+              }
+              required
+            />
+          </div>
 
-            <div className="col-md-6">
-              <label htmlFor="name" className="form-label">Student Name:</label>
-              <input
-                type="text"
-                name="name"
-                id="name"
-                className="form-control"
-                value={libraryRequestData.name}
-                onChange={(e) =>
-                  setLibraryRequestData((prev) => ({
-                    ...prev,
-                    name: e.target.value,
-                  }))
-                }
-                required
-              />
-            </div>
+          <div className="col-md-6">
+            <label htmlFor="name" className="form-label">
+              Student Name:
+            </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              className="form-control"
+              value={libraryRequestData.name}
+              onChange={(e) =>
+                setLibraryRequestData((prev) => ({
+                  ...prev,
+                  name: e.target.value,
+                }))
+              }
+              required
+            />
+          </div>
 
-            <div className="col-md-6">
-              <label htmlFor="academic_year" className="form-label" >Academic Year:</label>
-              <input
-                type="text"
-                name="academic_year"
-                id="academic_year"
-                className="form-control"
-                value={libraryRequestData.academicYear}
-                onChange={(e) =>
-                  setLibraryRequestData((prev) => ({
-                    ...prev,
-                    academicYear: e.target.value,
-                  }))
-                }
-                required
-              />
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="department" className="form-label">Department:</label>
-              <select
-                name="department"
-                id="department"
-                className="form-select"
+          <div className="col-md-6">
+            <label htmlFor="academic_year" className="form-label">
+              Academic Year:
+            </label>
+            <input
+              type="text"
+              name="academic_year"
+              id="academic_year"
+              className="form-control"
+              value={libraryRequestData.academicYear}
+              onChange={(e) =>
+                setLibraryRequestData((prev) => ({
+                  ...prev,
+                  academicYear: e.target.value,
+                }))
+              }
+              required
+            />
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="department" className="form-label">
+              Department:
+            </label>
+            <select
+              name="department"
+              id="department"
+              className="form-select"
+              value={libraryRequestData.department}
+              onChange={(e) =>
+                setLibraryRequestData((prev) => ({
+                  ...prev,
+                  department: e.target.value,
+                }))
+              }
+              required
+            >
+              <option value="">Select Department</option>
+              <optgroup label="Bachelor's Degrees">
+                <option value="B.Tech">B.Tech</option>
+                <option value="B.Sc">B.Sc</option>
+                <option value="B.C.A">B.C.A</option>
+                <option value="B.Arch">B.Arch</option>
+                <option value="B.Des">B.Des</option>
+                <option value="B.Pharm">B.Pharm</option>
+                <option value="B.B.A">B.B.A</option>
+                <option value="B.M.S">B.M.S</option>
+                <option value="B.Com">B.Com</option>
+                <option value="B.I.T">B.I.T</option>
+                <option value="B.Voc">B.Voc</option>
+                <option value="B.S">B.S</option>
+                <option value="B.F.A">B.F.A</option>
+                <option value="B.L">B.L</option>
+                <option value="B.Ed">B.Ed</option>
+                <option value="B.P.Ed">B.P.Ed</option>
+                <option value="B.F.Sc">B.F.Sc</option>
+                <option value="B.D.S">B.D.S</option>
+                <option value="B.H.M">B.H.M</option>
+                <option value="B.S.W">B.S.W</option>
+              </optgroup>
 
-                value={libraryRequestData.department}
-                onChange={(e) =>
-                  setLibraryRequestData((prev) => ({
-                    ...prev,
-                    department: e.target.value,
-                  }))
-                }
-                required
-              >
-                <option value="">Select Department</option>
-                <optgroup label="Bachelor's Degrees">
-                  <option value="B.Tech">B.Tech</option>
-                  <option value="B.Sc">B.Sc</option>
-                  <option value="B.C.A">B.C.A</option>
-                  <option value="B.Arch">B.Arch</option>
-                  <option value="B.Des">B.Des</option>
-                  <option value="B.Pharm">B.Pharm</option>
-                  <option value="B.B.A">B.B.A</option>
-                  <option value="B.M.S">B.M.S</option>
-                  <option value="B.Com">B.Com</option>
-                  <option value="B.I.T">B.I.T</option>
-                  <option value="B.Voc">B.Voc</option>
-                  <option value="B.S">B.S</option>
-                  <option value="B.F.A">B.F.A</option>
-                  <option value="B.L">B.L</option>
-                  <option value="B.Ed">B.Ed</option>
-                  <option value="B.P.Ed">B.P.Ed</option>
-                  <option value="B.F.Sc">B.F.Sc</option>
-                  <option value="B.D.S">B.D.S</option>
-                  <option value="B.H.M">B.H.M</option>
-                  <option value="B.S.W">B.S.W</option>
-                </optgroup>
-
-                <optgroup label="Master's Degrees">
-                  <option value="M.Sc">M.Sc</option>
-                  <option value="M.C.A">M.C.A</option>
-                  <option value="M.Arch">M.Arch</option>
-                  <option value="M.Des">M.Des</option>
-                  <option value="M.B.A">M.B.A</option>
-                  <option value="M.S">M.S</option>
-                  <option value="M.Pharm">M.Pharm</option>
-                  <option value="M.Com">M.Com</option>
-                  <option value="M.Phil">M.Phil</option>
-                  <option value="M.Voc">M.Voc</option>
-                  <option value="M.F.A">M.F.A</option>
-                  <option value="M.Ed">M.Ed</option>
-                  <option value="M.P.Ed">M.P.Ed</option>
-                  <option value="M.L">M.L</option>
-                  <option value="M.F.Sc">M.F.Sc</option>
-                  <option value="M.D">M.D</option>
-                  <option value="M.Tech">M.Tech</option>
-                  <option value="M.Sc">M.Sc</option>
-                </optgroup>
-              </select>
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="branch" className="form-label">Branch:</label>
-              <input
-                type="text"
-                name="branch"
-                id="branch"
-                className="form-control"
-
-                value={libraryRequestData.branchName}
-                onChange={(e) =>
-                  setLibraryRequestData((prev) => ({
-                    ...prev,
-                    branchName: e.target.value,
-                  }))
-                }
-                required
-              />
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="block_name" className="form-label">Block Name:</label>
-              <select
-                name="blockName"
-                id="blockName"
-                className="form-select"
-
-                value={libraryRequestData.blockName}
-                onChange={(e) =>
-                  setLibraryRequestData((prev) => ({
-                    ...prev,
-                    blockName: e.target.value,
-                  }))
-                }
-                required
-              >
-                <option value="">Select Block</option>
-                <option value="A-sannasi">A - Sannasi</option>
-                <option value="B-thamarai">B - Thamari</option>
-                <option value="C-malligai">C - Malligai</option>
-                <option value="D-agasthiyar">D - Agasthiyar</option>
-                <option value="E-nelson_mandela">E - Nelson Mandela</option>
-                <option value="F-oori">F - Oori</option>
-                <option value="G-paari">G - Paari</option>
-              </select>
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="room_no" className="form-label">Room No:</label>
-              <input
-                type="text"
-                name="room_no"
-                id="room_no"
-                className="form-control"
-
-                value={libraryRequestData.roomNumber}
-                onChange={(e) =>
-                  setLibraryRequestData((prev) => ({
-                    ...prev,
-                    roomNumber: e.target.value,
-                  }))
-                }
-                required
-              />
-            </div>
-            <div className="col-12">
-              <label htmlFor="description" className="form-label">Description:</label>
-              <textarea
-                name="description"
-                id="description"
-                className="form-control"
-
-                value={libraryRequestData.description}
-                onChange={(e) =>
-                  setLibraryRequestData((prev) => ({
-                    ...prev,
-                    description: e.target.value,
-                  }))
-                }
-                required
-              ></textarea>
-            </div>
-            <div className="col-12 form-check">
-              <input
-                type="checkbox"
-                name="terms_conditions"
-                id="terms_conditions"
-                className="form-check-input"
-                checked={libraryRequestData.terms_conditions}
-                onChange={() =>
-                  setLibraryRequestData((prev) => ({
-                    ...prev,
-                    terms_conditions: !prev.terms_conditions,
-                  }))
-                }
-                required
-              />
-              <label htmlFor="terms_conditions" className="form-check-label">
-                I have read and agree to the terms and conditions
-              </label>
-            </div>
-            <div className="col-12 d-flex justify-content-end">
-              <button type="submit" className="btn btn-success">Preview</button>
-            </div>
-      
+              <optgroup label="Master's Degrees">
+                <option value="M.Sc">M.Sc</option>
+                <option value="M.C.A">M.C.A</option>
+                <option value="M.Arch">M.Arch</option>
+                <option value="M.Des">M.Des</option>
+                <option value="M.B.A">M.B.A</option>
+                <option value="M.S">M.S</option>
+                <option value="M.Pharm">M.Pharm</option>
+                <option value="M.Com">M.Com</option>
+                <option value="M.Phil">M.Phil</option>
+                <option value="M.Voc">M.Voc</option>
+                <option value="M.F.A">M.F.A</option>
+                <option value="M.Ed">M.Ed</option>
+                <option value="M.P.Ed">M.P.Ed</option>
+                <option value="M.L">M.L</option>
+                <option value="M.F.Sc">M.F.Sc</option>
+                <option value="M.D">M.D</option>
+                <option value="M.Tech">M.Tech</option>
+                <option value="M.Sc">M.Sc</option>
+              </optgroup>
+            </select>
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="branch" className="form-label">
+              Branch:
+            </label>
+            <input
+              type="text"
+              name="branch"
+              id="branch"
+              className="form-control"
+              value={libraryRequestData.branchName}
+              onChange={(e) =>
+                setLibraryRequestData((prev) => ({
+                  ...prev,
+                  branchName: e.target.value,
+                }))
+              }
+              required
+            />
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="block_name" className="form-label">
+              Block Name:
+            </label>
+            <select
+              name="blockName"
+              id="blockName"
+              className="form-select"
+              value={libraryRequestData.blockName}
+              onChange={(e) =>
+                setLibraryRequestData((prev) => ({
+                  ...prev,
+                  blockName: e.target.value,
+                }))
+              }
+              required
+            >
+              <option value="">Select Block</option>
+              <option value="A-sannasi">A - Sannasi</option>
+              <option value="B-thamarai">B - Thamari</option>
+              <option value="C-malligai">C - Malligai</option>
+              <option value="D-agasthiyar">D - Agasthiyar</option>
+              <option value="E-nelson_mandela">E - Nelson Mandela</option>
+              <option value="F-oori">F - Oori</option>
+              <option value="G-paari">G - Paari</option>
+            </select>
+          </div>
+          <div className="col-md-6">
+            <label htmlFor="room_no" className="form-label">
+              Room No:
+            </label>
+            <input
+              type="text"
+              name="room_no"
+              id="room_no"
+              className="form-control"
+              value={libraryRequestData.roomNumber}
+              onChange={(e) =>
+                setLibraryRequestData((prev) => ({
+                  ...prev,
+                  roomNumber: e.target.value,
+                }))
+              }
+              required
+            />
+          </div>
+          <div className="col-12">
+            <label htmlFor="description" className="form-label">
+              Description:
+            </label>
+            <textarea
+              name="description"
+              id="description"
+              className="form-control"
+              value={libraryRequestData.description}
+              onChange={(e) =>
+                setLibraryRequestData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
+              required
+            ></textarea>
+          </div>
+          <div className="col-12 form-check">
+            <input
+              type="checkbox"
+              name="terms_conditions"
+              id="terms_conditions"
+              className="form-check-input"
+              checked={libraryRequestData.terms_conditions}
+              onChange={() =>
+                setLibraryRequestData((prev) => ({
+                  ...prev,
+                  terms_conditions: !prev.terms_conditions,
+                }))
+              }
+              required
+            />
+            <label htmlFor="terms_conditions" className="form-check-label">
+              I have read and agree to the terms and conditions
+            </label>
+          </div>
+          <div className="col-12 d-flex justify-content-end">
+            <button type="submit" className="btn btn-success">
+              Preview
+            </button>
+          </div>
         </form>
-      </div >
+      </div>
       {showPreview && (
         <div className="library-request-preview mt-5">
           <h3>Check Your Details</h3>
           <div className="row g-3">
             <div className="col-md-6">
-              <p><strong>Student Name:</strong> {libraryRequestData.name}</p>
+              <p>
+                <strong>Student Name:</strong> {libraryRequestData.name}
+              </p>
             </div>
             <div className="col-md-6">
-              <p><strong>Student Id: </strong>{userData?.studentId}</p>
+              <p>
+                <strong>Student Id: </strong>
+                {userData?.studentId}
+              </p>
             </div>
             <div className="col-md-6">
-              <p><strong>Contact No:</strong> {libraryRequestData.phone}</p>
+              <p>
+                <strong>Contact No:</strong> {libraryRequestData.phone}
+              </p>
             </div>
             <div className="col-md-6">
-              <p><strong>Block Name:</strong> {libraryRequestData.blockName}</p>
+              <p>
+                <strong>Block Name:</strong> {libraryRequestData.blockName}
+              </p>
             </div>
             <div className="col-md-6">
-              <p><strong>Room No:</strong> {libraryRequestData.roomNumber}</p>
+              <p>
+                <strong>Room No:</strong> {libraryRequestData.roomNumber}
+              </p>
             </div>
             <div className="col-md-6">
-              <p><strong>Department:</strong> {libraryRequestData.department}</p>
+              <p>
+                <strong>Department:</strong> {libraryRequestData.department}
+              </p>
             </div>
             <div className="col-md-6">
-              <p><strong>Branch:</strong> {libraryRequestData.branchName}</p>
+              <p>
+                <strong>Branch:</strong> {libraryRequestData.branchName}
+              </p>
             </div>
             <div className="col-md-12">
-              <p><strong>Description: </strong> {libraryRequestData.description}</p>
+              <p>
+                <strong>Description: </strong> {libraryRequestData.description}
+              </p>
             </div>
             <div className="d-flex justify-content-between">
               <button
-              className="btn btn-primary"
-
+                className="btn btn-primary"
                 onClick={() => {
                   sendLibraryRequest(libraryRequestData);
                   setAutofill(false);
@@ -332,8 +566,7 @@ function LibraryRequest() {
                 Send
               </button>
               <button
-              className="btn btn-secondary"
-
+                className="btn btn-secondary"
                 onClick={() => {
                   setAutofill(false);
                   setShowPreview(false);
@@ -356,9 +589,8 @@ function LibraryRequest() {
             </div>
           </div>
         </div>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
 }
 
