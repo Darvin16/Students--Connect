@@ -281,6 +281,7 @@ app.post("/fetch/library/request", async (req, res) => {
     const libraryRequestForm = await libraryRequest.findOne({
       studentId: user.studentId,
       requestDate: { $gte: startOfDay },
+      "cancelRequest.status": false,
     });
 
     if (libraryRequestForm) {
@@ -317,8 +318,6 @@ app.post("/library/request", async (req, res) => {
     terms_conditions,
   } = req.body;
 
-  console.log(req.body);
-
   if (
     !name ||
     !phone ||
@@ -346,6 +345,7 @@ app.post("/library/request", async (req, res) => {
   const existingRequest = await libraryRequest.findOne({
     studentId: req.user.studentId,
     requestDate: { $gte: startOfDay },
+    "cancelRequest.status": false,
   });
 
   if (existingRequest) {
@@ -397,7 +397,12 @@ app.post("/library/request/cancel", async (req, res) => {
     request.cancelRequest.status = true;
     request.cancelRequest.time = Date.now();
     request.cancelRequest.reason = reason;
-    await request.save();
+    await request.save().then(() => {
+      return res.status(200).send({
+        success: true,
+        message: "Request cancelled Successfully",
+      });
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).send({ success: false, message: "Server Error" });

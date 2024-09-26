@@ -29,3 +29,23 @@
   text-align: center;
 }
 
+.toggleBtn {
+  border: none;
+  border-radius: 50px;
+  padding: 10px;
+  background-color: var(--accent-1);
+  transition: background-color 0.3s ease;
+}
+.toggleBtnHolder {
+  background-color: var(--accent-1);
+  width: fit-content;
+  margin: 0 auto;
+  border-radius: 50px;
+  overflow: hidden;
+}
+.toggleBtn:hover {
+  background-color: var(--accent-2);
+}
+.active {
+  background-color: var(--accent-2);
+}

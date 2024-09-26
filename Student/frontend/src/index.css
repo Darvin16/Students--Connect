@@ -17,13 +17,13 @@ code {
 }
 
 :root {
-  --primary: #6482ad;
-  --secondary: #7fa1c3;
+  --primary: #007DCB;
+  --secondary: #00B1B2;
   --primary-2: #C96868;
   --secondary-2: #FADFA1;
   --accent-1: #e2dad6;
-  --accent-2: #f5eded;
-  --accent-3: #FFF4EA;
+  --accent-2: #00C79F;
+  --accent-3: #716DA0;
   --accent-4: #7EACB5;
 
 }

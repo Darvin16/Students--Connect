@@ -19,7 +19,7 @@ export const AppProvider = ({ children }) => {
   });
   const URL = "http://localhost:8000";
   const navigate = useNavigate();
-  const [libraryRequestForm, setLibraryRequestForm] = useState({});
+  const [libraryRequestForm, setLibraryRequestForm] = useState();
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -69,7 +69,7 @@ export const AppProvider = ({ children }) => {
       .then((res) => {
         if (res.status === 200) {
           setLibraryRequestForm(res.data.libraryRequestForm);
-          console.log(res.data.libraryRequestForm)
+          console.log(res.data.libraryRequestForm);
         }
       })
       .catch((err) => {
@@ -87,6 +87,7 @@ export const AppProvider = ({ children }) => {
       .then((res) => {
         if (res.status === 200) {
           alert(res.data.message);
+          fetchLibraryRequestForm();
         }
       })
       .catch((err) => {
@@ -111,6 +112,7 @@ export const AppProvider = ({ children }) => {
       .then((res) => {
         if (res.status === 200) {
           alert(res.data.message);
+          fetchLibraryRequestForm();
         }
       })
       .catch((err) => {

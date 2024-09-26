@@ -323,11 +323,13 @@ app.post("/fetch/library/requests", async (req, res) => {
           studentBlockName: staff.blockName,
           requestDate: { $gte: startOfDay },
           "wardenApproval.status": "approved", // Only fetch requests approved by the warden
+          "cancelRequest.status": false,
         });
       } else {
         libraryRequests = await libraryRequest.find({
           studentBlockName: staff.blockName,
           requestDate: { $gte: startOfDay },
+          "cancelRequest.status": false,
         });
       }
 

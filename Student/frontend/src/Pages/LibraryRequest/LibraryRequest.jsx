@@ -214,17 +214,24 @@ function LibraryRequest() {
                       setCancelReason("");
                     }}
                   >
-                    <label htmlFor="cancel-reason">Reason:</label>
+                    <label htmlFor="cancel-reason">
+                      <strong>Reason:</strong>
+                    </label>
                     <textarea
                       name="cancel-reason"
+                      className="form-control"
                       id="cancel-reason"
                       value={cancelReason}
                       onChange={(e) => setCancelReason(e.target.value)}
                       required
                     ></textarea>
-                    <button type="submit">Submit</button>
+                    <br />
+                    <button type="submit" className="btn btn-danger">
+                      Submit
+                    </button>
                     <button
                       type="reset"
+                      className="btn btn-secondary"
                       onClick={() => {
                         setCancelReason("");
                         setCancelRequest(false);
