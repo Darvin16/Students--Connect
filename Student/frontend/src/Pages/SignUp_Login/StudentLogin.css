@@ -1,110 +1,97 @@
-/* StudentLogin.css */
-
+/* Main login page container */
 .login-page {
-  margin: 0;
-  padding: 0;
-  font-family: "Arial", sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: lightgray;
-  /* background: linear-gradient(135deg, #6e8efb, #a777e3); */
+  background-color:white; /* Light grey background like in your staff login page */
 }
 
+/* Container for the login box */
 .login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-}
-
-.login-box {
   background-color: white;
   padding: 40px;
   border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  width: 250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 350px;
 }
 
+/* Header */
 .login-box h2 {
-  font-size: 24px;
+  text-align: center;
   color: #333;
+  font-size: 24px;
   margin-bottom: 20px;
 }
 
-.login-form {
-  margin-bottom: 20px;
-}
-
-.login-form input{
-  border: none;
-  border-bottom: 1px solid #777;
-}
-
+/* Input container styling */
 .login-input-container {
   margin-bottom: 20px;
 }
 
+/* Input fields styling */
 .login-input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  /* border-radius: 5px; */
-  font-size: 14px;
-  outline: none;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
 }
 
 .login-input:focus {
-  border-color: #6e8efb;
+  border-color: #9e5db1; /* Similar to the purple used in buttons */
+  outline: none;
 }
 
-.login-input-checkbox{
-  text-align: left;
-  margin-bottom: 10px;
-  padding-left: 10px;
+/* Checkbox styling */
+.login-input-checkbox {
   display: flex;
-  gap:10px;
   align-items: center;
-}
-.forgot-password {
-  font-size: 12px;
-  color: #999;
   margin-bottom: 20px;
-  cursor: pointer;
-  text-align: right;
 }
 
+.login-input-checkbox input {
+  margin-right: 10px;
+}
+
+.login-input-checkbox label {
+  color: #555;
+}
+
+/* Login button styling */
 .login-button {
-  width: 60%;
+  width: 100%;
   padding: 10px;
-  background-color: black;
-  /* background: linear-gradient(135deg, #6e8efb, #a777e3); */
+  background-color: #9e5db1;
   color: white;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
   font-size: 16px;
-  transition: background-color 0.3s ease;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .login-button:hover {
-  background: linear-gradient(135deg, #5b79e1, #956fd1);
+  background-color:#7B3A8F; /* Hover color similar to your staff page button */
+  transform: translateY(-2px);
 }
 
+/* Divider and Sign-up link */
 .login-divider {
-  font-size: 14px;
-  color: #aaa;
+  text-align: center;
   margin: 20px 0;
+  color: #888;
+}
+
+.signup-link {
+  text-align: center;
 }
 
 .signup-link a {
-  /* color: #6e8efb; */
-  color: black;
+  color: #0056b3;
   text-decoration: none;
-  font-weight: bold;
 }
 
 .signup-link a:hover {

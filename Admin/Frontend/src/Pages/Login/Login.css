@@ -3,7 +3,6 @@
     box-sizing: border-box;
 }
 
-
 .button-alignment {
     position: absolute;
     top: 20px;
@@ -16,7 +15,7 @@
 
 /* Other button styles */
 .admin {
-    background-color: #007bff;
+    background-color: #00f;
     /* Button color */
     color: white;
     border: none;
@@ -70,7 +69,7 @@
 }
 
 .login-container button:hover {
-    background-color: #0056b3;
+    background-color: #8e67c6;
 }
 
 /* Style for the staff login container */
