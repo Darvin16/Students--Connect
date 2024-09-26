@@ -394,6 +394,13 @@ app.post("/library/request/cancel", async (req, res) => {
       });
     }
 
+    if (Object.keys(request.in).length > 0) {
+      return res.status(409).send({
+        success: false,
+        message: "Request is can't be cancelled.",
+      })
+    }
+
     request.cancelRequest.status = true;
     request.cancelRequest.time = Date.now();
     request.cancelRequest.reason = reason;

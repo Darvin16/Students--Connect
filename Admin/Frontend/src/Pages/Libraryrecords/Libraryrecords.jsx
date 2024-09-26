@@ -61,7 +61,7 @@ const LibraryRequests = () => {
                       {request.in ? (
                         <>
                           {request.out ? (
-                            <p>Student is Out</p>
+                            <p>Student Left</p>
                           ) : (
                             <button
                               className="btn btn-danger"
