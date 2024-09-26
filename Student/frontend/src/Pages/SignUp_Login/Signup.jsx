@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import styles from "./Signup.module.css"; // CSS Module
 
 function Signup() {
-  const { setSignupForm, Signup } = useContext(AppContext);
+  const { signupForm, setSignupForm, Signup } = useContext(AppContext);
   const [showHostelInfo, setShowHostelInfo] = useState(false); // State for toggling
 
   return (
@@ -36,6 +36,7 @@ function Signup() {
                   type="text"
                   name="studentId"
                   id="studentId"
+                  value={signupForm.studentId}
                   onChange={(e) =>
                     setSignupForm((prev) => ({
                       ...prev,
@@ -53,6 +54,7 @@ function Signup() {
                   type="text"
                   name="name"
                   id="name"
+                  value={signupForm.name}
                   onChange={(e) =>
                     setSignupForm((prev) => ({ ...prev, name: e.target.value }))
                   }
@@ -67,8 +69,12 @@ function Signup() {
                   type="email"
                   name="email"
                   id="email"
+                  value={signupForm.email}
                   onChange={(e) =>
-                    setSignupForm((prev) => ({ ...prev, email: e.target.value }))
+                    setSignupForm((prev) => ({
+                      ...prev,
+                      email: e.target.value,
+                    }))
                   }
                   required
                 />
@@ -81,10 +87,14 @@ function Signup() {
                   type="tel"
                   name="phone"
                   id="phone"
+                  value={signupForm.phone}
                   placeholder="0000000000"
                   pattern="[0-9]{10}"
                   onChange={(e) =>
-                    setSignupForm((prev) => ({ ...prev, phone: e.target.value }))
+                    setSignupForm((prev) => ({
+                      ...prev,
+                      phone: e.target.value,
+                    }))
                   }
                   required
                 />
@@ -96,6 +106,7 @@ function Signup() {
                   className="form-control"
                   name="department"
                   id="department"
+                  value={signupForm.department}
                   onChange={(e) => {
                     setSignupForm((prev) => ({
                       ...prev,
@@ -158,6 +169,7 @@ function Signup() {
                   type="text"
                   name="branchName"
                   id="branchName"
+                  value={signupForm.branchName}
                   placeholder="AI, CSE, ECE, etc..."
                   onChange={(e) => {
                     setSignupForm((prev) => ({
@@ -176,6 +188,7 @@ function Signup() {
                   type="text"
                   name="academic-year"
                   id="academic-year"
+                  value={signupForm.academicYear}
                   placeholder="2024"
                   onChange={(e) => {
                     setSignupForm((prev) => ({
@@ -188,7 +201,6 @@ function Signup() {
               </div>
             </>
           ) : (
-            // Hostel Registration Section
             <>
               <div className="form-group">
                 <label htmlFor="blockName">Block Name:</label>
@@ -196,6 +208,7 @@ function Signup() {
                   className="form-control"
                   name="blockName"
                   id="blockName"
+                  value={signupForm.blockName}
                   onChange={(e) =>
                     setSignupForm((prev) => ({
                       ...prev,
@@ -222,6 +235,7 @@ function Signup() {
                   type="text"
                   name="roomNumber"
                   id="roomNumber"
+                  value={signupForm.roomNumber}
                   onChange={(e) => {
                     setSignupForm((prev) => ({
                       ...prev,
@@ -240,6 +254,7 @@ function Signup() {
                     name="gender"
                     id="male"
                     value="male"
+                    checked={signupForm.gender === "male"}
                     onChange={(e) =>
                       setSignupForm((prev) => ({
                         ...prev,
@@ -255,6 +270,7 @@ function Signup() {
                     name="gender"
                     id="female"
                     value="female"
+                    checked={signupForm.gender === "female"}
                     onChange={(e) =>
                       setSignupForm((prev) => ({
                         ...prev,
@@ -274,6 +290,7 @@ function Signup() {
                   type="password"
                   name="password"
                   id="password"
+                  value={signupForm.password}
                   onChange={(e) =>
                     setSignupForm((prev) => ({
                       ...prev,
@@ -291,6 +308,7 @@ function Signup() {
                   type="password"
                   name="confirmpassword"
                   id="confirmpassword"
+                  value={signupForm.confirmPassword}
                   onChange={(e) =>
                     setSignupForm((prev) => ({
                       ...prev,
