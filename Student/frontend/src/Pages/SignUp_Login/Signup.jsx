@@ -191,7 +191,7 @@ function Signup() {
                   name="academic-year"
                   id="academic-year"
                   value={signupForm.academicYear}
-                  placeholder={new Date.getFullYear()}
+                  placeholder={new Date().getFullYear()}
                   onChange={(e) => {
                     setSignupForm((prev) => ({
                       ...prev,
