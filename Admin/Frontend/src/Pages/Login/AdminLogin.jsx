@@ -36,6 +36,7 @@ function AdminLogin() {
                   setAdminLoginForm((al) => ({ ...al, password: e.target.value }))
                 }
                 required
+                autoComplete="off"
               />
             </div>
             <div>

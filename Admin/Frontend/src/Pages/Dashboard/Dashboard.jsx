@@ -102,6 +102,14 @@ function Dashboard() {
                   <li className="nav-item">
                     <Link
                       className="nav-link"
+                      to="/dashboard/warden/record/library/past"
+                    >
+                      <FontAwesomeIcon icon={faBookAtlas} /> Library Records
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link"
                       to="/dashboard/warden/record/leave"
                     >
                       <FontAwesomeIcon icon={faLayerGroup} /> Leave Request
@@ -135,6 +143,14 @@ function Dashboard() {
                       to="/dashboard/sro/record/library"
                     >
                       <FontAwesomeIcon icon={faBookAtlas} /> Library Request
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link"
+                      to="/dashboard/sro/record/library/past"
+                    >
+                      <FontAwesomeIcon icon={faBookAtlas} /> Library Records
                     </Link>
                   </li>
                   <li className="nav-item">
@@ -181,7 +197,7 @@ function Dashboard() {
         </div>
       </nav>
 
-      <div className="dashboard-components container mt-4">
+      <div className="dashboard-components  ">
         <Routes>
           {userData?.role === "admin" && (
             <>
@@ -207,6 +223,10 @@ function Dashboard() {
                 path="/warden/record/library"
                 element={<Libraryrecords />}
               />
+              <Route
+                path="/warden/record/library/past"
+                element={<LibraryRecordsHistory />}
+              />
               <Route path="/warden/record/leave" element={<></>} />
               <Route path="/warden/profile" element={<></>} />
             </>
@@ -216,6 +236,7 @@ function Dashboard() {
               <Route path="/" element={<WardenPage />} />
               <Route path="/sro/record/student" element={<StudentRecord />} />
               <Route path="/sro/record/library" element={<Libraryrecords />} />
+              <Route path="/sro/record/library/past" element={<LibraryRecordsHistory />} />
               <Route path="/sro/record/leave" element={<></>} />
               <Route path="/sro/profile" element={<></>} />
             </>

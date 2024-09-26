@@ -1,7 +1,9 @@
 .student-record-page {
   padding: 10px;
-    background-image: linear-gradient(to bottom right,hsl(300, 76%, 82%),lightblue,violet);
+    /* background-image: linear-gradient(to bottom right,hsl(300, 76%, 82%),lightblue,violet); */
+    background-color: aliceblue;
     min-height: 100vh;
+    border-radius: 15px;
 }
 
 /* Filter */

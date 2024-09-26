@@ -18,6 +18,7 @@ const LibraryRequests = () => {
     }
   }, [libraryRequests]);
 
+
   if (userData?.role === "librarian") {
     return (
       <div className="library-requests-container">
@@ -39,7 +40,7 @@ const LibraryRequests = () => {
               </thead>
               <tbody>
                 {libraryRequests.map((request) => (
-                  <tr key={request.requestid}>
+                  <tr key={request.requestId}>
                     <td>{request.studentId}</td>
                     <td>{request.studentName}</td>
                     <td>{request.studentDepartment}</td>
@@ -114,7 +115,7 @@ const LibraryRequests = () => {
             </thead>
             <tbody>
               {libraryRequests.map((request) => (
-                <tr key={request.requestid}>
+                <tr key={request.requestId}>
                   <td>{request.studentId}</td>
                   <td>{request.studentName}</td>
                   <td>{request.studentDepartment}</td>
