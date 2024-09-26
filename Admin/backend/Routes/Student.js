@@ -1,5 +1,6 @@
 import express from "express";
 import studentsData from "../Models/StudentsData.js";
+import staffData from "../Models/StaffData.js";
 
 const router = express.Router();
 
@@ -68,15 +69,47 @@ router.post("/add", (req, res) => {
     });
 });
 
-router.post("/get", async (_, res) => {
+router.post("/get", async (req, res) => {
   try {
+    const { user } = req;
     const studentRecords = await studentsData
       .find({})
       .select("-_id -__v -password");
+
+    if (user.role !== "admin") {
+      const staff = await staffData.findOne({
+        employeeId: user.employeeId,
+      });
+      const filterStudentRecords = await studentsData.find({
+        blockname: staff.blockName,
+      });
+
+      if (!staff) {
+        return res.status(403).send({
+          success: false,
+          message: "You are not authorized to access this resource",
+        });
+      }
+      if (!filterStudentRecords) {
+        return res.status(404).send({
+          success: false,
+          message: "No student records found",
+        });
+      }
+
+      return res.status(200).send({
+        success: true,
+        message: "Student Records Retrieved Successfully",
+        studentRecords: filterStudentRecords,
+      });
+    }
+
     if (studentRecords) {
-      return res
-        .status(200)
-        .send({ success: true, studentRecords: studentRecords });
+      return res.status(200).send({
+        success: true,
+        message: "Student Records Retrieved Successfully",
+        studentRecords: studentRecords,
+      });
     } else {
       return res
         .status(404)

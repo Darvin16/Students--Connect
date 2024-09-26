@@ -35,6 +35,7 @@ export const AppProvider = ({ children }) => {
   const [studentRecords, setStudentRecords] = useState([]);
   const [signupForm, setSignupForm] = useState({});
   const [libraryRequests, setLibraryRequests] = useState([]);
+  const [libraryRecords, setLibraryRecords] = useState([]);
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -116,6 +117,7 @@ export const AppProvider = ({ children }) => {
       .then((res) => {
         if (res.status === 200) {
           setLibraryRequests(res.data.libraryRequests);
+          setLibraryRecords(res.data.libraryRecords);
         }
       })
       .catch((err) => {
@@ -390,6 +392,7 @@ export const AppProvider = ({ children }) => {
         libraryRequests,
         fetchLibraryRequests,
         handleLibraryRequest,
+        libraryRecords,
       }}
     >
       {children}

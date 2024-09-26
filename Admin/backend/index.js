@@ -310,6 +310,10 @@ app.post("/fetch/library/requests", async (req, res) => {
       const startOfDay = new Date();
       startOfDay.setHours(0, 0, 0, 0);
 
+      const records = await libraryRequest.find({
+        studentBlockName: staff.blockName,
+      });
+
       if (!staff) {
         return res
           .status(404)
@@ -336,7 +340,7 @@ app.post("/fetch/library/requests", async (req, res) => {
       return res.status(200).send({
         success: true,
         message: "Request fetched Successfully",
-        libraryRecords: libraryRecords,
+        libraryRecords: records,
         libraryRequests: libraryRequests,
       });
     }

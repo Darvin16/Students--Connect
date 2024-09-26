@@ -17,6 +17,8 @@ import AdminPage from "../LandPage/Admin/AdminPage";
 import WardenPage from "../LandPage/Warden/WardenPage";
 import Libraryrecords from "../Libraryrecords/Libraryrecords";
 import "./Dashboard.css";
+import AdminStudentRecords from "../StudentRecord/AdminStudentRecords";
+import LibraryRecordsHistory from "../Libraryrecords/LibraryRecordsHistory";
 
 function Dashboard() {
   const { userData, logout } = useContext(AppContext);
@@ -162,8 +164,8 @@ function Dashboard() {
             <>
               <Route path="/" element={<AdminPage />} />
               <Route path="/record/staff" element={<StaffRecord />} />
-              <Route path="/record/student" element={<></>} />
-              <Route path="/record/library" element={<></>} />
+              <Route path="/record/student" element={<AdminStudentRecords/>} />
+              <Route path="/record/library" element={<LibraryRecordsHistory/>} />
               <Route path="/record/leave" element={<></>} />
               <Route path="/profile" element={<></>} />
             </>
