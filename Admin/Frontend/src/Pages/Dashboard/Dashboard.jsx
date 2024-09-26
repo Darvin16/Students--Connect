@@ -164,8 +164,11 @@ function Dashboard() {
             <>
               <Route path="/" element={<AdminPage />} />
               <Route path="/record/staff" element={<StaffRecord />} />
-              <Route path="/record/student" element={<AdminStudentRecords/>} />
-              <Route path="/record/library" element={<LibraryRecordsHistory/>} />
+              <Route path="/record/student" element={<AdminStudentRecords />} />
+              <Route
+                path="/record/library"
+                element={<LibraryRecordsHistory />}
+              />
               <Route path="/record/leave" element={<></>} />
               <Route path="/profile" element={<></>} />
             </>
@@ -188,10 +191,15 @@ function Dashboard() {
           {userData?.role === "SRO" && (
             <>
               <Route path="/" element={<WardenPage />} />
-              <Route path="/sro/record/student" element={<></>} />
+              <Route path="/sro/record/student" element={<StudentRecord/>} />
               <Route path="/sro/record/library" element={<Libraryrecords />} />
               <Route path="/sro/record/leave" element={<></>} />
               <Route path="/sro/profile" element={<></>} />
+            </>
+          )}
+          {userData?.role === "librarian" && (
+            <>
+              <Route path="/" element={<div />} />
             </>
           )}
         </Routes>
