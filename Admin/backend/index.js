@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import Student from "./Routes/Student.js";
 import libraryRequest from "./Models/LibraryRequest.js";
+import studentsData from "./Models/StudentsData.js";
 
 const app = express();
 app.use(express.json());
@@ -298,6 +299,66 @@ app.post("/fetch/user", (req, res) => {
           message: "Error Occured while finding user",
         });
       });
+  }
+});
+
+app.post("/fetch/dashboard/info", async (req, res) => {
+  try {
+    const { user } = req;
+    const startOfDay = new Date().setHours(0, 0, 0, 0);
+    if (user.role === "admin") {
+      const staffs = await staffData.find({});
+      const students = await studentsData.find({});
+      const staffActiveCount = staffs.filter((staff) => staff.password);
+      const studentActiveCount = students.filter((student) => student.password);
+      const libraryRequests = await libraryRequest.find({
+        requestDate: { $gte: startOfDay },
+      });
+
+      return res.status(200).send({
+        success: true,
+        message: "Dashboard Info Fetched Successfully",
+        dashboardInfo: {
+          staffCount: staffs.length,
+          studentCount: students.length,
+          studentActiveCount: studentActiveCount.length,
+          staffActiveCount: staffActiveCount.length,
+          libraryRequestsCount: libraryRequests.length,
+          leaveRequestsCount: 0,
+        },
+      });
+    } else {
+      const staff = await staffData.findOne({
+        employeeId: user.employeeId,
+      });
+      const studentCount = await studentsData.find({
+        blockName: staff.blockName,
+      });
+      const studentActiveCount = studentCount.filter(
+        (student) => student.password
+      );
+      const libraryRequests = await libraryRequest.find({
+        requestDate: { $gte: startOfDay },
+        studentBlockName: staff.blockName,
+      });
+
+      return res.status(200).send({
+        success: true,
+        message: "Dashboard Info Fetched Successfully",
+        dashboardInfo: {
+          studentCount: studentCount.length,
+          studentActiveCount: studentActiveCount.length,
+          libraryRequestsCount: libraryRequests.length,
+          leaveRequestsCount: 0,
+        },
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      success: false,
+      message: "Error Occured while fetching dashboard info",
+    });
   }
 });
 

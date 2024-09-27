@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { AppContext } from "../../Context/AppContext";
 import LibraryRequestTracker from "../LibraryRequest/LibraryRequestTracker";
+import RequestForm from "../LibraryRequest/RequestForm";
 
 function Dashboard() {
   const [showMenu, setShowMenu] = React.useState(false);
@@ -37,7 +38,11 @@ function Dashboard() {
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/library/request" element={<LibraryRequest />} />
-            <Route path="/library/request/tracking" element={<LibraryRequestTracker />} />
+            <Route
+              path="/library/request/tracking"
+              element={<LibraryRequestTracker />}
+            />
+            <Route path="/library/request/form" element={<RequestForm />} />
           </Routes>
         </div>
       </div>

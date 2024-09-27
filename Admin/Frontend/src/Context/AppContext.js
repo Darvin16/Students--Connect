@@ -36,6 +36,7 @@ export const AppProvider = ({ children }) => {
   const [signupForm, setSignupForm] = useState({});
   const [libraryRequests, setLibraryRequests] = useState([]);
   const [libraryRecords, setLibraryRecords] = useState([]);
+  const [dashboardInfo, setDashboardInfo] = useState({});
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -47,6 +48,7 @@ export const AppProvider = ({ children }) => {
     if (authToken) {
       fetchStudentRecords();
       fetchLibraryRequests();
+      fetchDashboardInfo();
     }
   }, [authToken]);
 
@@ -62,6 +64,25 @@ export const AppProvider = ({ children }) => {
       .then((res) => {
         if (res.status === 200) {
           setUserData(res.data.user);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function fetchDashboardInfo() {
+    axios
+      .post(
+        "http://localhost:9000/fetch/dashboard/info",
+        {},
+        {
+          headers: { authToken: authToken },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          setDashboardInfo(res.data.dashboardInfo);
         }
       })
       .catch((err) => {
@@ -393,6 +414,8 @@ export const AppProvider = ({ children }) => {
         fetchLibraryRequests,
         handleLibraryRequest,
         libraryRecords,
+        fetchDashboardInfo,
+        dashboardInfo,
       }}
     >
       {children}

@@ -131,7 +131,7 @@ p {
 .progress-step:last-child::after {
   display: none;
 }
-.progress-step:last-child p{
+.progress-step:last-child p {
   right: 0px;
 }
 .progress-step:nth-child(2) p {
@@ -148,3 +148,53 @@ p {
 .completed::after {
   background-color: green;
 }
+
+/* TimeLine */
+.request-tracker-timeline {
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: 10px;
+  padding-bottom: 20px;
+  gap: 50px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.tracker-timeline-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.tracker-timeline-group label {
+  width: 6em;
+  /* box-shadow: 0px 0px 5px; */
+  padding: 5px;
+  border-radius: 5px;
+}
+.tracker-timeline-group p {
+  /* width: 22em; */
+  /* box-shadow: 0px 0px 5px; */
+  padding: 5px;
+  border-radius: 5px;
+  margin: 0;
+}
+.tracker-timeline-group span{
+  padding: 1px;
+  background-color: hsl(0, 0%, 0%,0.5);
+  /* border-radius: 50%; */
+  height: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+/* .tracker-timeline-group span::after{
+  content: '';
+  position: absolute;
+  width: 2px;
+  background-color: black;
+  height: 80px;
+}
+.tracker-timeline-group:last-child span::after {
+  display: none;
+} */
+

@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { AppContext } from "../../../Context/AppContext";
+import { useEffect } from "react";
 
 function WardenPage() {
   const [entryBox, setEntryBox] = useState(false);
@@ -12,7 +13,15 @@ function WardenPage() {
     handleAddStudent,
     addStudentResult,
     setAddStudentResult,
+    fetchDashboardInfo,
+    dashboardInfo,
   } = useContext(AppContext);
+
+  useEffect(() => {
+    if (Object.keys(dashboardInfo).length === 0) {
+      fetchDashboardInfo();
+    }
+  }, [dashboardInfo]);
 
   function genInputBox() {
     return Array.from({ length: studentEntryCount }, (_, i) => (
@@ -67,13 +76,13 @@ function WardenPage() {
   return (
     <div className="admin-dashboard">
       <em>
-        <h2>{userData?.role} Dashboard</h2>
+        <h2>{userData?.role === "warden" ? "Warden" : "SRO"} Dashboard</h2>
       </em>
       <div className="dashboard-cards">
-        <div className="card">Leave Request</div>
-        <div className="card">Student Enrolled</div>
-        <div className="card">Library Requests</div>
-        <div className="card">Total Student List</div>
+        <div className="card"><p>{dashboardInfo.leaveRequestsCount}</p>Leave Request</div>
+        <div className="card"><p>{dashboardInfo.studentActiveCount}</p>Student Enrolled</div>
+        <div className="card"><p>{dashboardInfo.libraryRequestsCount}</p>Library Requests</div>
+        <div className="card"><p>{dashboardInfo.studentCount}</p>Total Student List</div>
       </div>
 
       {entryBox && (

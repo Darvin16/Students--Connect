@@ -11,6 +11,7 @@ function AdminPage() {
     setAddStaff,
     handleAddStaff,
     addStaffResult,
+    dashboardInfo,
     setAddStaffResult,
   } = useContext(AppContext);
 
@@ -70,11 +71,24 @@ function AdminPage() {
         <h2>Admin Dashboard</h2>
       </em>
       <div className="dashboard-cards">
-        <div className="card">Total Staff</div>
-        <div className="card">Active Entries</div>
-        <div className="card">Pending Approvals</div>
-        <div className="card">Library Requests</div>
-        <div className="card">Leave Requests</div>
+        <div className="card">
+          <p>{dashboardInfo.staffCount}</p>Total Staff
+        </div>
+        <div className="card">
+          <p>{dashboardInfo.staffCount}</p>Active Entries
+        </div>
+        <div className="card">
+          <p>{dashboardInfo.studentCount}</p>Total Students
+        </div>
+        <div className="card">
+          <p>{dashboardInfo.studentActiveCount}</p>Active Students
+        </div>
+        <div className="card">
+          <p>{dashboardInfo.libraryRequestsCount}</p>Library Requests
+        </div>
+        <div className="card">
+          <p>{dashboardInfo.leaveRequestsCount}</p>Leave Requests
+        </div>
       </div>
 
       {entryBox && (

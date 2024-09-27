@@ -8,6 +8,7 @@ function LibraryRequestTracker() {
     fetchLibraryRequestForm,
     authToken,
     cancelLibraryRequest,
+    navigate,
   } = useContext(AppContext);
 
   const [cancelRequest, setCancelRequest] = useState(false);
@@ -30,6 +31,7 @@ function LibraryRequestTracker() {
   return (
     <div className="library-request-tracker-page">
       <h1>Application Tracking Status</h1>
+      <h5>Student ID: {libraryRequestForm.studentId}</h5>
       {/* Progress Bar */}
       <div className="progress-bar-container">
         <div className={`progress-step completed`}>
@@ -95,7 +97,136 @@ function LibraryRequestTracker() {
       </div>
 
       <div className="request-details">
-        <div className="section">
+        <div className="request-tracker-timeline">
+          <div className="tracher-head">
+            <h2>Timeline:-</h2>
+            <h5>
+              Date:{" "}
+              {new Date().toLocaleDateString("en-GB", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+            </h5>
+          </div>
+          <div className="tracker-timeline-group">
+            <label>
+              {new Date(libraryRequestForm.requestDate).toLocaleTimeString(
+                "en-Gb",
+                {
+                  hour12: true,
+                }
+              )}
+            </label>
+            <span></span>
+            <p>Your Request Has been Submitted</p>
+          </div>
+          <div className="tracker-timeline-group">
+            {!libraryRequestForm.wardenApproval ? (
+              <>
+                <label>00:00:00</label>
+                <span></span>
+                <p>Waiting for Warden Approval</p>
+              </>
+            ) : (
+              <>
+                {libraryRequestForm.wardenApproval.status === "approved" ? (
+                  <>
+                    <label>
+                      {new Date(
+                        libraryRequestForm.wardenApproval.time
+                      ).toLocaleTimeString("en-Gb", {
+                        hour12: true,
+                      })}
+                    </label>
+                    <span></span>
+                    <p>Your Request has been Approved by Warden</p>
+                  </>
+                ) : (
+                  <>
+                    <label>
+                      {new Date(
+                        libraryRequestForm.wardenApproval.time
+                      ).toLocaleTimeString("en-Gb", {
+                        hour12: true,
+                      })}
+                    </label>
+                    <span></span>
+                    <p>Your Request has been Rejected by Warden</p>
+                  </>
+                )}
+              </>
+            )}
+          </div>
+          {libraryRequestForm.wardenApproval && (
+            <div className="tracker-timeline-group">
+              {!libraryRequestForm.SROApproval ? (
+                <>
+                  <label>00:00:00</label>
+                  <span></span>
+                  <p>Waiting for SRO Approval</p>
+                </>
+              ) : (
+                <>
+                  {libraryRequestForm.SROApproval.status === "approved" ? (
+                    <>
+                      <label>
+                        {new Date(
+                          libraryRequestForm.SROApproval.time
+                        ).toLocaleTimeString("en-Gb", {
+                          hour12: true,
+                        })}
+                      </label>
+                      <span></span>
+                      <p>Your Request has been Approved by SRO</p>
+                    </>
+                  ) : (
+                    <>
+                      <label>
+                        {new Date(
+                          libraryRequestForm.SROApproval.time
+                        ).toLocaleTimeString("en-Gb", {
+                          hour12: true,
+                        })}
+                      </label>
+                      <span></span>
+                      <p>Your Request has been Rejected by SRO</p>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+          {libraryRequestForm.in && (
+            <div className="tracker-timeline-group">
+              <label>
+                {new Date(libraryRequestForm.in.time).toLocaleTimeString(
+                  "en-Gb",
+                  {
+                    hour12: true,
+                  }
+                )}
+              </label>
+              <span></span>
+              <p>You entered the library</p>
+            </div>
+          )}
+          {libraryRequestForm.out && (
+            <div className="tracker-timeline-group">
+              <label>
+                {new Date(libraryRequestForm.out.time).toLocaleTimeString(
+                  "en-Gb",
+                  {
+                    hour12: true,
+                  }
+                )}
+              </label>
+              <span></span>
+              <p>You exit the library</p>
+            </div>
+          )}
+        </div>
+        {/* <div className="section">
           <h3>Student Details</h3>
           <p>
             <strong>Student ID:</strong> {libraryRequestForm.studentId}
@@ -199,81 +330,71 @@ function LibraryRequestTracker() {
             <strong>Librarian (Out):</strong>{" "}
             {libraryRequestForm.out?.librarianName}
           </p>
+        </div> */}
+        <div className="tracker-request-">
+          {libraryRequestForm.wardenApproval?.status === "approved" &&
+            libraryRequestForm.SROApproval?.status === "approved" && (
+              <>
+                <div className="tracker-request-approved">Form Approved</div>
+                <button
+                  onClick={() =>
+                    navigate("dashboard/library/request/form", {
+                      state: libraryRequestForm,
+                    })
+                  }
+                >
+                  View
+                </button>
+              </>
+            )}
         </div>
 
         <div className="section">
-          <h3>Delay & Cancellation</h3>
-          <p>
-            <strong>Delay Time:</strong> {libraryRequestForm.delayTime} hours
-          </p>
-          {libraryRequestForm.cancelRequest?.status ? (
-            <>
-              <p>
-                <strong>Request Canceled:</strong> Yes
-              </p>
-              <p>
-                <strong>Cancellation Reason:</strong>{" "}
-                {libraryRequestForm.cancelRequest?.reason}
-              </p>
-              <p>
-                <strong>Cancellation Time:</strong>{" "}
-                {new Date(
-                  libraryRequestForm.cancelRequest?.time
-                ).toLocaleString()}
-              </p>
-            </>
+          {!cancelRequest ? (
+            <button
+              className="cancel-button"
+              onClick={() => setCancelRequest(true)}
+            >
+              Cancel Request
+            </button>
           ) : (
-            <>
-              <p>
-                <strong>Request Canceled:</strong> No
-              </p>
-              {!cancelRequest ? (
-                <button
-                  className="cancel-button"
-                  onClick={() => setCancelRequest(true)}
-                >
-                  Cancel Request
-                </button>
-              ) : (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    cancelLibraryRequest(
-                      libraryRequestForm.requestId,
-                      cancelReason
-                    );
-                    setCancelRequest(false);
-                    setCancelReason("");
-                  }}
-                >
-                  <label htmlFor="cancel-reason">
-                    <strong>Reason:</strong>
-                  </label>
-                  <textarea
-                    name="cancel-reason"
-                    className="form-control"
-                    id="cancel-reason"
-                    value={cancelReason}
-                    onChange={(e) => setCancelReason(e.target.value)}
-                    required
-                  ></textarea>
-                  <br />
-                  <button type="submit" className="btn btn-danger">
-                    Submit
-                  </button>
-                  <button
-                    type="reset"
-                    className="btn btn-secondary"
-                    onClick={() => {
-                      setCancelReason("");
-                      setCancelRequest(false);
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </form>
-              )}
-            </>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                cancelLibraryRequest(
+                  libraryRequestForm.requestId,
+                  cancelReason
+                );
+                setCancelRequest(false);
+                setCancelReason("");
+              }}
+            >
+              <label htmlFor="cancel-reason">
+                <strong>Reason:</strong>
+              </label>
+              <textarea
+                name="cancel-reason"
+                className="form-control"
+                id="cancel-reason"
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                required
+              ></textarea>
+              <br />
+              <button type="submit" className="btn btn-danger">
+                Submit
+              </button>
+              <button
+                type="reset"
+                className="btn btn-secondary"
+                onClick={() => {
+                  setCancelReason("");
+                  setCancelRequest(false);
+                }}
+              >
+                Cancel
+              </button>
+            </form>
           )}
         </div>
       </div>
