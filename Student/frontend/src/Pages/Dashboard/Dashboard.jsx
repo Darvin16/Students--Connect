@@ -6,6 +6,7 @@ import "./Dashboard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { AppContext } from "../../Context/AppContext";
+import LibraryRequestTracker from "../LibraryRequest/LibraryRequestTracker";
 
 function Dashboard() {
   const [showMenu, setShowMenu] = React.useState(false);
@@ -22,17 +23,21 @@ function Dashboard() {
       <div className="dashboard-container">
         {showMenu && (
           <div className="dashboard-nav">
-            <Link to="/dashboard/">Dashboard</Link>
-            <Link to="/dashboard/library/request">Library Request</Link>
-            <Link to="/dashboard/leave/request">Leave Request</Link>
-            <Link to="/dashboard/profile">Profile</Link>
-            <button onClick={()=>Logout()}>Logout</button>
+            <div className="dashboard-nav-link">
+              <Link to="/dashboard/">Dashboard</Link>
+              <Link to="/dashboard/library/request">Library Request</Link>
+              <Link to="/dashboard/library/request/Tracking">Tracker</Link>
+              <Link to="/dashboard/leave/request">Leave Request</Link>
+              <Link to="/dashboard/profile">Profile</Link>
+              <button onClick={() => Logout()}>Logout</button>
+            </div>
           </div>
         )}
         <div className="dashboard-components">
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/library/request" element={<LibraryRequest />} />
+            <Route path="/library/request/tracking" element={<LibraryRequestTracker />} />
           </Routes>
         </div>
       </div>

@@ -48,11 +48,10 @@
   /* color: white; */
 }
 
-
 /* Form */
 
 .library-request-page {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   background-color: #f9f9f9;
   padding: 20px;
   border-radius: 8px;
@@ -83,4 +82,69 @@ p {
 
 .cancel-button:hover {
   background-color: #c0392b;
+}
+
+/* Tracker */
+
+.library-request-tracker-page {
+  box-shadow: 0px 0px 5px;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+/* Prograss Bar */
+
+.progress-bar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+  overflow: hidden;
+  padding-bottom: 20px;
+}
+
+.progress-step {
+  padding: 2px;
+  text-align: center;
+  background-color: lightgray;
+  border-radius: 50%;
+  position: relative;
+  text-wrap: nowrap;
+}
+.progress-step p {
+  margin: 0;
+  position: absolute;
+  bottom: -20px;
+}
+.progress-step::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -400px;
+  width: 400px;
+  height: 5px;
+  background-color: lightgray;
+  transform: translateY(-50%);
+}
+
+.progress-step:last-child::after {
+  display: none;
+}
+.progress-step:last-child p{
+  right: 0px;
+}
+.progress-step:nth-child(2) p {
+  left: -40px;
+}
+.progress-step:nth-child(3) p {
+  left: -30px;
+}
+
+.completed {
+  background-color: green;
+}
+
+.completed::after {
+  background-color: green;
 }
