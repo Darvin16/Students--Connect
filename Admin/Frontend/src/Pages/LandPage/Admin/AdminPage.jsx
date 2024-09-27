@@ -72,22 +72,22 @@ function AdminPage() {
       </em>
       <div className="dashboard-cards">
         <div className="card">
-          <p>{dashboardInfo.staffCount}</p>Total Staff
+          Total Staff Count<p>{dashboardInfo.staffCount}</p>
         </div>
         <div className="card">
-          <p>{dashboardInfo.staffCount}</p>Active Entries
+          Active Entries <p>{dashboardInfo.staffCount}</p>
         </div>
         <div className="card">
-          <p>{dashboardInfo.studentCount}</p>Total Students
+          Total Students<p>{dashboardInfo.studentCount}</p>
         </div>
         <div className="card">
-          <p>{dashboardInfo.studentActiveCount}</p>Active Students
+          Active Students<p>{dashboardInfo.studentActiveCount}</p>
         </div>
         <div className="card">
-          <p>{dashboardInfo.libraryRequestsCount}</p>Library Requests
+          Library Requests<p>{dashboardInfo.libraryRequestsCount}</p>
         </div>
         <div className="card">
-          <p>{dashboardInfo.leaveRequestsCount}</p>Leave Requests
+          Leave Requests<p>{dashboardInfo.leaveRequestsCount}</p>
         </div>
       </div>
 
