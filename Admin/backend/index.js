@@ -9,6 +9,7 @@ import bcrypt from "bcrypt";
 import Student from "./Routes/Student.js";
 import libraryRequest from "./Models/LibraryRequest.js";
 import studentsData from "./Models/StudentsData.js";
+import PDFDocument from "pdfkit";
 
 const app = express();
 app.use(express.json());
@@ -424,6 +425,106 @@ app.post("/fetch/library/requests", async (req, res) => {
     return res.status(500).send({
       success: false,
       message: "Error Occured while fetching library requests",
+    });
+  }
+});
+
+app.post("/generate/pdf", async (req, res) => {
+  try {
+    const { requestId } = req.body;
+
+    if (!requestId) {
+      return res.status(400).send({
+        success: false,
+        message: "Request ID is required",
+      });
+    }
+
+    const request = await libraryRequest.findOne({
+      requestId: requestId,
+    });
+
+    if (!request) {
+      return res.status(404).send({
+        success: false,
+        message: "Request not found",
+      });
+    }
+
+    const filename = request.studentId
+      ? `Request-${request.studentId}.pdf`
+      : `Request-Unknown.pdf`;
+    
+    res.header("Access-Control-Expose-Headers", "Content-Disposition"); // Expose Content-Disposition header
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=${filename}`
+    );
+
+    const doc = new PDFDocument();
+
+    doc.pipe(res);
+
+    doc
+      .fontSize(16)
+      .text(`Library Request for Student ID: ${request.studentId}`, {
+        align: "center",
+      });
+
+    doc
+      .moveDown()
+      .fontSize(12)
+      .text(`Student Name: ${request.studentName}`, {
+        align: "left",
+      })
+      .text(`Academic Year: ${request.studentAcademicYear}`, {
+        align: "left",
+      })
+      .text(`Contact No: ${request.studentContactNo}`, {
+        align: "left",
+      })
+      .text(`Department: ${request.studentDepartment}`, {
+        align: "left",
+      })
+      .text(`Branch: ${request.studentBranchName}`, {
+        align: "left",
+      })
+      .text(`Block Name: ${request.studentBlockName}`, {
+        align: "left",
+      })
+      .text(`Room Number: ${request.studentRoomNumber}`, {
+        align: "left",
+      })
+      .text(
+        `Request Date & Time:${new Date(request.requestDate).toLocaleString(
+          "en-GB",
+          {
+            year: "numeric",
+            month: "long",
+            day: "2-digit",
+            weekday: "long",
+            hour12: true,
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+          }
+        )}`,
+        {
+          align: "left",
+        }
+      )
+      .text(`Request Reason: ${request.description}`, {
+        align: "left",
+      });
+
+    doc.end();
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      success: false,
+      message: "Error Occured while generating pdf",
     });
   }
 });

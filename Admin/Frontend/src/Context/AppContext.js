@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import fileDownload from "js-file-download";
 
 export const AppContext = createContext();
 
@@ -143,6 +144,39 @@ export const AppProvider = ({ children }) => {
       })
       .catch((err) => {
         console.log(err);
+      });
+  }
+
+  function generatePDF(requestId) {
+    axios
+      .post(
+        "http://localhost:9000/generate/pdf",
+        {
+          requestId: requestId,
+        },
+        {
+          headers: { authToken: authToken },
+          responseType: "blob",
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          const filename = res.headers["content-disposition"]
+            ? res.headers["content-disposition"]
+                .split("filename=")[1]
+                .replace(/"/g, "")
+            : `Request-${requestId}.pdf`;
+
+          fileDownload(res.data, filename);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred while generating the PDF.");
+        }
       });
   }
 
@@ -416,6 +450,7 @@ export const AppProvider = ({ children }) => {
         libraryRecords,
         fetchDashboardInfo,
         dashboardInfo,
+        generatePDF,
       }}
     >
       {children}

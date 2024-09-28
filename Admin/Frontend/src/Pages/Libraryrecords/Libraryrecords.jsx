@@ -10,6 +10,7 @@ const LibraryRequests = () => {
     libraryRequests,
     fetchLibraryRequests,
     handleLibraryRequest,
+    generatePDF,
   } = useContext(AppContext);
 
   useEffect(() => {
@@ -17,7 +18,6 @@ const LibraryRequests = () => {
       fetchLibraryRequests();
     }
   }, [libraryRequests]);
-
 
   if (userData?.role === "librarian") {
     return (
@@ -46,7 +46,14 @@ const LibraryRequests = () => {
                     <td>{request.studentDepartment}</td>
                     <td>{request.studentBlockName}</td>
                     <td>{request.studentRoomNumber}</td>
-                    <td>{request.requestForm}</td>
+                    <td>
+                      <button
+                        className="download-file-btn"
+                        onClick={() => generatePDF(request.requestId)}
+                      >
+                        Download Request
+                      </button>
+                    </td>
                     <td>
                       {new Date(request.requestDate).toLocaleString("en-GB", {
                         month: "long",
@@ -121,7 +128,14 @@ const LibraryRequests = () => {
                   <td>{request.studentDepartment}</td>
                   <td>{request.studentBlockName}</td>
                   <td>{request.studentRoomNumber}</td>
-                  <td>{request.requestForm}</td>
+                  <td>
+                    <button
+                      className="download-file-btn"
+                      onClick={() => generatePDF(request.requestId)}
+                    >
+                      Download Request
+                    </button>
+                  </td>
                   <td>
                     {new Date(request.requestDate).toLocaleString("en-GB", {
                       month: "long",

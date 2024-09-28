@@ -7,11 +7,8 @@ import { Container, Table, TableBody, TableCell, TableHead, TableRow, Typography
 
 
 function LibraryRecordsHistory() {
-  const {
-    userData,
-    libraryRecords,
-    fetchLibraryRequests,
-  } = useContext(AppContext);
+  const { userData, libraryRecords, fetchLibraryRequests, generatePDF } =
+    useContext(AppContext);
 
   useEffect(() => {
     if (libraryRecords.length === 0) {
@@ -41,6 +38,7 @@ function LibraryRecordsHistory() {
                 <TableCell>Out Time</TableCell>
                 <TableCell>Delay Time</TableCell>
                 <TableCell>Request Cancelled</TableCell>
+                <TableCell>Download File</TableCell>
               </TableRow>
             </TableHead>
 
@@ -84,6 +82,14 @@ function LibraryRecordsHistory() {
                       "No"
                     )}
                   </TableCell>
+                  <TableCell>
+                    <button
+                      className="download-file-btn"
+                      onClick={() => generatePDF(record.requestId)}
+                    >
+                      Download Request
+                    </button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -119,7 +125,11 @@ function LibraryRecordsHistory() {
                   <td>{request.studentDepartment}</td>
                   <td>{request.studentBlockName}</td>
                   <td>{request.studentRoomNumber}</td>
-                  <td>{request.requestForm}</td>
+                  <td>
+                    <button className="download-file-btn" onClick={() => generatePDF(request.requestId)}>
+                      Download Request
+                    </button>
+                  </td>
                   <td>
                     {new Date(request.requestDate).toLocaleString("en-GB", {
                       month: "long",
