@@ -3,12 +3,28 @@ import { AppContext } from "../../Context/AppContext";
 import "./signup.css";
 
 function Signup() {
-  const { signupForm, setSignupForm, StaffSignup, navigate } = useContext(AppContext);
+  const { signupForm, setSignupForm, StaffSignup, navigate } =
+    useContext(AppContext);
 
   return (
     <div className="signup-container">
       <h1 className="signup-title">Sign Up</h1>
       <form className="signup-form" onSubmit={(e) => StaffSignup(e)}>
+        <div className="form-group">
+          <label htmlFor="profileImage"></label>
+          <input
+            type="file"
+            name="profileImage"
+            id="profileImage"
+            onChange={(e) =>
+              setSignupForm((prev) => ({
+                ...prev,
+                staffImage: e.target.files[0],
+              }))
+            }
+            required
+          />
+        </div>
         <div className="form-group">
           <label htmlFor="employeeId">Employee Id:</label>
           <input
@@ -156,11 +172,15 @@ function Signup() {
           />
         </div>
         <div className="form-group">
-          <button type="submit" className="submit-button">Submit</button>
+          <button type="submit" className="submit-button">
+            Submit
+          </button>
         </div>
       </form>
       <div className="login-prompt">
-        <button onClick={() => navigate("/login")} className="login-button">Login</button>
+        <button onClick={() => navigate("/login")} className="login-button">
+          Login
+        </button>
       </div>
     </div>
   );

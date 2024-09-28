@@ -6,6 +6,8 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import studentsData from "./Models/StudentsData.js";
 import libraryRequest from "./Models/LibraryRequest.js";
+import multer from "multer";
+import path from "path";
 
 const app = express();
 app.use(express.json());
@@ -27,6 +29,22 @@ app.get("/", (req, res) => {
   res.send("Server Started");
 });
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "Uploads/StudentImage");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({
+  storage: storage,
+}).single("studentImage");
+
 function generateUniqueId(n) {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -37,7 +55,7 @@ function generateUniqueId(n) {
   return id;
 }
 
-app.post("/signup", (req, res) => {
+app.post("/signup", upload, (req, res) => {
   const {
     studentId,
     name,
@@ -53,7 +71,10 @@ app.post("/signup", (req, res) => {
     blockName,
   } = req.body;
 
+  const { file } = req;
+
   if (
+    !file ||
     !studentId ||
     !name ||
     !phone ||
@@ -106,6 +127,13 @@ app.post("/signup", (req, res) => {
           });
         }
 
+        if (student.blockName !== blockName) {
+          return res.status(400).send({
+            success: false,
+            message: `Your not a Student of ${blockName} Block`,
+          });
+        }
+
         bcrypt.genSalt(10, (err, salt) => {
           if (err) {
             console.log(err);
@@ -128,10 +156,10 @@ app.post("/signup", (req, res) => {
             student.department = department;
             student.branchName = branchName;
             student.academicYear = academicYear;
-            student.blockName = blockName;
             student.roomNumber = roomNumber;
             student.gender = gender;
             student.password = hash;
+            student.studentImage = file.filename;
 
             student
               .save()
@@ -398,7 +426,7 @@ app.post("/library/request/cancel", async (req, res) => {
       return res.status(409).send({
         success: false,
         message: "Request is can't be cancelled.",
-      })
+      });
     }
 
     request.cancelRequest.status = true;

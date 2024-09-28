@@ -4,9 +4,20 @@ import staffData from "../Models/StaffData.js";
 
 const router = express.Router();
 
-router.post("/add", (req, res) => {
+router.post("/add", async (req, res) => {
+  const { user } = req;
   const studentIds = req.body;
   const date = Date.now();
+  const staff = await staffData.findOne({
+    employeeId: user.employeeId,
+  });
+
+  if (!staff) {
+    return res.status(403).send({
+      success: false,
+      message: "You are not authorized to add students",
+    });
+  }
 
   if (studentIds.length === 0) {
     return res
@@ -29,6 +40,7 @@ router.post("/add", (req, res) => {
           .create({
             studentId: studentId,
             createdOn: date,
+            blockName: staff.blockName,
           })
           .then(() => {
             return {

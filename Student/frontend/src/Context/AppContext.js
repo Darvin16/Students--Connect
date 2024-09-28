@@ -128,8 +128,13 @@ export const AppProvider = ({ children }) => {
   function Signup(e) {
     e.preventDefault();
 
+    const formData = new FormData();
+    for (const key in signupForm) {
+      formData.append(key, signupForm[key]);
+    }
+
     axios
-      .post(`${URL}/signup`, signupForm)
+      .post(`${URL}/signup`, formData)
       .then((res) => {
         if (res.status === 200) {
           alert(res.data.message);

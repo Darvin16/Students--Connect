@@ -353,8 +353,14 @@ export const AppProvider = ({ children }) => {
 
   function StaffSignup(e) {
     e.preventDefault();
+
+    const formData = new FormData();
+    for (const key in signupForm) {
+      formData.append(key, signupForm[key]);
+    }
+
     axios
-      .post("http://localhost:9000/signup/staff", signupForm)
+      .post("http://localhost:9000/signup/staff", formData)
       .then((res) => {
         if (res.status === 200) {
           alert(res.data.message);

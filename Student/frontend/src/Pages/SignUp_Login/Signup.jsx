@@ -42,6 +42,22 @@ function Signup() {
         <form className={styles.signupForm} onSubmit={(e) => Signup(e)}>
           <>
             <div className="form-group">
+              <label htmlFor="studentImage"></label>
+              <input
+                className="form-control"
+                type="file"
+                name="studentImage"
+                id="studentImage"
+                onChange={(e) =>
+                  setSignupForm((prev) => ({
+                    ...prev,
+                    studentImage: e.target.files[0],
+                  }))
+                }
+                required
+              />
+            </div>
+            <div className="form-group">
               <label htmlFor="studentId">Student Id:</label>
               <input
                 className="form-control"

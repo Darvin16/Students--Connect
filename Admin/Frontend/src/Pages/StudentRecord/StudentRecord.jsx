@@ -79,7 +79,7 @@ function StudentRecord() {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <select
+            {/* <select
               name="blockName-filter"
               id="blockName-filter"
               onChange={(e) =>
@@ -94,7 +94,7 @@ function StudentRecord() {
               <option value="E-nelson_mandela">E - Nelson Mandela</option>
               <option value="F-oori">F - Oori</option>
               <option value="G-paari">G - Paari</option>
-            </select>
+            </select> */}
             <select
               name="department-filter"
               id="department-filter"
@@ -150,7 +150,7 @@ function StudentRecord() {
           <div className="filterby-year">
             <label htmlFor="academic-year">
               <b>Academic Year: </b>
-            </label>
+            </label>{" "}
             <input
               type="number"
               name="academic-year"
@@ -224,7 +224,7 @@ function StudentRecord() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <select
+          {/* <select
             name="blockName-filter"
             id="blockName-filter"
             onChange={(e) =>
@@ -239,7 +239,7 @@ function StudentRecord() {
             <option value="E-nelson_mandela">E - Nelson Mandela</option>
             <option value="F-oori">F - Oori</option>
             <option value="G-paari">G - Paari</option>
-          </select>
+          </select> */}
           <select
             name="department-filter"
             id="department-filter"
@@ -295,7 +295,7 @@ function StudentRecord() {
         <div className="filterby-year">
           <label htmlFor="academic-year">
             <b>Academic Year: </b>
-          </label>
+          </label>{" "}
           <input
             type="number"
             name="academic-year"

@@ -10,6 +10,8 @@ import Student from "./Routes/Student.js";
 import libraryRequest from "./Models/LibraryRequest.js";
 import studentsData from "./Models/StudentsData.js";
 import PDFDocument from "pdfkit";
+import multer from "multer";
+import path from "path";
 
 const app = express();
 app.use(express.json());
@@ -38,6 +40,20 @@ mongoose
 app.get("/", () => {
   console.log("Server is running");
 });
+
+const storage = multer.diskStorage({
+  destination: "Uploads/StaffImages",
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
+
+const upload = multer({
+  storage: storage,
+}).single("staffImage");
 
 app.post("/login/staff", (req, res) => {
   const { employeeId, password } = req.body;
@@ -97,7 +113,7 @@ app.post("/login/staff", (req, res) => {
     });
 });
 
-app.post("/signup/staff", (req, res) => {
+app.post("/signup/staff", upload, (req, res) => {
   const {
     employeeId,
     name,
@@ -110,8 +126,11 @@ app.post("/signup/staff", (req, res) => {
     blockName,
   } = req.body;
 
+  const { file } = req;
+
   if (
     !employeeId ||
+    !file ||
     !name ||
     !phone ||
     !email ||
@@ -184,6 +203,7 @@ app.post("/signup/staff", (req, res) => {
             staff.gender = gender;
             staff.password = hash;
             staff.blockName = blockName || null;
+            staff.staffImage = file.filename;
 
             staff
               .save()
@@ -195,6 +215,10 @@ app.post("/signup/staff", (req, res) => {
               })
               .catch((err) => {
                 console.log(err);
+                return res.status(500).send({
+                  success: false,
+                  message: "Error in Backend",
+                });
               });
           });
         });
@@ -454,14 +478,11 @@ app.post("/generate/pdf", async (req, res) => {
     const filename = request.studentId
       ? `Request-${request.studentId}.pdf`
       : `Request-Unknown.pdf`;
-    
+
     res.header("Access-Control-Expose-Headers", "Content-Disposition"); // Expose Content-Disposition header
 
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename=${filename}`
-    );
+    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
 
     const doc = new PDFDocument();
 
