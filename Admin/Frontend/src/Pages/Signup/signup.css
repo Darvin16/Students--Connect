@@ -46,6 +46,12 @@
     outline: none;
 }
 
+.form-group .upload-image{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+}
+
 .radio-group {
     display: flex;
     justify-content: space-around;

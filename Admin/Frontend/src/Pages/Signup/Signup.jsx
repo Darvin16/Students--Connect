@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { AppContext } from "../../Context/AppContext";
 import "./signup.css";
+import uploadImage from "../../Asset/upload.png";
 
 function Signup() {
   const { signupForm, setSignupForm, StaffSignup, navigate } =
@@ -11,7 +12,17 @@ function Signup() {
       <h1 className="signup-title">Sign Up</h1>
       <form className="signup-form" onSubmit={(e) => StaffSignup(e)}>
         <div className="form-group">
-          <label htmlFor="profileImage"></label>
+          <label htmlFor="profileImage">
+            <img
+              src={
+                signupForm.staffImage
+                  ? URL.createObjectURL(signupForm.staffImage)
+                  : uploadImage
+              }
+              alt="upload profile"
+              className="upload-image"
+            />
+          </label>
           <input
             type="file"
             name="profileImage"
@@ -22,6 +33,9 @@ function Signup() {
                 staffImage: e.target.files[0],
               }))
             }
+            style={{
+              opacity:0,
+            }}
             required
           />
         </div>

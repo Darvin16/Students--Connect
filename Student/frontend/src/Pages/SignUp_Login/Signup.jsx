@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { AppContext } from "../../Context/AppContext";
 import { Link } from "react-router-dom";
 import styles from "./Signup.module.css"; // CSS Module
+import uploadImage from "../../Asset/upload.png";
 
 function Signup() {
   const { signupForm, setSignupForm, Signup } = useContext(AppContext);
@@ -17,9 +18,7 @@ function Signup() {
           {showHostelInfo ? "Hostel Registration" : "Student Details"}
         </h3>
         <div className="my-3 text-center">
-          <div
-            className={styles.toggleBtnHolder}
-          >
+          <div className={styles.toggleBtnHolder}>
             <button
               className={`${styles.toggleBtn} ${
                 showHostelInfo ? "" : styles.active
@@ -42,7 +41,9 @@ function Signup() {
         <form className={styles.signupForm} onSubmit={(e) => Signup(e)}>
           <>
             <div className="form-group">
-              <label htmlFor="studentImage"></label>
+              <label htmlFor="studentImage">
+                <img className={styles.uploadImage} src={signupForm.studentImage?URL.createObjectURL(signupForm.studentImage):uploadImage} alt="uploadfile" title="Upload your Image" />
+              </label>
               <input
                 className="form-control"
                 type="file"
@@ -54,6 +55,9 @@ function Signup() {
                     studentImage: e.target.files[0],
                   }))
                 }
+                style={{
+                  opacity: 0,
+                }}
                 required
               />
             </div>

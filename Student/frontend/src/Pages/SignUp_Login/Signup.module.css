@@ -49,3 +49,9 @@
 .active {
   background-color: var(--accent-2);
 }
+
+.uploadImage{
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
