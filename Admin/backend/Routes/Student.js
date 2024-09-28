@@ -82,7 +82,7 @@ router.post("/get", async (req, res) => {
       });
       const filterStudentRecords = await studentsData
         .find({
-          blockname: staff.blockName,
+          blockName: staff.blockName,
         })
         .select("-_id -__v -password");
 
