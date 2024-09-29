@@ -8,7 +8,7 @@ import studentsData from "./Models/StudentsData.js";
 import libraryRequest from "./Models/LibraryRequest.js";
 import multer from "multer";
 import path from "path";
-import fs from "fs"
+import fs from "fs";
 import { fileURLToPath } from "url";
 
 const app = express();
@@ -19,7 +19,7 @@ app.use(express.static("Uploads"));
 
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url)
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 mongoose
@@ -61,7 +61,7 @@ function generateUniqueId(n) {
   return id;
 }
 
-app.post("/signup", (req, res) => {
+app.post("/signup", multer().none(), (req, res) => {
   const {
     studentId,
     name,
@@ -463,23 +463,23 @@ app.post("/add/profile/image", upload, async (req, res) => {
       });
     }
 
-      if (student.studentImage) {
-        const imagePath = path.join(
-          __dirname,
-          "Uploads/StudentImage",
-          student.studentImage
-        );
+    if (student.studentImage) {
+      const imagePath = path.join(
+        __dirname,
+        "Uploads/StudentImage",
+        student.studentImage
+      );
 
-        fs.unlink(imagePath, (err) => {
-          if (err) {
-            console.log(err);
-            return res.status(409).send({
-              success: false,
-              message: "Can't delete the past image, Try again later",
-            });
-          }
-        });
-      }
+      fs.unlink(imagePath, (err) => {
+        if (err) {
+          console.log(err);
+          return res.status(409).send({
+            success: false,
+            message: "Can't delete the past image, Try again later",
+          });
+        }
+      });
+    }
 
     student.studentImage = file.filename;
 

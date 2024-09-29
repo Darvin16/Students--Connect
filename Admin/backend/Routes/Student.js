@@ -7,6 +7,7 @@ const router = express.Router();
 router.post("/add", async (req, res) => {
   const { user } = req;
   const studentIds = req.body;
+  const uniqueStudentIds = [...new Set(studentIds)];
   const date = Date.now();
   const staff = await staffData.findOne({
     employeeId: user.employeeId,
@@ -25,12 +26,14 @@ router.post("/add", async (req, res) => {
       .send({ success: false, message: "Student ID is required" });
   }
 
-  const promises = studentIds.map((studentId) => {
+  const resultsStudentIDs = {};
+
+  const promises = uniqueStudentIds.map((studentId) => {
     return studentsData
       .findOne({ studentId: studentId })
       .then((student) => {
         if (student) {
-          return {
+          return resultsStudentIDs[studentId] = {
             createdOn: student.createdOn,
             status: "Duplicate",
           };
@@ -43,14 +46,14 @@ router.post("/add", async (req, res) => {
             blockName: staff.blockName,
           })
           .then(() => {
-            return {
+            resultsStudentIDs[studentId] = {
               createdOn: date,
               status: "Activated",
             };
           })
           .catch((err) => {
             console.log(err);
-            return {
+            resultsStudentIDs[studentId] = {
               createdOn: date,
               status: "Error",
             };
@@ -58,7 +61,7 @@ router.post("/add", async (req, res) => {
       })
       .catch((err) => {
         console.log(err);
-        return {
+        resultsStudentIDs[studentId] = {
           createdOn: date,
           status: "Error",
         };
@@ -66,7 +69,11 @@ router.post("/add", async (req, res) => {
   });
 
   Promise.all(promises)
-    .then((results) => {
+    .then(() => {
+      const results = studentIds.map(
+        (studentId) => resultsStudentIDs[studentId]
+      );
+
       return res.status(200).send({
         success: true,
         message: "Student Addition Successfully Completed",

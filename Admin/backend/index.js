@@ -11,9 +11,10 @@ import libraryRequest from "./Models/LibraryRequest.js";
 import studentsData from "./Models/StudentsData.js";
 import PDFDocument from "pdfkit";
 import multer from "multer";
-import path from "path";
+import path, { resolve } from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import { rejects } from "assert";
 
 const app = express();
 app.use(express.json());
@@ -119,7 +120,7 @@ app.post("/login/staff", (req, res) => {
     });
 });
 
-app.post("/signup/staff", (req, res) => {
+app.post("/signup/staff", multer().none(),(req, res) => {
   const {
     employeeId,
     name,
@@ -705,6 +706,7 @@ app.post("/update/library/requests", async (req, res) => {
 
 app.post("/staff/add", (req, res) => {
   const employeeIds = req.body;
+  const uniqueEmployeeIds = [...new Set(employeeIds)];
   const date = Date.now();
 
   if (employeeIds.length === 0) {
@@ -713,7 +715,9 @@ app.post("/staff/add", (req, res) => {
       .send({ success: false, message: "Please Enter the Employee Id" });
   }
 
-  const promises = employeeIds.map((employeeId) => {
+  const employeeIdsResults = {};
+
+  const promises = uniqueEmployeeIds.map((employeeId) => {
     return staffData
       .findOne({ employeeId: employeeId })
       .then((staff) => {
@@ -724,20 +728,20 @@ app.post("/staff/add", (req, res) => {
               createdOn: date,
             })
             .then(() => {
-              return {
+              employeeIdsResults[employeeId] = {
                 createdOn: date,
                 status: "Activated",
               };
             })
             .catch((err) => {
               console.log(err);
-              return {
+              employeeIdsResults[employeeId] = {
                 createdOn: date,
                 status: "Error",
               };
             });
         } else {
-          return {
+          employeeIdsResults[employeeId] = {
             createdOn: staff.createdOn,
             status: "Duplicate",
           };
@@ -745,7 +749,7 @@ app.post("/staff/add", (req, res) => {
       })
       .catch((err) => {
         console.log(err);
-        return {
+        employeeIdsResults[employeeId] = {
           createdOn: date,
           status: "Error",
         };
@@ -753,7 +757,10 @@ app.post("/staff/add", (req, res) => {
   });
 
   Promise.all(promises)
-    .then((results) => {
+    .then(() => {
+      const results = employeeIds.map(
+        (employeeId) => employeeIdsResults[employeeId]
+      );
       return res.status(200).send({
         success: true,
         message: "Staff Addition Successfully Completed",
@@ -850,7 +857,7 @@ app.post("/staff/edit", (req, res) => {
   }
 });
 
-app.delete("/staff/remove", (req, res) => {
+app.delete("/staff/remove", async (req, res) => {
   const { selectedStaffs } = req.body;
 
   if (selectedStaffs.length === 0) {
@@ -859,20 +866,62 @@ app.delete("/staff/remove", (req, res) => {
       .send({ success: false, message: "Please provide the employee id" });
   }
 
-  staffData
-    .deleteMany({ employeeId: { $in: selectedStaffs } })
-    .then((ack) => {
-      return res.status(200).send({
-        success: true,
-        message: `Staff Record${ack.deletedCount > 1 ? "s" : ""} Deleted`,
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      return res
-        .status(500)
-        .send({ success: false, message: "Error in Deleting Records" });
+  try {
+    const promises = selectedStaffs.map((id) => {
+      return staffData.findOneAndDelete({ employeeId: id });
     });
+
+    const results = await Promise.all(promises);
+
+    const deletedStaffs = results.filter((staff) => staff !== null);
+
+    if (deletedStaffs.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: "No Staff Deleted",
+      });
+    }
+
+    const imageDeletionPromises = deletedStaffs.map((staff) => {
+      if (staff.staffImage) {
+        const imagePath = path.join(
+          __dirname,
+          "Uploads/StaffImages",
+          staff.staffImage
+        );
+
+        return new Promise((resolve, reject) => {
+          fs.unlink(imagePath, (err) => {
+            if (err) {
+              console.log(err);
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
+        });
+      } else {
+        return Promise.resolve();
+      }
+    });
+
+    const deleteResults = await Promise.all(imageDeletionPromises);
+
+    console.log(deleteResults);
+
+    return res.status(200).send({
+      success: true,
+      message: `Staff${
+        deletedStaffs.length > 1 ? "s" : "F"
+      } Deleted Successfully`,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
 });
 
 app.use("/student", Student);

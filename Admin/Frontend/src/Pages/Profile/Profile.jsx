@@ -48,7 +48,11 @@ function Profile() {
         </div>
         <div className="profile-page-header">
           <h3>{userData.name}</h3>
-          <p>(Block: {userData.blockName})</p>
+          {userData.role !== "librarian" ? (
+            <p>(Block: {userData.blockName})</p>
+          ) : (
+            <></>
+          )}
           <p>{userData.role}</p>
         </div>
         <button className="profile-edit-button">Edit</button>
@@ -92,12 +96,13 @@ function Profile() {
             </p>
             <p>{userData.gender}</p>
           </div>
-          <div className="profile-details-group">
-            <p>
-              <b>Block Name:</b>
-            </p>
-            <p>{userData.blockName}</p>
-          </div>
+          {userData.role !== "librarian" ?
+            <div className="profile-details-group">
+              <p>
+                <b>Block Name:</b>
+              </p>
+              <p>{userData.blockName}</p>
+            </div> : <></>}
         </div>
       </div>
       <div className="profile-page-group">

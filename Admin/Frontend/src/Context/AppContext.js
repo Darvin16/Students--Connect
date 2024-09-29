@@ -245,6 +245,7 @@ export const AppProvider = ({ children }) => {
           alert(res.data.message);
           setAddStaffResult(res.data.results);
           fetchStaffRecords();
+          fetchDashboardInfo();
         } else {
           alert(res.data.message);
         }
@@ -293,6 +294,7 @@ export const AppProvider = ({ children }) => {
           alert(res.data.message);
           fetchStaffRecords();
           setSelectedStaffs([]);
+          fetchDashboardInfo();
         }
       })
       .catch((err) => {
@@ -316,6 +318,7 @@ export const AppProvider = ({ children }) => {
           alert(res.data.message);
           setAddStudentResult(res.data.results);
           fetchStudentRecords();
+          fetchDashboardInfo();
         } else {
           alert(res.data.message);
         }
@@ -340,6 +343,7 @@ export const AppProvider = ({ children }) => {
         if (res.status === 200) {
           alert(res.data.message);
           fetchStudentRecords();
+          fetchDashboardInfo();
           setSelectedStudents([]);
         }
       })
