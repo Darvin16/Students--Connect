@@ -18,6 +18,7 @@ export const AppProvider = ({ children }) => {
     rememberMe: false,
   });
   const URL = "http://localhost:8000";
+  const imageAccessURL = "http://localhost:8000/studentImage/";
   const navigate = useNavigate();
   const [libraryRequestForm, setLibraryRequestForm] = useState();
 
@@ -125,6 +126,32 @@ export const AppProvider = ({ children }) => {
       });
   }
 
+  function addProfileImage(image) {
+    const imageToAdd = new FormData();
+    imageToAdd.append("studentImage", image);
+
+    axios
+      .post(`${URL}/add/profile/image`, imageToAdd, {
+        headers: {
+          authToken: authToken,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          fetchUser();
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred in add profile image");
+        }
+      });
+  }
+
   function Signup(e) {
     e.preventDefault();
 
@@ -202,6 +229,9 @@ export const AppProvider = ({ children }) => {
         libraryRequestForm,
         fetchLibraryRequestForm,
         cancelLibraryRequest,
+        imageAccessURL,
+        addProfileImage,
+        fetchUser,
       }}
     >
       {children}

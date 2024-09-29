@@ -8,13 +8,19 @@ import studentsData from "./Models/StudentsData.js";
 import libraryRequest from "./Models/LibraryRequest.js";
 import multer from "multer";
 import path from "path";
+import fs from "fs"
+import { fileURLToPath } from "url";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
+app.use(express.static("Uploads"));
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename);
 
 mongoose
   .connect("mongodb://localhost:27017/StudentConnect")
@@ -55,13 +61,14 @@ function generateUniqueId(n) {
   return id;
 }
 
-app.post("/signup", upload, (req, res) => {
+app.post("/signup", (req, res) => {
   const {
     studentId,
     name,
     phone,
     email,
     department,
+    address,
     branchName,
     academicYear,
     roomNumber,
@@ -71,14 +78,12 @@ app.post("/signup", upload, (req, res) => {
     blockName,
   } = req.body;
 
-  const { file } = req;
-
   if (
-    !file ||
     !studentId ||
     !name ||
     !phone ||
     !email ||
+    !address ||
     !department ||
     !branchName ||
     !academicYear ||
@@ -118,6 +123,7 @@ app.post("/signup", upload, (req, res) => {
           student.academicYear &&
           student.blockName &&
           student.roomNumber &&
+          student.address &&
           student.gender &&
           student.password
         ) {
@@ -159,7 +165,7 @@ app.post("/signup", upload, (req, res) => {
             student.roomNumber = roomNumber;
             student.gender = gender;
             student.password = hash;
-            student.studentImage = file.filename;
+            student.address = address;
 
             student
               .save()
@@ -441,6 +447,62 @@ app.post("/library/request/cancel", async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(500).send({ success: false, message: "Server Error" });
+  }
+});
+
+app.post("/add/profile/image", upload, async (req, res) => {
+  try {
+    const { file, user } = req;
+
+    const student = await studentsData.findOne({ studentId: user.studentId });
+
+    if (!student) {
+      return res.status(404).send({
+        success: false,
+        message: "Student Not Found",
+      });
+    }
+
+      if (student.studentImage) {
+        const imagePath = path.join(
+          __dirname,
+          "Uploads/StudentImage",
+          student.studentImage
+        );
+
+        fs.unlink(imagePath, (err) => {
+          if (err) {
+            console.log(err);
+            return res.status(409).send({
+              success: false,
+              message: "Can't delete the past image, Try again later",
+            });
+          }
+        });
+      }
+
+    student.studentImage = file.filename;
+
+    student
+      .save()
+      .then(() => {
+        return res.status(200).send({
+          success: true,
+          message: "Profile Image Added Successfully",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        return res
+          .status(500)
+          .send({ success: false, message: "Server Error in saving Image" });
+      });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      success: false,
+      message: "Server Error",
+    });
   }
 });
 

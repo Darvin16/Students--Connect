@@ -12,13 +12,19 @@ import studentsData from "./Models/StudentsData.js";
 import PDFDocument from "pdfkit";
 import multer from "multer";
 import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(cors());
+app.use(express.static("Uploads"));
 
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 mongoose
   .connect("mongodb://localhost:27017/StudentConnect")
@@ -113,25 +119,24 @@ app.post("/login/staff", (req, res) => {
     });
 });
 
-app.post("/signup/staff", upload, (req, res) => {
+app.post("/signup/staff", (req, res) => {
   const {
     employeeId,
     name,
     phone,
     email,
     role,
+    address,
     gender,
     password,
     confirmPassword,
     blockName,
   } = req.body;
 
-  const { file } = req;
-
   if (
     !employeeId ||
-    !file ||
     !name ||
+    !address ||
     !phone ||
     !email ||
     !role ||
@@ -171,6 +176,7 @@ app.post("/signup/staff", upload, (req, res) => {
           staff.phone &&
           staff.role &&
           staff.gender &&
+          staff.address &&
           staff.password
         ) {
           return res.status(400).send({
@@ -203,7 +209,7 @@ app.post("/signup/staff", upload, (req, res) => {
             staff.gender = gender;
             staff.password = hash;
             staff.blockName = blockName || null;
-            staff.staffImage = file.filename;
+            staff.address = address;
 
             staff
               .save()
@@ -226,6 +232,10 @@ app.post("/signup/staff", upload, (req, res) => {
     })
     .catch((err) => {
       console.log(err);
+      return res.status(500).send({
+        success: false,
+        message: "Error in Server",
+      });
     });
 });
 
@@ -546,6 +556,62 @@ app.post("/generate/pdf", async (req, res) => {
     return res.status(500).send({
       success: false,
       message: "Error Occured while generating pdf",
+    });
+  }
+});
+
+app.post("/add/profile/image", upload, async (req, res) => {
+  try {
+    const { file, user } = req;
+
+    const staff = await staffData.findOne({ employeeId: user.employeeId });
+
+    if (!staff) {
+      return res.status(404).send({
+        success: false,
+        message: "Student Not Found",
+      });
+    }
+
+    if (staff.staffImage) {
+      const imagePath = path.join(
+        __dirname,
+        "Uploads/StaffImages",
+        staff.staffImage
+      );
+
+      fs.unlink(imagePath, (err) => {
+        if (err) {
+          console.log(err);
+          return res.status(409).send({
+            success: false,
+            message: "Can't delete the past image, Try again later",
+          });
+        }
+      });
+    }
+
+    staff.staffImage = file.filename;
+
+    staff
+      .save()
+      .then(() => {
+        return res.status(200).send({
+          success: true,
+          message: "Profile Image Added Successfully",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        return res
+          .status(500)
+          .send({ success: false, message: "Server Error in saving Image" });
+      });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      success: false,
+      message: "Server Error",
     });
   }
 });

@@ -2,13 +2,10 @@ import React, { useContext, useState } from "react";
 import { AppContext } from "../../Context/AppContext";
 import { Link } from "react-router-dom";
 import styles from "./Signup.module.css"; // CSS Module
-import uploadImage from "../../Asset/upload.png";
 
 function Signup() {
   const { signupForm, setSignupForm, Signup } = useContext(AppContext);
   const [showHostelInfo, setShowHostelInfo] = useState(false); // State for toggling
-
-  console.log(signupForm);
 
   return (
     <div className={`container ${styles.signupPage}`}>
@@ -40,27 +37,6 @@ function Signup() {
 
         <form className={styles.signupForm} onSubmit={(e) => Signup(e)}>
           <>
-            <div className="form-group">
-              <label htmlFor="studentImage">
-                <img className={styles.uploadImage} src={signupForm.studentImage?URL.createObjectURL(signupForm.studentImage):uploadImage} alt="uploadfile" title="Upload your Image" />
-              </label>
-              <input
-                className="form-control"
-                type="file"
-                name="studentImage"
-                id="studentImage"
-                onChange={(e) =>
-                  setSignupForm((prev) => ({
-                    ...prev,
-                    studentImage: e.target.files[0],
-                  }))
-                }
-                style={{
-                  opacity: 0,
-                }}
-                required
-              />
-            </div>
             <div className="form-group">
               <label htmlFor="studentId">Student Id:</label>
               <input
@@ -296,7 +272,7 @@ function Signup() {
                   required
                 />
                 <label htmlFor="male">Male</label>
-
+{" "}
                 <input
                   type="radio"
                   name="gender"
@@ -315,6 +291,22 @@ function Signup() {
               </div>
             </div>
 
+            <div className="form-group">
+              <label htmlFor="address">Address:</label>
+              <textarea
+                 className="form-control"
+                name="address"
+                id="address"
+                value={signupForm.address}
+                onChange={(e) =>
+                  setSignupForm((prev) => ({
+                    ...prev,
+                    address: e.target.value,
+                  }))
+                }
+                required
+              ></textarea>
+            </div>
             <div className="form-group">
               <label htmlFor="password">Password:</label>
               <input

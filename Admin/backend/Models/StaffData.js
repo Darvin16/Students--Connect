@@ -9,8 +9,9 @@ const staffDataSchema = new mongoose.Schema({
   role: String,
   blockName: String,
   gender: String,
+  address: String,
   password: String,
-  createdOn:Number,
+  createdOn: Number,
 });
 
 const staffData = mongoose.model("staffdata", staffDataSchema);

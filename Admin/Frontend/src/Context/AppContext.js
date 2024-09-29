@@ -38,6 +38,7 @@ export const AppProvider = ({ children }) => {
   const [libraryRequests, setLibraryRequests] = useState([]);
   const [libraryRecords, setLibraryRecords] = useState([]);
   const [dashboardInfo, setDashboardInfo] = useState({});
+  const imageAccessURL = "http://localhost:9000/StaffImages/";
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -176,6 +177,32 @@ export const AppProvider = ({ children }) => {
           alert(err.response.data.message);
         } else {
           alert("An error occurred while generating the PDF.");
+        }
+      });
+  }
+
+  function addProfileImage(image) {
+    const imageToAdd = new FormData();
+    imageToAdd.append("staffImage", image);
+
+    axios
+      .post(`http://localhost:9000/add/profile/image`, imageToAdd, {
+        headers: {
+          authToken: authToken,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          fetchUser();
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred in add profile image");
         }
       });
   }
@@ -457,6 +484,9 @@ export const AppProvider = ({ children }) => {
         fetchDashboardInfo,
         dashboardInfo,
         generatePDF,
+        fetchUser,
+        addProfileImage,
+        imageAccessURL,
       }}
     >
       {children}

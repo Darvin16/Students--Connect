@@ -6,6 +6,7 @@ const studentsDataSchema = new mongoose.Schema({
   name: String,
   email: String,
   phone: Number,
+  address:String,
   department: String,
   branchName: String,
   blockName: String,

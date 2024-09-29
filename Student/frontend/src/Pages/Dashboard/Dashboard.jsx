@@ -8,6 +8,7 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { AppContext } from "../../Context/AppContext";
 import LibraryRequestTracker from "../LibraryRequest/LibraryRequestTracker";
 import RequestForm from "../LibraryRequest/RequestForm";
+import Profile from "../Profile/Profile";
 
 function Dashboard() {
   const [showMenu, setShowMenu] = React.useState(false);
@@ -43,6 +44,7 @@ function Dashboard() {
               element={<LibraryRequestTracker />}
             />
             <Route path="/library/request/form" element={<RequestForm />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>
       </div>

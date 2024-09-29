@@ -20,6 +20,7 @@ import "./Dashboard.css";
 import AdminStudentRecords from "../StudentRecord/AdminStudentRecords";
 import LibraryRecordsHistory from "../Libraryrecords/LibraryRecordsHistory";
 import LibrarianPage from "../LandPage/Librarian/LibrarianPage";
+import Profile from "../Profile/Profile";
 
 function Dashboard() {
   const { userData, logout } = useContext(AppContext);
@@ -69,11 +70,6 @@ function Dashboard() {
                       <FontAwesomeIcon icon={faLayerGroup} /> Leave Record
                     </Link>
                   </li>
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/dashboard/profile">
-                      <FontAwesomeIcon icon={faCircleInfo} /> Profile
-                    </Link>
-                  </li>
                 </>
               )}
               {userData?.role === "warden" && (
@@ -116,7 +112,7 @@ function Dashboard() {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/dashboard/profile">
+                    <Link className="nav-link" to="/dashboard/warden/profile">
                       <FontAwesomeIcon icon={faCircleInfo} /> Profile
                     </Link>
                   </li>
@@ -159,7 +155,7 @@ function Dashboard() {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/dashboard/profile">
+                    <Link className="nav-link" to="/dashboard/sro/profile">
                       <FontAwesomeIcon icon={faCircleInfo} /> Profile
                     </Link>
                   </li>
@@ -181,7 +177,7 @@ function Dashboard() {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/dashboard/profile">
+                    <Link className="nav-link" to="/dashboard/librarian/profile">
                       <FontAwesomeIcon icon={faCircleInfo} /> Profile
                     </Link>
                   </li>
@@ -228,7 +224,7 @@ function Dashboard() {
                 element={<LibraryRecordsHistory />}
               />
               <Route path="/warden/record/leave" element={<></>} />
-              <Route path="/warden/profile" element={<></>} />
+              <Route path="/warden/profile" element={<Profile />} />
             </>
           )}
           {userData?.role === "SRO" && (
@@ -236,9 +232,12 @@ function Dashboard() {
               <Route path="/" element={<WardenPage />} />
               <Route path="/sro/record/student" element={<StudentRecord />} />
               <Route path="/sro/record/library" element={<Libraryrecords />} />
-              <Route path="/sro/record/library/past" element={<LibraryRecordsHistory />} />
+              <Route
+                path="/sro/record/library/past"
+                element={<LibraryRecordsHistory />}
+              />
               <Route path="/sro/record/leave" element={<></>} />
-              <Route path="/sro/profile" element={<></>} />
+              <Route path="/sro/profile" element={<Profile />} />
             </>
           )}
           {userData?.role === "librarian" && (
@@ -248,6 +247,7 @@ function Dashboard() {
                 path="/librarian/library/requests"
                 element={<Libraryrecords />}
               />
+              <Route path="/librarian/profile" element={<Profile />} />
             </>
           )}
         </Routes>
