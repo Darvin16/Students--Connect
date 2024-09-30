@@ -27,7 +27,6 @@ export const AppProvider = ({ children }) => {
   const [addStaff, setAddStaff] = useState([]);
   const [addStaffResult, setAddStaffResult] = useState([]);
   const [selectedStaffs, setSelectedStaffs] = useState([]);
-  const [editStaff, setEditStaff] = useState(null);
   const [studentEntryCount, setStudentEntryCount] = useState(0);
   const [addStudent, setAddStudent] = useState([]);
   const [addStudentResult, setAddStudentResult] = useState([]);
@@ -39,6 +38,7 @@ export const AppProvider = ({ children }) => {
   const [libraryRecords, setLibraryRecords] = useState([]);
   const [dashboardInfo, setDashboardInfo] = useState({});
   const imageAccessURL = "http://localhost:9000/StaffImages/";
+  const [editProfile, setEditProfile] = useState({});
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -260,17 +260,18 @@ export const AppProvider = ({ children }) => {
       });
   }
 
-  function handleEditStaff(e) {
-    e.preventDefault();
+  function handleEditProfile(dataToSend) {
     axios
-      .post("http://localhost:9000/staff/edit", editStaff, {
-        headers: { authToken: authToken },
+      .put("http://localhost:9000/staff/edit", dataToSend, {
+        headers: {
+          authToken: authToken,
+        },
       })
       .then((res) => {
         if (res.status === 200) {
           alert(res.data.message);
-          setEditStaff(false);
-          fetchStaffRecords();
+          fetchUser();
+          setEditProfile({});
         }
       })
       .catch((err) => {
@@ -278,7 +279,7 @@ export const AppProvider = ({ children }) => {
         if (err.response && err.response.data && err.response.data.message) {
           alert(err.response.data.message);
         } else {
-          alert("An error occurred");
+          alert("An error occurred while editing the profile");
         }
       });
   }
@@ -460,9 +461,6 @@ export const AppProvider = ({ children }) => {
         navigate,
         addStudent,
         setAddStudent,
-        editStaff,
-        setEditStaff,
-        handleEditStaff,
         handleRemoveStaff,
         handleAddStudent,
         authToken,
@@ -491,6 +489,9 @@ export const AppProvider = ({ children }) => {
         fetchUser,
         addProfileImage,
         imageAccessURL,
+        handleEditProfile,
+        editProfile,
+        setEditProfile,
       }}
     >
       {children}

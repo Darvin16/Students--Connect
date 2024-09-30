@@ -506,7 +506,7 @@ app.post("/add/profile/image", upload, async (req, res) => {
   }
 });
 
-app.post("/student/edit", async (req, res) => {
+app.put("/student/edit", async (req, res) => {
   const {
     name,
     email,
@@ -515,10 +515,11 @@ app.post("/student/edit", async (req, res) => {
     branchName,
     roomNumber,
     academicYear,
-    blockName,
     gender,
     address,
   } = req.body;
+
+  const { user } = req;
 
   if (
     !name ||
@@ -528,7 +529,6 @@ app.post("/student/edit", async (req, res) => {
     !branchName ||
     !roomNumber ||
     !academicYear ||
-    !blockName ||
     !gender ||
     !address
   ) {
@@ -547,7 +547,6 @@ app.post("/student/edit", async (req, res) => {
           name: name,
           email: email,
           phone: phone,
-          blockName: blockName,
           gender: gender,
           address: address,
           department: department,

@@ -21,6 +21,7 @@ export const AppProvider = ({ children }) => {
   const imageAccessURL = "http://localhost:8000/studentImage/";
   const navigate = useNavigate();
   const [libraryRequestForm, setLibraryRequestForm] = useState();
+  const [editProfile, setEditProfile] = useState({});
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -152,6 +153,30 @@ export const AppProvider = ({ children }) => {
       });
   }
 
+  function handleEditProfile(dataToSend) {
+    axios
+      .put(`${URL}/student/edit`, dataToSend, {
+        headers: {
+          authToken: authToken,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+          fetchUser();
+          setEditProfile({});
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred while editing the profile");
+        }
+      });
+  }
+
   function Signup(e) {
     e.preventDefault();
 
@@ -232,6 +257,9 @@ export const AppProvider = ({ children }) => {
         imageAccessURL,
         addProfileImage,
         fetchUser,
+        handleEditProfile,
+        editProfile,
+        setEditProfile,
       }}
     >
       {children}

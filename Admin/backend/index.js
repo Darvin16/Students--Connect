@@ -775,15 +775,15 @@ app.post("/staff/add", (req, res) => {
     });
 });
 
-app.post("/staff/edit", async (req, res) => {
-  const { name, email, phone, role, blockName, gender, address } = req.body;
+app.put("/staff/edit", async (req, res) => {
+  const { name, email, phone, blockName, gender, address } = req.body;
 
-  if (!name || !email || !phone || !role || !address || !gender) {
+  if (!name || !email || !phone || !address || !gender) {
     return res
       .status(400)
       .send({ success: false, message: "Please fill all the fields" });
   }
-  if (role !== "librarian" && !blockName) {
+  if (req.user.role !== "librarian" && !blockName) {
     return res
       .status(400)
       .send({ success: false, message: "Please fill all the fields" });
@@ -791,14 +791,13 @@ app.post("/staff/edit", async (req, res) => {
   staffData
     .findOneAndUpdate(
       {
-        employeeId: user.employeeId,
+        employeeId: req.user.employeeId,
       },
       {
         $set: {
           name: name,
           email: email,
           phone: phone,
-          role: role,
           blockName: blockName || null,
           gender: gender,
           address: address,
