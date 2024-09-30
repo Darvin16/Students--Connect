@@ -120,7 +120,7 @@ app.post("/login/staff", (req, res) => {
     });
 });
 
-app.post("/signup/staff", multer().none(),(req, res) => {
+app.post("/signup/staff", multer().none(), (req, res) => {
   const {
     employeeId,
     name,
@@ -775,27 +775,10 @@ app.post("/staff/add", (req, res) => {
     });
 });
 
-app.post("/staff/edit", (req, res) => {
-  const {
-    employeeId,
-    previousEmployeeId,
-    name,
-    email,
-    phone,
-    role,
-    blockName,
-    gender,
-  } = req.body;
+app.post("/staff/edit", async (req, res) => {
+  const { name, email, phone, role, blockName, gender, address } = req.body;
 
-  if (
-    !employeeId ||
-    !previousEmployeeId ||
-    !name ||
-    !email ||
-    !phone ||
-    !role ||
-    !gender
-  ) {
+  if (!name || !email || !phone || !role || !address || !gender) {
     return res
       .status(400)
       .send({ success: false, message: "Please fill all the fields" });
@@ -805,56 +788,35 @@ app.post("/staff/edit", (req, res) => {
       .status(400)
       .send({ success: false, message: "Please fill all the fields" });
   }
-
-  if (employeeId !== previousEmployeeId) {
-    staffData
-      .findOne({ employeeId: employeeId })
-      .then((staff) => {
-        if (staff) {
-          return res
-            .status(409)
-            .send({ success: false, message: "Employee id already taken!!!" });
-        } else {
-          updateStaff();
-        }
-      })
-      .catch((err) => {
-        console.log(err);
+  staffData
+    .findOneAndUpdate(
+      {
+        employeeId: user.employeeId,
+      },
+      {
+        $set: {
+          name: name,
+          email: email,
+          phone: phone,
+          role: role,
+          blockName: blockName || null,
+          gender: gender,
+          address: address,
+        },
+      }
+    )
+    .then(() => {
+      return res
+        .status(200)
+        .send({ success: true, message: "Your details updated Successfully" });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send({
+        success: false,
+        message: "Internal Server Error",
       });
-  } else {
-    updateStaff();
-  }
-  function updateStaff() {
-    staffData
-      .findOneAndUpdate(
-        { employeeId: previousEmployeeId },
-        {
-          $set: {
-            employeeId: employeeId,
-            name: name,
-            email: email,
-            phone: phone,
-            role: role,
-            blockName: blockName,
-            gender: gender,
-          },
-        }
-      )
-      .then((staff) => {
-        if (!staff) {
-          return res
-            .status(404)
-            .send({ success: false, message: "Staff not found" });
-        } else {
-          return res
-            .status(200)
-            .send({ success: true, message: "Staff updated successfully" });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+    });
 });
 
 app.delete("/staff/remove", async (req, res) => {

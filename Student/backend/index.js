@@ -506,6 +506,71 @@ app.post("/add/profile/image", upload, async (req, res) => {
   }
 });
 
+app.post("/student/edit", async (req, res) => {
+  const {
+    name,
+    email,
+    phone,
+    department,
+    branchName,
+    roomNumber,
+    academicYear,
+    blockName,
+    gender,
+    address,
+  } = req.body;
+
+  if (
+    !name ||
+    !email ||
+    !phone ||
+    !department ||
+    !branchName ||
+    !roomNumber ||
+    !academicYear ||
+    !blockName ||
+    !gender ||
+    !address
+  ) {
+    return res
+      .status(400)
+      .send({ success: false, message: "Please fill all the fields" });
+  }
+
+  studentsData
+    .findOneAndUpdate(
+      {
+        studentId: user.studentId,
+      },
+      {
+        $set: {
+          name: name,
+          email: email,
+          phone: phone,
+          blockName: blockName,
+          gender: gender,
+          address: address,
+          department: department,
+          branchName: branchName,
+          academicYear: academicYear,
+          roomNumber: roomNumber,
+        },
+      }
+    )
+    .then(() => {
+      return res
+        .status(200)
+        .send({ success: true, message: "Your details updated Successfully" });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send({
+        success: false,
+        message: "Internal Server Error",
+      });
+    });
+});
+
 app.listen(8000, () => {
   console.log("Server is running on port 8000");
 });

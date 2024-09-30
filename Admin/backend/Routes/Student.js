@@ -1,8 +1,13 @@
 import express from "express";
 import studentsData from "../Models/StudentsData.js";
 import staffData from "../Models/StaffData.js";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 
 const router = express.Router();
+
+const __dirname = import.meta.dirname;
 
 router.post("/add", async (req, res) => {
   const { user } = req;
@@ -33,10 +38,10 @@ router.post("/add", async (req, res) => {
       .findOne({ studentId: studentId })
       .then((student) => {
         if (student) {
-          return resultsStudentIDs[studentId] = {
+          return (resultsStudentIDs[studentId] = {
             createdOn: student.createdOn,
             status: "Duplicate",
-          };
+          });
         }
 
         return studentsData
@@ -144,7 +149,7 @@ router.post("/get", async (req, res) => {
   }
 });
 
-router.delete("/delete", (req, res) => {
+router.delete("/delete", async (req, res) => {
   const { selectedStudents } = req.body;
 
   if (selectedStudents.length === 0) {
@@ -153,20 +158,67 @@ router.delete("/delete", (req, res) => {
       .send({ success: false, message: "No students selected" });
   }
 
-  studentsData
-    .deleteMany({ studentId: { $in: selectedStudents } })
-    .then((ack) => {
-      return res.status(200).send({
-        success: true,
-        message: `Student Record${ack.deletedCount > 1 ? "s" : ""} Deleted`,
-      });
-    })
-    .catch((err) => {
-      console.log(err);
-      return res
-        .status(500)
-        .send({ success: false, message: "Error in Deleting Records" });
+  try {
+    const promises = selectedStudents.map((id) => {
+      return studentsData.findOneAndDelete({ studentId: id });
     });
+
+    const results = await Promise.all(promises);
+
+    const deletedStudents = results.filter((student) => student !== null);
+
+    if (deletedStudents.length === 0) {
+      return res.status(404).send({
+        success: false,
+        message: "No students found with the given IDs",
+      });
+    }
+
+    const deleteImagePromises = deletedStudents.map((student) => {
+      if (student.studentImage) {
+        const imagePath = path.join(
+          path.resolve(__dirname, "../../.."),
+          "Student/backend",
+          "Uploads/StudentImage",
+          student.studentImage
+        );
+
+        // const imagePath = path.join(
+        //   path.resolve(__dirname.replace("Admin", "Student"),".."),
+        //   "Uploads/StudentImage",
+        //   student.studentImage
+        // );
+
+        return new Promise((resolve, reject) => {
+          fs.unlink(imagePath, (err) => {
+            if (err) {
+              console.log(err);
+              reject(err);
+            } else {
+              resolve();
+            }
+          });
+        });
+      } else {
+        return Promise.resolve();
+      }
+    });
+
+    await Promise.all(deleteImagePromises);
+
+    return res.status(200).send({
+      success: true,
+      message: `Student${
+        deletedStudents.length > 1 ? "s" : ""
+      } deleted successfully`,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      success: false,
+      message: "Error deleting students",
+    });
+  }
 });
 
 export default router;
