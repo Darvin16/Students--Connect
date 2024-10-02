@@ -366,6 +366,9 @@ app.post("/fetch/dashboard/info", async (req, res) => {
     } else if (user.role === "librarian") {
       const libraryRequests = await libraryRequest.find({
         requestDate: { $gte: startOfDay },
+        "wardenApproval.status": "approved",
+        "SROApproval.status": "approved",
+        "cancelRequest.status": false,
       });
       const entryStatus = libraryRequests.filter(
         (request) => request.in !== null
@@ -387,8 +390,7 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           totalVisits: totalVisits.length,
         },
       });
-    }
-    {
+    } else {
       const staff = await staffData.findOne({
         employeeId: user.employeeId,
       });

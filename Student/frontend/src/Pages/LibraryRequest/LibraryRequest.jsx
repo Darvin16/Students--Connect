@@ -58,6 +58,7 @@ function LibraryRequest() {
           onSubmit={(e) => {
             e.preventDefault();
             setShowPreview(true);
+            window.scrollTo(0,700)
           }}
         >
           <div className="col-md-6">
