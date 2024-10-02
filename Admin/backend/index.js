@@ -363,7 +363,32 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           leaveRequestsCount: 0,
         },
       });
-    } else {
+    } else if (user.role === "librarian") {
+      const libraryRequests = await libraryRequest.find({
+        requestDate: { $gte: startOfDay },
+      });
+      const entryStatus = libraryRequests.filter(
+        (request) => request.in !== null
+      );
+      const exitStatus = libraryRequests.filter(
+        (request) => request.out !== null
+      );
+      const totalVisits = libraryRequests.filter(
+        (request) => request.in !== null && request.out !== null
+      );
+
+      return res.status(200).send({
+        success: true,
+        message: "Dashboard Info Fetched Successfully",
+        dashboardInfo: {
+          libraryRequestsCount: libraryRequests.length,
+          entryStatus: entryStatus.length,
+          exitStatus: exitStatus.length,
+          totalVisits: totalVisits.length,
+        },
+      });
+    }
+    {
       const staff = await staffData.findOne({
         employeeId: user.employeeId,
       });
