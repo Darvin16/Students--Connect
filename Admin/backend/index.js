@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import Student from "./Routes/Student.js";
+import ResetPassword from "./Routes/resetPassword.js";
 import libraryRequest from "./Models/LibraryRequest.js";
 import studentsData from "./Models/StudentsData.js";
 import PDFDocument from "pdfkit";
@@ -14,7 +15,6 @@ import multer from "multer";
 import path, { resolve } from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
-import { rejects } from "assert";
 
 const app = express();
 app.use(express.json());
@@ -266,6 +266,8 @@ app.post("/login/admin", (req, res) => {
       });
     });
 });
+
+app.use(ResetPassword);
 
 app.use((req, res, next) => {
   const authToken = req.headers.authtoken;

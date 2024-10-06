@@ -5,6 +5,8 @@ import Signup from "./Pages/SignUp_Login/Signup";
 import { AppContext, AppProvider } from "./Context/AppContext";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import ProtectRoutes from "./Component/ProtectRoutes";
+import ForgotPassword from "./Pages/ResetPassword/ForgotPassword";
+import ResetPassword from "./Pages/ResetPassword/ResetPassword";
 
 function RootDirect() {
   const { authToken, navigate } = useContext(AppContext);
@@ -29,6 +31,8 @@ function App() {
             <Route path="/" element={<RootDirect />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route element={<ProtectRoutes />}>
               <Route path="/dashboard/*" element={<Dashboard />} />
             </Route>

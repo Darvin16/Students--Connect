@@ -10,6 +10,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import ResetPassword from "./Routes/resetPassword.js"
 
 const app = express();
 app.use(express.json());
@@ -261,6 +262,8 @@ app.post("/login", (req, res) => {
       });
     });
 });
+
+app.use(ResetPassword)
 
 app.use((req, res, next) => {
   const authToken = req.headers.authtoken;

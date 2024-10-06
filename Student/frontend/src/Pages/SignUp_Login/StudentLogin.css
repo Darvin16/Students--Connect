@@ -97,3 +97,8 @@
 .signup-link a:hover {
   text-decoration: underline;
 }
+
+.login-flex{
+    display: flex;
+    justify-content: space-between;
+}

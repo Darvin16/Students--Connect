@@ -358,6 +358,48 @@ export const AppProvider = ({ children }) => {
       });
   }
 
+  function forgotPassword(userId) {
+    axios
+      .post("http://localhost:9000/forgot-password", { userId })
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+          navigate("/login");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred");
+        }
+      });
+  }
+
+  function resetPassword( token, newPassword, confirmPassword ) {
+    axios
+      .post("http://localhost:9000/reset-password", {
+        token,
+        newPassword,
+        confirmPassword,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+          navigate("login");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred");
+        }
+      });
+  }
+
   function StaffLogin(e) {
     e.preventDefault();
     axios
@@ -492,6 +534,8 @@ export const AppProvider = ({ children }) => {
         handleEditProfile,
         editProfile,
         setEditProfile,
+        forgotPassword,
+        resetPassword,
       }}
     >
       {children}

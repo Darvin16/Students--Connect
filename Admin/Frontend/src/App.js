@@ -6,6 +6,8 @@ import Dashboard from "./Pages/Dashboard/Dashboard";
 import ProtectRoutes from "./Component/ProtectRoutes";
 import { useContext, useEffect } from "react";
 import Signup from "./Pages/Signup/Signup";
+import ForgotPassword from "./Pages/ResetPassword/ForgotPassword";
+import ResetPassword from "./Pages/ResetPassword/ResetPassword";
 
 
 function RootRedirect() {
@@ -31,6 +33,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/adminlogin" element={<AdminLogin />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route element={<ProtectRoutes />}>
               <Route path="/dashboard/*" element={<Dashboard />} />
             </Route>

@@ -43,21 +43,23 @@ const Login = () => {
                 required
               />
             </div>
-            <div className="login-input-checkbox">
-              <input
-                type="checkbox"
-                name="rememberMe"
-                id="rememberMe"
-                onChange={() => {
-                  setLoginForm((prev) => ({
-                    ...prev,
-                    rememberMe: !prev.rememberMe,
-                  }));
-                }}
-              />
-              <label htmlFor="rememberMe">Remeber Me</label>
+            <div className="login-flex">
+              <div className="login-input-checkbox">
+                <input
+                  type="checkbox"
+                  name="rememberMe"
+                  id="rememberMe"
+                  onChange={() => {
+                    setLoginForm((prev) => ({
+                      ...prev,
+                      rememberMe: !prev.rememberMe,
+                    }));
+                  }}
+                />
+                <label htmlFor="rememberMe">Remeber Me</label>
+              </div>
+              <Link to="/forgot-password">Forgot Password?</Link>
             </div>
-            {/* <p className="forgot-password">Forgot password?</p> */}
             <button className="login-button" type="submit">
               Login
             </button>
