@@ -153,6 +153,50 @@ export const AppProvider = ({ children }) => {
       });
   }
 
+  function handleLeaveRequest(requestData) {
+    axios
+      .post(`${URL}/leave-request/raise`, requestData, {
+        headers: {
+          authToken: authToken,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An Error Occured in Send Leave Request, Please try again");
+        }
+      });
+  }
+
+  function cancelLeaveRequest(cancelData) {
+    axios
+      .post(`${URL}/leave-request/cancel`, cancelData, {
+        headers: {
+          authToken: authToken,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred in cancel leave request");
+        }
+      });
+  }
+
   function handleEditProfile(dataToSend) {
     axios
       .put(`${URL}/student/edit`, dataToSend, {
@@ -304,6 +348,8 @@ export const AppProvider = ({ children }) => {
         setEditProfile,
         resetPassword,
         forgotPassword,
+        handleLeaveRequest,
+        cancelLeaveRequest,
       }}
     >
       {children}

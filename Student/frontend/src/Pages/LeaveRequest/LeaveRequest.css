@@ -1,0 +1,83 @@
+.leave-request-page {
+  padding: 10px;
+}
+.leave-request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.leave-request-body {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.leave-request-body-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  justify-content: center;
+}
+.leave-request-body-group-date {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.leave-request-page button {
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  color: white;
+  background-color: blue;
+}
+.leave-request-page button[type="reset"] {
+  background-color: red;
+}
+.leave-request-body input:not([type="checkbox"]){
+    max-height: 40px;
+}
+.leave-request-body input:not([type="checkbox"]),
+.leave-request-body textarea,
+.leave-request-body select {
+  flex: 1;
+  outline: none;
+  border: 1px solid gray;
+  padding: 5px;
+  border-radius: 5px;
+  transition: border 0.15s ease-in-out,box-shadow 0.15s ease-in-out;
+}
+.leave-request-body input:not([type="checkbox"]):hover,
+.leave-request-body textarea:hover,
+.leave-request-body select:hover,
+.leave-request-body input:not([type="checkbox"]):focus,
+.leave-request-body textarea:focus,
+.leave-request-body select:focus {
+    border: 1px solid hsl(233, 80%,55%,0.3);
+    box-shadow: 0px 0px 0px 5px hsl(233, 80%,55%,0.3);
+}
+
+.leave-request-body-group-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+    gap: 10px;
+    grid-column:span 2;
+}
+
+.leave-request-body-group img{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+.leave-request-body-group:has(img){
+    align-items: center;
+}
+@media (max-width:650px) {
+    .leave-request-body{
+        grid-template-columns: 1fr;
+    }
+    .leave-request-body-group-btn{
+        grid-column: span 1;
+    }
+}

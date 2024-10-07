@@ -9,6 +9,7 @@ import { AppContext } from "../../Context/AppContext";
 import LibraryRequestTracker from "../LibraryRequest/LibraryRequestTracker";
 import RequestForm from "../LibraryRequest/RequestForm";
 import Profile from "../Profile/Profile";
+import LeaveRequest from "../LeaveRequest/LeaveRequest";
 
 function Dashboard() {
   const [showMenu, setShowMenu] = React.useState(false);
@@ -44,6 +45,7 @@ function Dashboard() {
               element={<LibraryRequestTracker />}
             />
             <Route path="/library/request/form" element={<RequestForm />} />
+            <Route path="/leave/request" element={<LeaveRequest />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>

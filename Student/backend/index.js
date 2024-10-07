@@ -10,7 +10,10 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
-import ResetPassword from "./Routes/resetPassword.js"
+import ResetPassword from "./Routes/resetPassword.js";
+import generateUniqueId from "./Functions/generateUniqueId.js";
+import LeaveRequest from "./Routes/leaveRequest.js";
+import upload from "./Functions/upload.js";
 
 const app = express();
 app.use(express.json());
@@ -35,32 +38,6 @@ mongoose
 app.get("/", (req, res) => {
   res.send("Server Started");
 });
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "Uploads/StudentImage");
-  },
-  filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
-
-const upload = multer({
-  storage: storage,
-}).single("studentImage");
-
-function generateUniqueId(n) {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let id = "";
-  for (let i = 0; i < n; i++) {
-    id += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return id;
-}
 
 app.post("/signup", multer().none(), (req, res) => {
   const {
@@ -263,7 +240,7 @@ app.post("/login", (req, res) => {
     });
 });
 
-app.use(ResetPassword)
+app.use(ResetPassword);
 
 app.use((req, res, next) => {
   const authToken = req.headers.authtoken;
@@ -282,6 +259,8 @@ app.use((req, res, next) => {
     return res.sendStatus(401);
   }
 });
+
+app.use(LeaveRequest);
 
 app.post("/fetch/user", (req, res) => {
   const { user } = req;
@@ -486,7 +465,7 @@ app.post("/add/profile/image", upload, async (req, res) => {
 
     student.studentImage = file.filename;
 
-    student
+    await student
       .save()
       .then(() => {
         return res.status(200).send({
