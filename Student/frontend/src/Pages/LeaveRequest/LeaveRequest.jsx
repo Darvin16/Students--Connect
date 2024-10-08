@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./LeaveRequest.css";
 import { AppContext } from "../../Context/AppContext";
+import ToastMessage from "./ToastMessage";
 
 function LeaveRequest() {
-  const { handleLeaveRequest, imageAccessURL, userData } =
+  const { handleLeaveRequest, imageAccessURL, userData, showToast } =
     useContext(AppContext);
   const [requestData, setRequestDate] = useState({});
 
@@ -325,7 +326,7 @@ function LeaveRequest() {
             pattern="[0-9]{10}"
             placeholder="1234567890"
             value={requestData.parentContactNo}
-            onChange={(e) => {
+            onInput={(e) => {
               setRequestDate((prev) => ({
                 ...prev,
                 parentContactNo: e.target.value,
@@ -346,6 +347,7 @@ function LeaveRequest() {
           </button>
         </div>
       </form>
+      {showToast && <ToastMessage />}
     </div>
   );
 }

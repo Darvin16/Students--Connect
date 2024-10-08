@@ -22,6 +22,7 @@ export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
   const [libraryRequestForm, setLibraryRequestForm] = useState();
   const [editProfile, setEditProfile] = useState({});
+  const [showToast, setShowToast] = useState(false);
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -162,7 +163,7 @@ export const AppProvider = ({ children }) => {
       })
       .then((res) => {
         if (res.status === 200) {
-          alert(res.data.message);
+          setShowToast(true);
         }
       })
       .catch((err) => {
@@ -350,6 +351,8 @@ export const AppProvider = ({ children }) => {
         forgotPassword,
         handleLeaveRequest,
         cancelLeaveRequest,
+        showToast,
+        setShowToast,
       }}
     >
       {children}
