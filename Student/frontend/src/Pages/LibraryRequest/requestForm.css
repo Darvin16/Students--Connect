@@ -18,3 +18,9 @@
 .request-form-group.closer{
     grid-column: span 2;
 }
+.empty-library-request{
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    height: 100%;
+}

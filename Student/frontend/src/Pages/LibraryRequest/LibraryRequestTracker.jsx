@@ -22,8 +22,8 @@ function LibraryRequestTracker() {
 
   if (!libraryRequestForm) {
     return (
-      <div>
-        <h1>Here you see your library request prograss</h1>
+      <div className="empty-library-request">
+        <h2>Here you see your library request prograss</h2>
       </div>
     );
   }

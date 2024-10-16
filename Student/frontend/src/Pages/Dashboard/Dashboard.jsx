@@ -10,6 +10,7 @@ import LibraryRequestTracker from "../LibraryRequest/LibraryRequestTracker";
 import RequestForm from "../LibraryRequest/RequestForm";
 import Profile from "../Profile/Profile";
 import LeaveRequest from "../LeaveRequest/LeaveRequest";
+import LeaveTracker from "../LeaveRequest/LeaveTracker";
 
 function Dashboard() {
   const [showMenu, setShowMenu] = React.useState(false);
@@ -29,8 +30,11 @@ function Dashboard() {
             <div className="dashboard-nav-link">
               <Link to="/dashboard/">Dashboard</Link>
               <Link to="/dashboard/library/request">Library Request</Link>
-              <Link to="/dashboard/library/request/Tracking">Tracker</Link>
+              <Link to="/dashboard/library/request/tracker">
+                Library Tracker
+              </Link>
               <Link to="/dashboard/leave/request">Leave Request</Link>
+              <Link to="/dashboard/leave/request/tracker">Leave Tracker</Link>
               <Link to="/dashboard/profile">Profile</Link>
               <button onClick={() => Logout()}>Logout</button>
             </div>
@@ -41,11 +45,12 @@ function Dashboard() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/library/request" element={<LibraryRequest />} />
             <Route
-              path="/library/request/tracking"
+              path="/library/request/tracker"
               element={<LibraryRequestTracker />}
             />
             <Route path="/library/request/form" element={<RequestForm />} />
             <Route path="/leave/request" element={<LeaveRequest />} />
+            <Route path="/leave/request/tracker" element={<LeaveTracker />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>

@@ -125,3 +125,107 @@
   background-color: blue;
   color: white;
 }
+
+/* Leave Tracker */
+
+.leave-tracker-page {
+  height: 90%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.leave-tracker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0px 0px 5px;
+  padding: 5px;
+  border-radius: 10px;
+}
+.leave-tracker-selecter {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.leave-tracker-selecter select {
+  outline: none;
+  padding: 2px;
+  border-radius: 5px;
+  transition: all 0.1s ease-in-out;
+}
+.leave-tracker-selecter select:hover {
+  outline: 1px solid blue;
+  box-shadow: 0px 0px 0px 5px hsl(240, 100%, 50%, 0.2);
+}
+
+.leave-tracker-body {
+  box-shadow: 0px 0px 5px;
+  padding: 5px;
+  border-radius: 10px;
+  flex: 1;
+}
+.leave-tracker-container {
+  display: grid;
+  gap: 20px;
+  grid-template-rows: 1fr 1fr 1fr 1fr auto;
+  overflow: hidden;
+}
+.leave-tracker-group {
+  display: grid;
+  grid-template-columns: 5% 4fr 1fr;
+  align-items: center;
+  gap: 10px;
+}
+.leave-tracker-group span {
+  font-size: 16px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  position: relative;
+}
+.leave-tracker-group span::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  height: var(--auto-height,0);
+  width: 2px;
+  background-color: gray;
+}
+.leave-tracker-group:nth-child(4) span::after {
+  display: none;
+}
+.leave-tracker-btn {
+  height: fit-content;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.leave-tracker-container button {
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  background-color: blue;
+  color: white;
+}
+.tracker-approved {
+  background-color: hsl(120, 100%, 45%) !important;
+}
+.tracker-approved::after {
+  background-color: hsl(120, 100%, 45%) !important;
+}
+.tracker-rejected {
+  background-color: red !important;
+}
+.tracker-rejected::after {
+  background-color: red !important;
+}
+.tracker-pending {
+  background-color: gray !important;
+}

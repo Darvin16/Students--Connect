@@ -23,6 +23,8 @@ export const AppProvider = ({ children }) => {
   const [libraryRequestForm, setLibraryRequestForm] = useState();
   const [editProfile, setEditProfile] = useState({});
   const [showToast, setShowToast] = useState(false);
+  const [leaveRequests, setLeaveRequests] = useState([]);
+  const [leaveRequestOption, setLeaveRequestOption] = useState([]);
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -33,6 +35,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     if (authToken) {
       fetchLibraryRequestForm();
+      fetchLeaveRequests();
     }
   }, [authToken]);
 
@@ -151,6 +154,20 @@ export const AppProvider = ({ children }) => {
         } else {
           alert("An error occurred in add profile image");
         }
+      });
+  }
+
+  function fetchLeaveRequests() {
+    axios
+      .get(`${URL}/leave-request/fetch`, {
+        headers: { authToken: authToken },
+      })
+      .then((res) => {
+        setLeaveRequests(res.data.leaveRequests);
+        setLeaveRequestOption(res.data.leaveRequestOption);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   }
 
@@ -353,6 +370,9 @@ export const AppProvider = ({ children }) => {
         cancelLeaveRequest,
         showToast,
         setShowToast,
+        fetchLeaveRequests,
+        leaveRequests,
+        leaveRequestOption,
       }}
     >
       {children}
