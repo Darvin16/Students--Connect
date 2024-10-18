@@ -82,7 +82,9 @@ function LibraryRequestTracker() {
           }`}
         >
           {libraryRequestForm.wardenApproval &&
-          libraryRequestForm.SROApproval ? (
+          libraryRequestForm.wardenApproval?.status === "rejected" ? (
+            <>❌</>
+          ) : libraryRequestForm.SROApproval ? (
             libraryRequestForm.wardenApproval.status === "approved" &&
             libraryRequestForm.SROApproval?.status === "approved" ? (
               <>✅</>
@@ -226,125 +228,23 @@ function LibraryRequestTracker() {
             </div>
           )}
         </div>
-        {/* <div className="section">
-          <h3>Student Details</h3>
-          <p>
-            <strong>Student ID:</strong> {libraryRequestForm.studentId}
-          </p>
-          <p>
-            <strong>Name:</strong> {libraryRequestForm.studentName}
-          </p>
-          <p>
-            <strong>Block Name:</strong> {libraryRequestForm.studentBlockName}
-          </p>
-          <p>
-            <strong>Room Number:</strong> {libraryRequestForm.studentRoomNumber}
-          </p>
-          <p>
-            <strong>Department:</strong> {libraryRequestForm.studentDepartment}
-          </p>
-          <p>
-            <strong>Branch:</strong> {libraryRequestForm.studentBranchName}
-          </p>
-          <p>
-            <strong>Academic Year:</strong>{" "}
-            {libraryRequestForm.studentAcademicYear}
-          </p>
-          <p>
-            <strong>Contact No:</strong> {libraryRequestForm.studentContactNo}
-          </p>
-        </div>
-
-        <div className="section">
-          <h3>Request Details</h3>
-          <p>
-            <strong>Request ID:</strong> {libraryRequestForm.requestId}
-          </p>
-          <p>
-            <strong>Request Date:</strong>{" "}
-            {new Date(libraryRequestForm.requestDate).toLocaleString()}
-          </p>
-          <p>
-            <strong>Description:</strong> {libraryRequestForm.description}
-          </p>
-        </div>
-
-        <div className="section">
-          <h3>Warden Approval</h3>
-          <p>
-            <strong>Status:</strong> {libraryRequestForm.wardenApproval?.status}
-          </p>
-          <p>
-            <strong>Approved By:</strong>{" "}
-            {libraryRequestForm.wardenApproval?.by}
-          </p>
-          <p>
-            <strong>Approval Time:</strong>{" "}
-            {new Date(libraryRequestForm.wardenApproval?.time).toLocaleString()}
-          </p>
-          <p>
-            <strong>Warden Name:</strong>{" "}
-            {libraryRequestForm.wardenApproval?.wardenName}
-          </p>
-        </div>
-
-        <div className="section">
-          <h3>SRO Approval</h3>
-          <p>
-            <strong>Status:</strong> {libraryRequestForm.SROApproval?.status}
-          </p>
-          <p>
-            <strong>Approved By:</strong> {libraryRequestForm.SROApproval?.by}
-          </p>
-          <p>
-            <strong>Approval Time:</strong>{" "}
-            {new Date(libraryRequestForm.SROApproval?.time).toLocaleString()}
-          </p>
-          <p>
-            <strong>SRO Name:</strong> {libraryRequestForm.SROApproval?.SROName}
-          </p>
-        </div>
-
-        <div className="section">
-          <h3>Library Log</h3>
-          <p>
-            <strong>Check In Time:</strong>{" "}
-            {new Date(libraryRequestForm.in?.time).toLocaleString()}
-          </p>
-          <p>
-            <strong>Checked In By:</strong> {libraryRequestForm.in?.by}
-          </p>
-          <p>
-            <strong>Librarian (In):</strong>{" "}
-            {libraryRequestForm.in?.librarianName}
-          </p>
-
-          <p>
-            <strong>Check Out Time:</strong>{" "}
-            {new Date(libraryRequestForm.out?.time).toLocaleString()}
-          </p>
-          <p>
-            <strong>Checked Out By:</strong> {libraryRequestForm.out?.by}
-          </p>
-          <p>
-            <strong>Librarian (Out):</strong>{" "}
-            {libraryRequestForm.out?.librarianName}
-          </p>
-        </div> */}
         <div className="tracker-request-">
           {libraryRequestForm.wardenApproval?.status === "approved" &&
             libraryRequestForm.SROApproval?.status === "approved" && (
               <>
-                <div className="tracker-request-approved">Form Approved</div>
+                <div className="tracker-request-approved">
+                  <label htmlFor="view">Form Approved</label>
                 <button
-                  onClick={() =>
-                    navigate("dashboard/library/request/form", {
-                      state: libraryRequestForm,
-                    })
-                  }
-                >
-                  View
-                </button>
+                  id="view"
+                    onClick={() =>
+                      navigate("dashboard/library/request/form", {
+                        state: libraryRequestForm,
+                      })
+                    }
+                  >
+                    View
+                  </button>
+                </div>
               </>
             )}
         </div>

@@ -197,7 +197,20 @@ function LeaveTracker() {
               )}
             </div>
             <div className="leave-tracker-group">
-              {request.wardenApproval && request.SROApproval ? (
+              {request.wardenApproval &&
+              request.wardenApproval?.status === "rejected" ? (
+                <>
+                  <span className="tracker-rejected">
+                    <FontAwesomeIcon icon={faXmark} />
+                  </span>
+                  <p>
+                    Request Rejected.
+                    <br />
+                    Your leave request has not been granted. Warden has rejected your request
+                  </p>
+                  <button className="tracker-rejected">Rejected</button>
+                </>
+              ) : request.SROApproval ? (
                 request.wardenApproval?.status === "approved" &&
                 request.SROApproval?.status === "approved" ? (
                   <>

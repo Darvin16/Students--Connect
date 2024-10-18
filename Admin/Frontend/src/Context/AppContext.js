@@ -41,6 +41,7 @@ export const AppProvider = ({ children }) => {
   const [editProfile, setEditProfile] = useState({});
   const [leaveRequests, setLeaveRequests] = useState([]);
   const [leaveRecords, setLeaveRecords] = useState([]);
+  
   useEffect(() => {
     if (authToken && !userData) {
       fetchUser();

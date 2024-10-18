@@ -21,6 +21,8 @@ import AdminStudentRecords from "../StudentRecord/AdminStudentRecords";
 import LibraryRecordsHistory from "../Libraryrecords/LibraryRecordsHistory";
 import LibrarianPage from "../LandPage/Librarian/LibrarianPage";
 import Profile from "../Profile/Profile";
+import LeaveRecords from "../LeaveRequests/LeaveRecords";
+import LeaveRequests from "../LeaveRequests/LeaveRequests";
 
 function Dashboard() {
   const { userData, logout } = useContext(AppContext);
@@ -106,9 +108,17 @@ function Dashboard() {
                   <li className="nav-item">
                     <Link
                       className="nav-link"
+                      to="/dashboard/warden/requests/leave"
+                    >
+                      <FontAwesomeIcon icon={faLayerGroup} /> Leave Requests
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link"
                       to="/dashboard/warden/record/leave"
                     >
-                      <FontAwesomeIcon icon={faLayerGroup} /> Leave Request
+                      <FontAwesomeIcon icon={faLayerGroup} /> Leave Records
                     </Link>
                   </li>
                   <li className="nav-item">
@@ -150,8 +160,16 @@ function Dashboard() {
                     </Link>
                   </li>
                   <li className="nav-item">
+                    <Link
+                      className="nav-link"
+                      to="/dashboard/sro/requests/leave"
+                    >
+                      <FontAwesomeIcon icon={faLayerGroup} /> Leave Requests
+                    </Link>
+                  </li>
+                  <li className="nav-item">
                     <Link className="nav-link" to="/dashboard/sro/record/leave">
-                      <FontAwesomeIcon icon={faLayerGroup} /> Leave Request
+                      <FontAwesomeIcon icon={faLayerGroup} /> Leave Records
                     </Link>
                   </li>
                   <li className="nav-item">
@@ -177,7 +195,10 @@ function Dashboard() {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link className="nav-link" to="/dashboard/librarian/profile">
+                    <Link
+                      className="nav-link"
+                      to="/dashboard/librarian/profile"
+                    >
                       <FontAwesomeIcon icon={faCircleInfo} /> Profile
                     </Link>
                   </li>
@@ -204,8 +225,7 @@ function Dashboard() {
                 path="/record/library"
                 element={<LibraryRecordsHistory />}
               />
-              <Route path="/record/leave" element={<></>} />
-              <Route path="/profile" element={<></>} />
+              <Route path="/record/leave" element={<LeaveRecords />} />
             </>
           )}
           {userData?.role === "warden" && (
@@ -223,7 +243,11 @@ function Dashboard() {
                 path="/warden/record/library/past"
                 element={<LibraryRecordsHistory />}
               />
-              <Route path="/warden/record/leave" element={<></>} />
+              <Route path="/warden/record/leave" element={<LeaveRecords />} />
+              <Route
+                path="/warden/requests/leave"
+                element={<LeaveRequests />}
+              />
               <Route path="/warden/profile" element={<Profile />} />
             </>
           )}
@@ -236,7 +260,8 @@ function Dashboard() {
                 path="/sro/record/library/past"
                 element={<LibraryRecordsHistory />}
               />
-              <Route path="/sro/record/leave" element={<></>} />
+              <Route path="/sro/record/leave" element={<LeaveRecords />} />
+              <Route path="/sro/requests/leave" element={<LeaveRequests />} />
               <Route path="/sro/profile" element={<Profile />} />
             </>
           )}

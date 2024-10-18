@@ -323,7 +323,8 @@ router.post("/generate/pdf", async (req, res) => {
               hour: "2-digit",
               minute: "2-digit",
               hour12: true,
-              dayPeriod: "short",
+              // dayPeriod: "short",
+              weekday: "short",
             })} and by the SRO  - ${
               request.SROApproval.SROName
             } of the block (${request.studentBlockName}) on ${new Date(
@@ -335,7 +336,8 @@ router.post("/generate/pdf", async (req, res) => {
               hour: "2-digit",
               minute: "2-digit",
               hour12: true,
-              dayPeriod: "short",
+              // dayPeriod: "short",
+              weekday: "short",
             })}, so the requested ${
               request.oneDayLeave ? "leave" : "leaves"
             } has been granted.`;
@@ -351,7 +353,8 @@ router.post("/generate/pdf", async (req, res) => {
               hour: "2-digit",
               minute: "2-digit",
               hour12: true,
-              dayPeriod: "short",
+              // dayPeriod: "short",
+              weekday: "short",
             })} but Rejected by the SRO  - ${
               request.SROApproval.SROName
             } of the block (${request.studentBlockName}) on ${new Date(
@@ -363,7 +366,8 @@ router.post("/generate/pdf", async (req, res) => {
               hour: "2-digit",
               minute: "2-digit",
               hour12: true,
-              dayPeriod: "short",
+              // dayPeriod: "short",
+              weekday: "short",
             })}, so the requested ${
               request.oneDayLeave ? "leave is" : "leaves are"
             } not granted.`;
@@ -380,7 +384,8 @@ router.post("/generate/pdf", async (req, res) => {
             hour: "2-digit",
             minute: "2-digit",
             hour12: true,
-            dayPeriod: "short",
+            // dayPeriod: "short",
+            weekday: "short",
           })}, so please wait patiently for the confirmation of the SRO of the block (${
             request.studentBlockName
           }).`;
@@ -397,7 +402,8 @@ router.post("/generate/pdf", async (req, res) => {
           hour: "2-digit",
           minute: "2-digit",
           hour12: true,
-          dayPeriod: "short",
+          // dayPeriod: "short",
+          weekday: "short",
         })}, so requested ${
           request.oneDayLeave ? "leave is" : "leaves are"
         } not granted`;
@@ -493,7 +499,7 @@ router.post("/generate/pdf", async (req, res) => {
         lineGap: 10,
       });
 
-    doc.image(imagePath,400,125, {
+    doc.image(imagePath, 400, 125, {
       width: 150,
       height: 150,
     });

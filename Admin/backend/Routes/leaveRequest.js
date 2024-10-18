@@ -40,7 +40,7 @@ router.post("/leave-request/update", async (req, res) => {
       leaveRequestDoc.SROApproval.status = status;
       leaveRequestDoc.SROApproval.by = staff.employeeId;
       leaveRequestDoc.SROApproval.time = Date.now();
-      leaveRequestDoc.SROApproval.SRONameF = staff.name;
+      leaveRequestDoc.SROApproval.SROName = staff.name;
     }
 
     await leaveRequestDoc.save().then((ack) => {
@@ -95,6 +95,8 @@ router.get("/fetch/leave-request", async (req, res) => {
       const leaveRequests = await leaveRequest.find({
         studentBlockName: staff.blockName,
         "wardenApproval.status": { $exists: false },
+        "cancelRequest.status": false,
+        from: { $gte: Date.now() },
       });
       const leaveRecords = await leaveRequest.find({
         studentBlockName: staff.blockName,
@@ -108,6 +110,8 @@ router.get("/fetch/leave-request", async (req, res) => {
       const leaveRequests = await leaveRequest.find({
         studentBlockName: staff.blockName,
         "SROApproval.status": { $exists: false },
+        "cancelRequest.status": false,
+        from: { $gte: Date.now() },
       });
       const leaveRecords = await leaveRequest.find({
         studentBlockName: staff.blockName,
