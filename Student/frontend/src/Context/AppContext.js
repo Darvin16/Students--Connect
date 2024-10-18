@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import fileDownload from "js-file-download";
 
 export const AppContext = createContext();
 
@@ -203,6 +204,7 @@ export const AppProvider = ({ children }) => {
       .then((res) => {
         if (res.status === 200) {
           alert(res.data.message);
+          fetchLeaveRequests();
         }
       })
       .catch((err) => {
@@ -211,6 +213,40 @@ export const AppProvider = ({ children }) => {
           alert(err.response.data.message);
         } else {
           alert("An error occurred in cancel leave request");
+        }
+      });
+  }
+
+  function generatePDF(requestId) {
+    axios
+      .post(
+        `${URL}/generate/pdf`,
+        { requestId },
+        {
+          headers: {
+            authToken: authToken,
+          },
+          responseType: "blob",
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("Data: ", res);
+          const filename = res.headers["content-disposition"]
+            ? res.headers["content-disposition"]
+                .split("filename=")[1]
+                .replace(/"/g, "")
+            : "Request-file.pdf";
+
+          fileDownload(res.data, filename);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred in generating PDF");
         }
       });
   }
@@ -373,6 +409,7 @@ export const AppProvider = ({ children }) => {
         fetchLeaveRequests,
         leaveRequests,
         leaveRequestOption,
+        generatePDF,
       }}
     >
       {children}

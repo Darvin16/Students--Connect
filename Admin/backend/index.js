@@ -12,7 +12,7 @@ import libraryRequest from "./Models/LibraryRequest.js";
 import studentsData from "./Models/StudentsData.js";
 import PDFDocument from "pdfkit";
 import multer from "multer";
-import path, { resolve } from "path";
+import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import leaveRequestFile from "./Routes/leaveRequest.js";
@@ -20,7 +20,7 @@ import leaveRequest from "./Models/LeaveRequest.js";
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.static("Uploads"));
 

@@ -16,15 +16,22 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 function LeaveTracker() {
-  const { fetchLeaveRequests, leaveRequestOption, leaveRequests } =
-    useContext(AppContext);
+  const {
+    fetchLeaveRequests,
+    leaveRequestOption,
+    leaveRequests,
+    cancelLeaveRequest,
+    generatePDF,
+  } = useContext(AppContext);
 
   const [request, setRequest] = useState({});
   const [option, setOption] = useState("");
   const divElement = useRef(null);
+  const containerElement = useRef(null);
+  const [showCancelBox, setShowCancelBox] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
 
   const setDynamicHeight = () => {
-    console.log("hi");
     setTimeout(() => {
       if (divElement.current) {
         const height = divElement.current.offsetHeight + 20;
@@ -49,6 +56,10 @@ function LeaveTracker() {
       window.removeEventListener("resize", handleResize);
     };
   }, [option]);
+
+  useLayoutEffect(() => {
+    setDynamicHeight();
+  }, [containerElement.current?.clientWidth]);
 
   useEffect(() => {
     if (leaveRequests.length === 0) {
@@ -87,7 +98,7 @@ function LeaveTracker() {
           </select>
         </div>
       </div>
-      <div className="leave-tracker-body">
+      <div className="leave-tracker-body" ref={containerElement}>
         {Object.keys(request).length > 0 ? (
           <div className="leave-tracker-container">
             <div className="leave-tracker-group" ref={divElement}>
@@ -230,14 +241,58 @@ function LeaveTracker() {
               )}
             </div>
             <div className="leave-tracker-btn">
-              <button>Download PDF</button>
-              <button className="tracker-rejected">Cancel Request</button>
+              <button onClick={() => generatePDF(request.requestId)}>
+                Download PDF
+              </button>
+              <button
+                className="tracker-rejected"
+                onClick={() => {
+                  setShowCancelBox(true);
+                  setTimeout(() => window.scrollTo(0, 1000), 0);
+                }}
+              >
+                Cancel Request
+              </button>
             </div>
           </div>
         ) : (
           <div className="empty-leave-tracker">
             <h3>No Request Selected</h3>
           </div>
+        )}
+
+        {showCancelBox && (
+          <form
+            className="leave-request-cancel"
+            onSubmit={(e) => {
+              e.preventDefault();
+              cancelLeaveRequest({
+                requestId: request.requestId,
+                reason: cancelReason,
+              });
+              setShowCancelBox(false);
+            }}
+          >
+            <label htmlFor="reason">
+              Provide a Reason for the Cancellation
+            </label>
+            <textarea
+              name="reason"
+              id="reason"
+              value={cancelReason}
+              onChange={(e) => setCancelReason(e.target.value)}
+            ></textarea>
+            <div className="leave-request-cancel-btn">
+              <button type="submit">Submit</button>
+              <button
+                type="Cancel"
+                className="tracker-rejected"
+                onClick={() => setShowCancelBox(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         )}
       </div>
     </div>

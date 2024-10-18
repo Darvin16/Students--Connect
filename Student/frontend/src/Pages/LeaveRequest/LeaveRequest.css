@@ -164,12 +164,12 @@
   padding: 5px;
   border-radius: 10px;
   flex: 1;
+  transition: height 0.3s ease;
 }
 .leave-tracker-container {
   display: grid;
   gap: 20px;
   grid-template-rows: 1fr 1fr 1fr 1fr auto;
-  overflow: hidden;
 }
 .leave-tracker-group {
   display: grid;
@@ -193,7 +193,7 @@
   content: "";
   position: absolute;
   top: 100%;
-  height: var(--auto-height,0);
+  height: var(--auto-height, 0);
   width: 2px;
   background-color: gray;
 }
@@ -207,7 +207,7 @@
   align-items: center;
   justify-content: flex-end;
 }
-.leave-tracker-container button {
+.leave-tracker-body button {
   border-radius: 5px;
   border: none;
   padding: 5px;
@@ -228,4 +228,30 @@
 }
 .tracker-pending {
   background-color: gray !important;
+}
+
+.leave-request-cancel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.leave-request-cancel label::after {
+  content: "*";
+  color: red;
+}
+.leave-request-cancel textarea {
+  outline: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+.leave-request-cancel textarea:focus,
+.leave-request-cancel textarea:hover {
+  outline: 1px solid blue;
+}
+.leave-request-cancel-btn {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: end;
 }
