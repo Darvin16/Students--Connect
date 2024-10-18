@@ -29,6 +29,16 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const studentImagePath = path.join(
+  __dirname,
+  "../..",
+  "/Student/backend/Uploads"
+);
+
+console.log(studentImagePath)
+
+app.use(express.static(studentImagePath));
+
 mongoose
   .connect("mongodb://localhost:27017/StudentConnect")
   .then(() => {

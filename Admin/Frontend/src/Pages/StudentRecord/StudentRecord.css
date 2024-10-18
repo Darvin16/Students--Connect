@@ -80,6 +80,11 @@
     width: 20px;
     height: 20px;
 }
+.student-record-container-group img{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
 .student-record-container-group-title {
   background-color: transparent;
 }

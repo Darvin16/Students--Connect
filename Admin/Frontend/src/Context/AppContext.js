@@ -38,10 +38,11 @@ export const AppProvider = ({ children }) => {
   const [libraryRecords, setLibraryRecords] = useState([]);
   const [dashboardInfo, setDashboardInfo] = useState({});
   const imageAccessURL = "http://localhost:9000/StaffImages/";
+  const studentUploadsURL = "http://localhost:9000/StudentImage/";
   const [editProfile, setEditProfile] = useState({});
   const [leaveRequests, setLeaveRequests] = useState([]);
   const [leaveRecords, setLeaveRecords] = useState([]);
-  
+
   useEffect(() => {
     if (authToken && !userData) {
       fetchUser();
@@ -586,6 +587,7 @@ export const AppProvider = ({ children }) => {
         fetchLeaveRequests,
         leaveRequests,
         leaveRecords,
+        studentUploadsURL,
       }}
     >
       {children}

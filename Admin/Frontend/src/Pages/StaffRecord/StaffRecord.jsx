@@ -11,6 +11,7 @@ function StaffRecord() {
     selectedStaffs,
     setSelectedStaffs,
     handleRemoveStaff,
+    imageAccessURL,
   } = useContext(AppContext);
   const [search, setSearch] = useState("");
   const [position, setPosition] = useState("");
@@ -57,10 +58,14 @@ function StaffRecord() {
               name="staffSearch"
               id="staffSearch"
               placeholder="Search here"
-              onChange={(e)=>setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <select name="position-filter" id="position-filter" onChange={(e)=>setPosition(e.target.value)}>
+          <select
+            name="position-filter"
+            id="position-filter"
+            onChange={(e) => setPosition(e.target.value)}
+          >
             <option value="">Position</option>
             <option value="warden">Warden</option>
             <option value="SRO">SRO</option>
@@ -86,6 +91,12 @@ function StaffRecord() {
                   onChange={() => handleSelectStaff(staff.employeeId)}
                 />
                 <div className="staff-info">
+                  <img
+                    src={
+                      staff.staffImage ? imageAccessURL + staff.staffImage : ""
+                    }
+                    alt={`${staff.name}'s Image`}
+                  />
                   <p>Employee ID: {staff.employeeId}</p>
                   <p>Name: {staff.name}</p>
                   <p>Role: {staff.role}</p>
