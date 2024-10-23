@@ -1,15 +1,32 @@
 .admin-dashboard {
   padding: 20px;
   font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
 }
 
 .admin-dashboard h2 {
-  text-align: center;
-  color: #333;
+  color: #fff;
   margin-bottom: 10px;
 }
 
+.dashboard-greeting{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.dashboard-greeting span{
+  border-radius: 5px;
+  padding: 5px;
+  background-color: black;
+  color: white;
+}
+
+.dashboard-insights{
+  background-color: #844cb9;
+  padding: 10px;
+  border-radius: 10px;
+}
 .dashboard-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 150px));
@@ -29,6 +46,9 @@
   min-height: 100px;
 }
 
+.card p{
+  margin: 0;
+}
 .entry-box {
   background-color: #fff;
   padding: 20px;
@@ -37,8 +57,20 @@
   margin-bottom: 20px;
 }
 
+.staff-record-container{
+  padding: 10px;
+  background-color: lightblue;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.staff-records{
+  display: flex;
+  justify-content: space-between;
+}
 .staff-records h3 {
   margin-top: 20px;
+  color: white;
 }
 
 .btn {
@@ -92,6 +124,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  background-color: white;
 }
 
 .add-staff-table th,

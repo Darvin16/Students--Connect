@@ -3,12 +3,6 @@
     box-sizing: border-box;
 }
 
-/* Main container for the admin login page */
-.admin-login {
-    /* position: relative;  */
-    /* Allow absolute positioning of child elements */
-}
-
 /* Container for the forms */
 .login-container {
     display: flex;

@@ -1,40 +1,52 @@
 .dashboard-page {
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Full height for the dashboard */
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full height for the dashboard */
+}
+
+.container-fluid {
+  display: flex;
+  justify-content: space-between;
 }
 
 .dashboard-components {
-    flex-grow: 1; /* Take up remaining space */
-    padding: 20px;
+  flex-grow: 1; /* Take up remaining space */
 }
 
 /* Optional styling for the navbar */
 .navbar {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  align-items: center;
 }
 
 .nav-item {
-    margin-right: 10px; /* Space between nav items */
+  margin-right: 10px; /* Space between nav items */
 }
 
 /* Adjust the logout button */
-.btn {
-    background-color: transparent; /* Optional styling */
-    color: #007bff; /* Bootstrap primary color */
+.dashboard-page .btn {
+  background-color: transparent; /* Optional styling */
+  color: #007bff; /* Bootstrap primary color */
+}
+
+.logout-btn{
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #367588;
+    color: white;
 }
 
 /* Optional styles for mobile view */
 @media (max-width: 576px) {
-    .navbar-nav .nav-link {
-        text-align: center; /* Center text in mobile */
-        padding: 10px 0; /* Increase padding for touch targets */
-    }
+  .navbar-nav .nav-link {
+    text-align: center; /* Center text in mobile */
+    padding: 10px 0; /* Increase padding for touch targets */
+  }
 }
 
-/* Additional styles for larger screens */
 @media (min-width: 992px) {
-    .dashboard-components {
-        padding: 40px; /* More padding for desktop */
-    }
+  .collapse {
+    flex: 0;
+  }
 }

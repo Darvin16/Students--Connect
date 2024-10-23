@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, Routes, Route } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -27,14 +27,32 @@ import LeaveRequests from "../LeaveRequests/LeaveRequests";
 function Dashboard() {
   const { userData, logout } = useContext(AppContext);
   const [showMenu, setShowMenu] = useState(false);
+  const [showDesktopLogout, setShowDesktopLogout] = useState(true);
+
+  useEffect(() => {
+    function showLogout() {
+      setTimeout(()=>{ if (window.innerWidth >= 992) {
+        setShowDesktopLogout(true);
+      } else {
+        setShowDesktopLogout(false);
+      }},0)
+     
+    }
+
+    window.addEventListener("resize", showLogout)
+    
+    return () => {
+      window.removeEventListener("resize", showLogout)
+    }
+  }, []);
 
   return (
     <div className="dashboard-page">
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">
+          <Link className="navbar-brand" to="/dashboard">
             Student Connect
-          </a>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -204,17 +222,25 @@ function Dashboard() {
                   </li>
                 </>
               )}
-              <li className="nav-item">
-                <button className="nav-link btn" onClick={() => logout()}>
-                  Logout
-                </button>
-              </li>
+
+              {showMenu && (
+                <li className="nav-item">
+                  <button className="logout-btn" onClick={() => logout()}>
+                    Logout
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
+          {showDesktopLogout && (
+            <button className="logout-btn" onClick={() => logout()}>
+              Logout
+            </button>
+          )}
         </div>
       </nav>
 
-      <div className="dashboard-components  ">
+      <div className="dashboard-components">
         <Routes>
           {userData?.role === "admin" && (
             <>
