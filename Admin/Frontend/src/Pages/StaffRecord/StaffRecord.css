@@ -64,11 +64,19 @@ h2 {
 }
 
 .staff-info {
-  margin-left: 30px;
+  flex: 1;
+  display: grid;
+}
+
+.staff-info img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: auto;
 }
 
 .staff-info p {
-  margin: 5px 0;
+  margin: 5px 0 5px 5px;
 }
 
 /* Button Styles */

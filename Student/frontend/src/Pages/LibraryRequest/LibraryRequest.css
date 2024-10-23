@@ -198,3 +198,17 @@ p {
   display: none;
 } */
 
+
+.tracker-request-approved{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.tracker-request-approved button{
+  border: none;
+  color: white;
+  padding: 5px;
+  background-color: blue;
+  border-radius: 5px;
+}

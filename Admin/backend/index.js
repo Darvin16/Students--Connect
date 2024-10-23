@@ -12,13 +12,15 @@ import libraryRequest from "./Models/LibraryRequest.js";
 import studentsData from "./Models/StudentsData.js";
 import PDFDocument from "pdfkit";
 import multer from "multer";
-import path, { resolve } from "path";
+import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import leaveRequestFile from "./Routes/leaveRequest.js";
+import leaveRequest from "./Models/LeaveRequest.js";
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.static("Uploads"));
 
@@ -26,6 +28,16 @@ dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const studentImagePath = path.join(
+  __dirname,
+  "../..",
+  "/Student/backend/Uploads"
+);
+
+console.log(studentImagePath)
+
+app.use(express.static(studentImagePath));
 
 mongoose
   .connect("mongodb://localhost:27017/StudentConnect")
@@ -287,6 +299,8 @@ app.use((req, res, next) => {
   }
 });
 
+app.use(leaveRequestFile);
+
 app.post("/fetch/user", (req, res) => {
   const { user } = req;
   if (user.role === "admin") {
@@ -352,6 +366,9 @@ app.post("/fetch/dashboard/info", async (req, res) => {
       const libraryRequests = await libraryRequest.find({
         requestDate: { $gte: startOfDay },
       });
+      const leaveRequests = await leaveRequest.find({
+        "wardenApproval.status": { $exists: false },
+      });
 
       return res.status(200).send({
         success: true,
@@ -362,7 +379,7 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           studentActiveCount: studentActiveCount.length,
           staffActiveCount: staffActiveCount.length,
           libraryRequestsCount: libraryRequests.length,
-          leaveRequestsCount: 0,
+          leaveRequestsCount: leaveRequests.length,
         },
       });
     } else if (user.role === "librarian") {
@@ -392,6 +409,36 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           totalVisits: totalVisits.length,
         },
       });
+    } else if (user.role === "SRO") {
+      const staff = await staffData.findOne({
+        employeeId: user.employeeId,
+      });
+      const studentCount = await studentsData.find({
+        blockName: staff.blockName,
+      });
+      const studentActiveCount = studentCount.filter(
+        (student) => student.password
+      );
+      const libraryRequests = await libraryRequest.find({
+        requestDate: { $gte: startOfDay },
+        studentBlockName: staff.blockName,
+        wardenApproval: { $exists: true },
+      });
+      const leaveRequests = await leaveRequest.find({
+        studentBlockName: staff.blockName,
+        wardenApproval: { $exists: true },
+      });
+
+      return res.status(200).send({
+        success: true,
+        message: "Dashboard Info Fetched Successfully",
+        dashboardInfo: {
+          studentCount: studentCount.length,
+          studentActiveCount: studentActiveCount.length,
+          libraryRequestsCount: libraryRequests.length,
+          leaveRequestsCount: leaveRequests.length,
+        },
+      });
     } else {
       const staff = await staffData.findOne({
         employeeId: user.employeeId,
@@ -406,6 +453,9 @@ app.post("/fetch/dashboard/info", async (req, res) => {
         requestDate: { $gte: startOfDay },
         studentBlockName: staff.blockName,
       });
+      const leaveRequests = await leaveRequest.find({
+        studentBlockName: staff.blockName,
+      });
 
       return res.status(200).send({
         success: true,
@@ -414,7 +464,7 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           studentCount: studentCount.length,
           studentActiveCount: studentActiveCount.length,
           libraryRequestsCount: libraryRequests.length,
-          leaveRequestsCount: 0,
+          leaveRequestsCount: leaveRequests.length,
         },
       });
     }

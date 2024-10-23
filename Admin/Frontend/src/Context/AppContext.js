@@ -38,7 +38,10 @@ export const AppProvider = ({ children }) => {
   const [libraryRecords, setLibraryRecords] = useState([]);
   const [dashboardInfo, setDashboardInfo] = useState({});
   const imageAccessURL = "http://localhost:9000/StaffImages/";
+  const studentUploadsURL = "http://localhost:9000/StudentImage/";
   const [editProfile, setEditProfile] = useState({});
+  const [leaveRequests, setLeaveRequests] = useState([]);
+  const [leaveRecords, setLeaveRecords] = useState([]);
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -50,6 +53,7 @@ export const AppProvider = ({ children }) => {
     if (authToken) {
       fetchStudentRecords();
       fetchLibraryRequests();
+      fetchLeaveRequests();
       fetchDashboardInfo();
     }
   }, [authToken]);
@@ -148,6 +152,22 @@ export const AppProvider = ({ children }) => {
       });
   }
 
+  function fetchLeaveRequests() {
+    axios
+      .get("http://localhost:9000/fetch/leave-request", {
+        headers: { authToken: authToken },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          setLeaveRequests(res.data.leaveRequests);
+          setLeaveRecords(res.data.leaveRecords);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   function generatePDF(requestId) {
     axios
       .post(
@@ -230,6 +250,33 @@ export const AppProvider = ({ children }) => {
           alert(err.response.data.message);
         } else {
           alert("An Error Occured");
+        }
+      });
+  }
+
+  function handleLeaveRequest(id, status) {
+    axios
+      .post(
+        "http://localhost:9000/leave-request/update",
+        { id, status },
+        {
+          headers: {
+            authToken: authToken,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+          fetchLeaveRequests();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred in leave request updation");
         }
       });
   }
@@ -377,7 +424,7 @@ export const AppProvider = ({ children }) => {
       });
   }
 
-  function resetPassword( token, newPassword, confirmPassword ) {
+  function resetPassword(token, newPassword, confirmPassword) {
     axios
       .post("http://localhost:9000/reset-password", {
         token,
@@ -536,6 +583,11 @@ export const AppProvider = ({ children }) => {
         setEditProfile,
         forgotPassword,
         resetPassword,
+        handleLeaveRequest,
+        fetchLeaveRequests,
+        leaveRequests,
+        leaveRecords,
+        studentUploadsURL,
       }}
     >
       {children}

@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import fileDownload from "js-file-download";
 
 export const AppContext = createContext();
 
@@ -22,6 +23,9 @@ export const AppProvider = ({ children }) => {
   const navigate = useNavigate();
   const [libraryRequestForm, setLibraryRequestForm] = useState();
   const [editProfile, setEditProfile] = useState({});
+  const [showToast, setShowToast] = useState(false);
+  const [leaveRequests, setLeaveRequests] = useState([]);
+  const [leaveRequestOption, setLeaveRequestOption] = useState([]);
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -32,6 +36,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     if (authToken) {
       fetchLibraryRequestForm();
+      fetchLeaveRequests();
     }
   }, [authToken]);
 
@@ -149,6 +154,99 @@ export const AppProvider = ({ children }) => {
           alert(err.response.data.message);
         } else {
           alert("An error occurred in add profile image");
+        }
+      });
+  }
+
+  function fetchLeaveRequests() {
+    axios
+      .get(`${URL}/leave-request/fetch`, {
+        headers: { authToken: authToken },
+      })
+      .then((res) => {
+        setLeaveRequests(res.data.leaveRequests);
+        setLeaveRequestOption(res.data.leaveRequestOption);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleLeaveRequest(requestData) {
+    axios
+      .post(`${URL}/leave-request/raise`, requestData, {
+        headers: {
+          authToken: authToken,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          setShowToast(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An Error Occured in Send Leave Request, Please try again");
+        }
+      });
+  }
+
+  function cancelLeaveRequest(cancelData) {
+    axios
+      .post(`${URL}/leave-request/cancel`, cancelData, {
+        headers: {
+          authToken: authToken,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data.message);
+          fetchLeaveRequests();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred in cancel leave request");
+        }
+      });
+  }
+
+  function generatePDF(requestId) {
+    axios
+      .post(
+        `${URL}/generate/pdf`,
+        { requestId },
+        {
+          headers: {
+            authToken: authToken,
+          },
+          responseType: "blob",
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("Data: ", res);
+          const filename = res.headers["content-disposition"]
+            ? res.headers["content-disposition"]
+                .split("filename=")[1]
+                .replace(/"/g, "")
+            : "Request-file.pdf";
+
+          fileDownload(res.data, filename);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response && err.response.data && err.response.data.message) {
+          alert(err.response.data.message);
+        } else {
+          alert("An error occurred in generating PDF");
         }
       });
   }
@@ -304,6 +402,14 @@ export const AppProvider = ({ children }) => {
         setEditProfile,
         resetPassword,
         forgotPassword,
+        handleLeaveRequest,
+        cancelLeaveRequest,
+        showToast,
+        setShowToast,
+        fetchLeaveRequests,
+        leaveRequests,
+        leaveRequestOption,
+        generatePDF,
       }}
     >
       {children}

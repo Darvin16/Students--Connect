@@ -5,7 +5,8 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import "./StudentRecord.css";
 
 function AdminStudentRecords() {
-  const { studentRecords, fetchStudentRecords } = useContext(AppContext);
+  const { studentRecords, fetchStudentRecords, studentUploadsURL } =
+    useContext(AppContext);
   const [search, setSearch] = useState("");
   const [sortby, setSortby] = useState({
     blockName: "",
@@ -148,6 +149,9 @@ function AdminStudentRecords() {
             <b>Sign No</b>
           </p>
           <p>
+            <b>Image</b>
+          </p>
+          <p>
             <b>Name</b>
           </p>
           <p>
@@ -176,6 +180,14 @@ function AdminStudentRecords() {
               className="student-record-container-group"
             >
               <p>{index + 1}</p>
+              <img
+                src={
+                  student.studentImage
+                    ? studentUploadsURL + student.studentImage
+                    : ""
+                }
+                alt={`${student.name}'s image`}
+              />
               <p>{student.name ? student.name : "-"}</p>
               <p>{student.studentId}</p>
               <p>{student.blockName ? student.blockName : "-"}</p>

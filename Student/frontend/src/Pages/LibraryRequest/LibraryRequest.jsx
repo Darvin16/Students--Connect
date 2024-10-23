@@ -58,7 +58,7 @@ function LibraryRequest() {
           onSubmit={(e) => {
             e.preventDefault();
             setShowPreview(true);
-            window.scrollTo(0,700)
+            setTimeout(() => window.scrollTo(0, 700), 0);
           }}
         >
           <div className="col-md-6">

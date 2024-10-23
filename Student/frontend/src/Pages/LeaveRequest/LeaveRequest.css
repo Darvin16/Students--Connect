@@ -1,0 +1,257 @@
+/* Leave Request */
+
+.leave-request-page {
+  padding: 10px;
+}
+.leave-request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.leave-request-body {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.leave-request-body-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  justify-content: center;
+}
+.leave-request-body-group-date {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.leave-request-page button {
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  color: white;
+  background-color: blue;
+}
+.leave-request-page button[type="reset"] {
+  background-color: red;
+}
+.leave-request-body input:not([type="checkbox"]) {
+  max-height: 40px;
+}
+.leave-request-body input:not([type="checkbox"]),
+.leave-request-body textarea,
+.leave-request-body select {
+  flex: 1;
+  outline: none;
+  border: 1px solid gray;
+  padding: 5px;
+  border-radius: 5px;
+  transition: border 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.leave-request-body input:not([type="checkbox"]):hover,
+.leave-request-body textarea:hover,
+.leave-request-body select:hover,
+.leave-request-body input:not([type="checkbox"]):focus,
+.leave-request-body textarea:focus,
+.leave-request-body select:focus {
+  border: 1px solid hsl(233, 80%, 55%, 0.3);
+  box-shadow: 0px 0px 0px 5px hsl(233, 80%, 55%, 0.3);
+}
+
+.leave-request-body-group-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10px;
+  gap: 10px;
+  grid-column: span 2;
+}
+
+.leave-request-body-group img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+}
+.leave-request-body-group:has(img) {
+  align-items: center;
+}
+@media (max-width: 650px) {
+  .leave-request-body {
+    grid-template-columns: 1fr;
+  }
+  .leave-request-body-group-btn {
+    grid-column: span 1;
+  }
+}
+
+/* Toast */
+
+.toast-box {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 250px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  animation: toast-op 0.5s ease-in-out;
+}
+@keyframes toast-op {
+  from {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+.toast-box svg {
+  color: hsl(120, 90%, 40%);
+  font-size: 5em;
+}
+.toast-box button {
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: blue;
+  color: white;
+}
+
+/* Leave Tracker */
+
+.leave-tracker-page {
+  height: 90%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.leave-tracker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0px 0px 5px;
+  padding: 5px;
+  border-radius: 10px;
+}
+.leave-tracker-selecter {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.leave-tracker-selecter select {
+  outline: none;
+  padding: 2px;
+  border-radius: 5px;
+  transition: all 0.1s ease-in-out;
+}
+.leave-tracker-selecter select:hover {
+  outline: 1px solid blue;
+  box-shadow: 0px 0px 0px 5px hsl(240, 100%, 50%, 0.2);
+}
+
+.leave-tracker-body {
+  box-shadow: 0px 0px 5px;
+  padding: 5px;
+  border-radius: 10px;
+  flex: 1;
+  transition: height 0.3s ease;
+}
+.leave-tracker-container {
+  display: grid;
+  gap: 20px;
+  grid-template-rows: 1fr 1fr 1fr 1fr auto;
+}
+.leave-tracker-group {
+  display: grid;
+  grid-template-columns: 5% 4fr 1fr;
+  align-items: center;
+  gap: 10px;
+}
+.leave-tracker-group span {
+  font-size: 16px;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  position: relative;
+}
+.leave-tracker-group span::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  height: var(--auto-height, 0);
+  width: 2px;
+  background-color: gray;
+}
+.leave-tracker-group:nth-child(4) span::after {
+  display: none;
+}
+.leave-tracker-btn {
+  height: fit-content;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-end;
+}
+.leave-tracker-body button {
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  background-color: blue;
+  color: white;
+}
+.tracker-approved {
+  background-color: hsl(120, 100%, 45%) !important;
+}
+.tracker-approved::after {
+  background-color: hsl(120, 100%, 45%) !important;
+}
+.tracker-rejected {
+  background-color: red !important;
+}
+.tracker-rejected::after {
+  background-color: red !important;
+}
+.tracker-pending {
+  background-color: gray !important;
+}
+
+.leave-request-cancel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.leave-request-cancel label::after {
+  content: "*";
+  color: red;
+}
+.leave-request-cancel textarea {
+  outline: none;
+  padding: 10px;
+  border-radius: 5px;
+}
+.leave-request-cancel textarea:focus,
+.leave-request-cancel textarea:hover {
+  outline: 1px solid blue;
+}
+.leave-request-cancel-btn {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: end;
+}
