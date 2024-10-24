@@ -92,7 +92,7 @@ function AdminPage() {
             Total Staff Count<p>{dashboardInfo.staffCount}</p>
           </div>
           <div className="card">
-            Active Entries <p>{dashboardInfo.staffCount}</p>
+            Active Entries <p>{dashboardInfo.staffActiveCount}</p>
           </div>
           <div className="card">
             Total Students<p>{dashboardInfo.studentCount}</p>

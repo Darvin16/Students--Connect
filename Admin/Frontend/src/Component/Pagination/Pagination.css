@@ -1,0 +1,29 @@
+.pagination-page-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+.pagination-page-nav > button {
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: larger;
+  box-shadow: 0px 0px 5px hsl(0, 0%, 0%, 0.5);
+}
+.page-numbers {
+  display: flex;
+  gap: 5px;
+}
+.page-numbers button {
+  border: none;
+  padding: 2px;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+.page-numbers button:disabled {
+  color: hsl(240, 100%, 30%);
+  text-decoration: underline;
+  text-shadow: 0px 0px 2px hsl(240, 100%, 50%,0.5);
+}
