@@ -242,6 +242,7 @@ export const AppProvider = ({ children }) => {
         if (res.status === 200) {
           alert(res.data.message);
           fetchLibraryRequests();
+          fetchDashboardInfo();
         }
       })
       .catch((err) => {
@@ -269,6 +270,7 @@ export const AppProvider = ({ children }) => {
         if (res.status === 200) {
           alert(res.data.message);
           fetchLeaveRequests();
+          fetchDashboardInfo();
         }
       })
       .catch((err) => {

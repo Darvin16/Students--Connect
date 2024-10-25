@@ -388,14 +388,64 @@ app.post("/fetch/dashboard/info", async (req, res) => {
         "cancelRequest.status": false,
       });
       const entryStatus = libraryRequests.filter(
-        (request) => request.in !== null
+        (request) => request.in.by
       );
       const exitStatus = libraryRequests.filter(
-        (request) => request.out !== null
+        (request) => request.out.by 
       );
       const totalVisits = libraryRequests.filter(
-        (request) => request.in !== null && request.out !== null
+        (request) => request.in.by && request.out.by
       );
+      const pendingStatus = libraryRequests.filter((request) => !request.in.by);
+      const delayedLibraryEntry = await libraryRequest.find({
+        requestDate: { $gte: startOfDay },
+        wardenApproval: { $exists: true },
+        SROApproval: { $exists: true },
+        delayTime: { $exists: true },
+      });
+
+      const averageDelay = await libraryRequest.aggregate([
+        {
+          $match: {
+            delayTime: { $exists: true },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              year: { $year: { $toDate: "$requestDate" } },
+              week: { $week: { $toDate: "$requestDate" } },
+            },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            week: "$_id.week",
+            year: "$_id.year",
+            count: 1,
+            _id: 1,
+          },
+        },
+        {
+          $sort: { year: 1, week: 1 },
+        },
+      ]);
+
+      const avgDelayCount =
+        averageDelay.reduce((acc, record) => {
+          return (acc += record.count);
+        }, 0) / averageDelay.length;
+
+      console.log({
+        libraryRequestsCount: libraryRequests.length,
+        entryStatus: entryStatus.length,
+        exitStatus: exitStatus.length,
+        totalVisits: totalVisits.length,
+        pendingStatus: pendingStatus.length,
+        delayedLibraryEntry: delayedLibraryEntry.length,
+        averageDelay: avgDelayCount,
+      });
 
       return res.status(200).send({
         success: true,
@@ -405,6 +455,9 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           entryStatus: entryStatus.length,
           exitStatus: exitStatus.length,
           totalVisits: totalVisits.length,
+          pendingStatus: pendingStatus.length,
+          delayedLibraryEntry: delayedLibraryEntry.length,
+          averageDelay: avgDelayCount,
         },
       });
     } else if (user.role === "SRO") {
@@ -421,10 +474,63 @@ app.post("/fetch/dashboard/info", async (req, res) => {
         requestDate: { $gte: startOfDay },
         studentBlockName: staff.blockName,
         wardenApproval: { $exists: true },
+        "cancelRequest.status": false,
       });
+      const approvedLibraryRequests = libraryRequests.filter(
+        (request) => request.SROApproval.status === "approved"
+      );
+      const rejectedLibraryRequests = libraryRequests.filter(
+        (request) => request.SROApproval.status === "rejected"
+      );
+      const pendingLibraryRequests = libraryRequests.filter(
+        (request) => !request.SROApproval.status
+      );
+      const delayedLibraryEntry = await libraryRequest.find({
+        requestDate: { $gte: startOfDay },
+        studentBlockName: staff.blockName,
+        wardenApproval: { $exists: true },
+        SROApproval: { $exists: true },
+        delayTime: { $exists: true },
+      });
+      const averageDelay = await libraryRequest.aggregate([
+        {
+          $match: {
+            delayTime: { $exists: true },
+            studentBlockName: staff.blockName,
+          },
+        },
+        {
+          $group: {
+            _id: {
+              year: { $year: { $toDate: "$requestDate" } },
+              week: { $week: { $toDate: "$requestDate" } },
+            },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            week: "$_id.week",
+            year: "$_id.year",
+            count: 1,
+            _id: 1,
+          },
+        },
+        {
+          $sort: { year: 1, week: 1 },
+        },
+      ]);
+
+      const avgDelayCount =
+        averageDelay.reduce((acc, record) => {
+          return (acc += record.count);
+        }, 0) / averageDelay.length;
+
       const leaveRequests = await leaveRequest.find({
         studentBlockName: staff.blockName,
         wardenApproval: { $exists: true },
+        SROApproval: { $exists: false },
+        "cancelRequest.status": false,
       });
 
       return res.status(200).send({
@@ -435,6 +541,11 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           studentActiveCount: studentActiveCount.length,
           libraryRequestsCount: libraryRequests.length,
           leaveRequestsCount: leaveRequests.length,
+          approvedLibraryRequests: approvedLibraryRequests.length,
+          rejectedLibraryRequests: rejectedLibraryRequests.length,
+          pendingLibraryRequests: pendingLibraryRequests.length,
+          delayedLibraryEntry: delayedLibraryEntry.length,
+          averageDelay: avgDelayCount,
         },
       });
     } else {
@@ -450,9 +561,62 @@ app.post("/fetch/dashboard/info", async (req, res) => {
       const libraryRequests = await libraryRequest.find({
         requestDate: { $gte: startOfDay },
         studentBlockName: staff.blockName,
+        "cancelRequest.status": false,
       });
+      const approvedLibraryRequests = libraryRequests.filter(
+        (request) => request.wardenApproval.status === "approved"
+      );
+      const rejectedLibraryRequests = libraryRequests.filter(
+        (request) => request.wardenApproval.status === "rejected"
+      );
+      const pendingLibraryRequests = libraryRequests.filter(
+        (request) => !request.wardenApproval.status
+      );
+      const delayedLibraryEntry = await libraryRequest.find({
+        requestDate: { $gte: startOfDay },
+        studentBlockName: staff.blockName,
+        wardenApproval: { $exists: true },
+        SROApproval: { $exists: true },
+        delayTime: { $exists: true },
+      });
+      const averageDelay = await libraryRequest.aggregate([
+        {
+          $match: {
+            delayTime: { $exists: true },
+            studentBlockName: staff.blockName,
+          },
+        },
+        {
+          $group: {
+            _id: {
+              year: { $year: { $toDate: "$requestDate" } },
+              week: { $week: { $toDate: "$requestDate" } },
+            },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            week: "$_id.week",
+            year: "$_id.year",
+            count: 1,
+            _id: 1,
+          },
+        },
+        {
+          $sort: { year: 1, week: 1 },
+        },
+      ]);
+
+      const avgDelayCount =
+        averageDelay.reduce((acc, record) => {
+          return (acc += record.count);
+        }, 0) / averageDelay.length;
+
       const leaveRequests = await leaveRequest.find({
         studentBlockName: staff.blockName,
+        wardenApproval: { $exists: false },
+        "cancelRequest.status": false,
       });
 
       return res.status(200).send({
@@ -463,6 +627,11 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           studentActiveCount: studentActiveCount.length,
           libraryRequestsCount: libraryRequests.length,
           leaveRequestsCount: leaveRequests.length,
+          approvedLibraryRequests: approvedLibraryRequests.length,
+          rejectedLibraryRequests: rejectedLibraryRequests.length,
+          pendingLibraryRequests: pendingLibraryRequests.length,
+          delayedLibraryEntry: delayedLibraryEntry.length,
+          averageDelay: avgDelayCount,
         },
       });
     }
@@ -494,7 +663,7 @@ app.post("/fetch/library/requests", async (req, res) => {
           .send({ success: false, message: "User not found" });
       }
 
-      let libraryRequests =[];
+      let libraryRequests = [];
 
       if (user.role === "SRO") {
         libraryRequests = await libraryRequest.find({
@@ -698,15 +867,15 @@ app.post("/update/library/requests", async (req, res) => {
   try {
     const user = req.user;
     const { requestId, status } = req.body;
-    const staff = await staffData.findOne({ employeeId: user.employeeId });
-    const request = await libraryRequest.findOne({ requestId: requestId });
+    const startOfDay = new Date().setHours(0, 0, 0, 0);
 
-    if (!request) {
-      return res.status(404).send({
-        success: false,
-        message: "Request not found",
-      });
+    if (!requestId || !status) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Invalid Request" });
     }
+
+    const staff = await staffData.findOne({ employeeId: user.employeeId });
 
     if (!staff) {
       return res.status(403).send({
@@ -715,66 +884,128 @@ app.post("/update/library/requests", async (req, res) => {
       });
     }
 
-    if (user.role === "warden") {
-      request.wardenApproval.status = status;
-      request.wardenApproval.by = staff.employeeId;
-      request.wardenApproval.wardenName = staff.name;
-      request.wardenApproval.time = Date.now();
-    } else if (user.role === "SRO") {
-      request.SROApproval.status = status;
-      request.SROApproval.by = staff.employeeId;
-      request.SROApproval.SROName = staff.name;
-      request.SROApproval.time = Date.now();
-    } else if (user.role === "librarian") {
-      if (status === "in") {
-        if (Object.keys(request.in).length === 0) {
-          return res.status(400).send({
-            success: false,
-            message: "Student is already in the library",
-          });
-        }
-        const currentHour = new Date(request.SROApproval.time).getHours();
-
-        let resttime;
-        if (currentHour < 21) {
-          resttime = 30 * 60 * 1000; // 30 minutes in milliseconds
+    if (requestId === "all") {
+      if (staff.role === "warden") {
+        const requests = await libraryRequest.updateMany(
+          {
+            requestDate: { $gte: startOfDay },
+            "wardenApproval.status": { $exists: false },
+          },
+          {
+            $set: {
+              "wardenApproval.status": status,
+              "wardenApproval.time": Date.now(),
+              "wardenApproval.by": staff.employeeId,
+              "wardenApproval.wardenName": staff.name,
+            },
+          }
+        );
+        if (requests.modifiedCount > 0) {
+          return res
+            .status(200)
+            .send({ success: true, message: "Requests Updated Successfully" });
         } else {
-          resttime = 15 * 60 * 1000; // 15 minutes in milliseconds
+          return res
+            .status(400)
+            .send({ success: false, message: "No Requests to Update" });
         }
-        request.in.by = staff.employeeId;
-        request.in.librarianName = staff.name;
-        request.in.time = Date.now();
-
-        // Calculate delay time
-        const delaytime = Date.now() - request.SROApproval.time;
-        if (resttime < delaytime) {
-          request.delayTime = delaytime - resttime;
+      } else if (staff.role === "SRO") {
+        const requests = await libraryRequest.updateMany(
+          {
+            requestDate: { $gte: startOfDay },
+            "wardenApproval.status": "approved",
+            "SROApproval.status": { $exists: false },
+          },
+          {
+            $set: {
+              "SROApproval.status": status,
+              "SROApproval.time": Date.now(),
+              "SROApproval.by": staff.employeeId,
+              "SROApproval.SROName": staff.name,
+            },
+          }
+        );
+        if (requests.modifiedCount > 0) {
+          return res
+            .status(200)
+            .send({ success: true, message: "Requests Updated Successfully" });
+        } else {
+          return res
+            .status(400)
+            .send({ success: false, message: "No Requests to Update" });
         }
-      } else if (status === "out") {
-        if (Object.keys(request.out).length === 0) {
-          return res.status(400).send({
-            success: false,
-            message: "Student is already out of the library",
-          });
-        }
-        request.out.by = staff.employeeId;
-        request.out.librarianName = staff.name;
-        request.out.time = Date.now();
       }
-    }
-
-    const ack = await request.save();
-
-    if (ack) {
-      return res.status(200).send({
-        success: true,
-        message: "Library Request Updated Successfully",
-      });
     } else {
-      return res.status(500).send({
-        success: false,
-        message: "Error Occured while updating library request",
-      });
+      const request = await libraryRequest.findOne({ requestId: requestId });
+
+      if (!request) {
+        return res.status(404).send({
+          success: false,
+          message: "Request not found",
+        });
+      }
+
+      if (user.role === "warden") {
+        request.wardenApproval.status = status;
+        request.wardenApproval.by = staff.employeeId;
+        request.wardenApproval.wardenName = staff.name;
+        request.wardenApproval.time = Date.now();
+      } else if (user.role === "SRO") {
+        request.SROApproval.status = status;
+        request.SROApproval.by = staff.employeeId;
+        request.SROApproval.SROName = staff.name;
+        request.SROApproval.time = Date.now();
+      } else if (user.role === "librarian") {
+        if (status === "in") {
+          if (Object.keys(request.in).length === 0) {
+            return res.status(400).send({
+              success: false,
+              message: "Student is already in the library",
+            });
+          }
+          const currentHour = new Date(request.SROApproval.time).getHours();
+
+          let resttime;
+          if (currentHour < 21) {
+            resttime = 30 * 60 * 1000; // 30 minutes in milliseconds
+          } else {
+            resttime = 15 * 60 * 1000; // 15 minutes in milliseconds
+          }
+          request.in.by = staff.employeeId;
+          request.in.librarianName = staff.name;
+          request.in.time = Date.now();
+
+          // Calculate delay time
+          const delaytime = Date.now() - request.SROApproval.time;
+          if (resttime < delaytime) {
+            request.delayTime = delaytime - resttime;
+          }
+        } else if (status === "out") {
+          if (Object.keys(request.out).length === 0) {
+            return res.status(400).send({
+              success: false,
+              message: "Student is already out of the library",
+            });
+          }
+          request.out.by = staff.employeeId;
+          request.out.librarianName = staff.name;
+          request.out.time = Date.now();
+        }
+      }
+
+      const ack = await request.save();
+
+      if (ack) {
+        return res.status(200).send({
+          success: true,
+          message: "Library Request Updated Successfully",
+        });
+      } else {
+        return res.status(500).send({
+          success: false,
+          message: "Error Occured while updating library request",
+        });
+      }
     }
   } catch (err) {
     console.log(err);

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Libraryrecords.css";
 import { AppContext } from "../../Context/AppContext";
@@ -15,6 +15,7 @@ import {
   faCheck,
   faXmark,
   faClock,
+  faHourglassEnd,
 } from "@fortawesome/free-solid-svg-icons";
 import { faWpforms } from "@fortawesome/free-brands-svg-icons";
 import delayIcon from "../../Asset/delay-hour.jpg";
@@ -28,7 +29,15 @@ const LibraryRequests = () => {
     handleLibraryRequest,
     generatePDF,
     studentUploadsURL,
+    dashboardInfo,
   } = useContext(AppContext);
+
+  const [sortby, setSortby] = useState({
+    id: "",
+    academicYear: "",
+    department: "",
+    delayList: false,
+  });
 
   useEffect(() => {
     if (libraryRequests.length === 0) {
@@ -58,87 +67,50 @@ const LibraryRequests = () => {
     }
   };
 
-  if (userData?.role === "librarian") {
-    return (
-      <div className="library-requests-container">
-        <h2 className="text-center my-4">Library Requests</h2>
-        <div className="card">
-          <div className="card-body">
-            <table className="table table-responsive">
-              <thead className="thead-light">
-                <tr>
-                  <th>Student ID</th>
-                  <th>Name</th>
-                  <th>Department</th>
-                  <th>Block Name</th>
-                  <th>Room No</th>
-                  <th>Request Form</th>
-                  <th>Requested Date & Time</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {libraryRequests.map((request) => (
-                  <tr key={request.requestId}>
-                    <td>{request.studentId}</td>
-                    <td>{request.studentName}</td>
-                    <td>{request.studentDepartment}</td>
-                    <td>{request.studentBlockName}</td>
-                    <td>{request.studentRoomNumber}</td>
-                    <td>
-                      <button
-                        className="download-file-btn"
-                        onClick={() => generatePDF(request.requestId)}
-                      >
-                        Download Request
-                      </button>
-                    </td>
-                    <td>
-                      {new Date(request.requestDate).toLocaleString("en-GB", {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                        second: "numeric",
-                        hour12: true,
-                      })}
-                    </td>
-                    <td>
-                      {request.in ? (
-                        <>
-                          {request.out ? (
-                            <p>Student Left</p>
-                          ) : (
-                            <button
-                              className="btn btn-danger"
-                              onClick={() =>
-                                handleLibraryRequest(request.requestId, "out")
-                              }
-                            >
-                              OUT
-                            </button>
-                          )}
-                        </>
-                      ) : (
-                        <button
-                          className="btn btn-success me-1"
-                          onClick={() =>
-                            handleLibraryRequest(request.requestId, "in")
-                          }
-                        >
-                          IN
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    );
+  const calcDelayTime = (time) => {
+    if (!time) {
+      return "-";
+    }
+
+    const seconds = Math.floor(time / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    return `${hours > 0 ? `${hours} hour${hours > 1 ? "s" : ""}` : ``} ${
+      remainingMinutes > 0
+        ? `${remainingMinutes} minute${remainingMinutes > 1 ? "s" : ""}`
+        : ""
+    }`;
+  };
+
+  const filterRequest = () => {
+    let filteredRequests = [...libraryRequests];
+
+    if (sortby.id) {
+      filteredRequests = filteredRequests.filter(
+        (req) => req.studentId === sortby.id
+      );
+    }
+    if (sortby.academicYear.length >= 4) {
+      filteredRequests = filteredRequests.filter(
+        (req) => req.studentAcademicYear === parseInt(sortby.academicYear)
+      );
+    }
+    if (sortby.department) {
+      filteredRequests = filteredRequests.filter(
+        (req) => req.studentDepartment === sortby.department
+      );
+    }
+    if (sortby.delayList) {
+      filteredRequests = filteredRequests.filter((req) => req.delayTime);
+    }
+
+    return filteredRequests;
+  };
+
+  if (!userData) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -169,13 +141,25 @@ const LibraryRequests = () => {
             &nbsp; Approval Status
           </h3>
           <p>Requested</p>
-          <p>Approved</p>
-          <p>Rejected</p>
+          <p>{userData.role === "librarian" ? "Entry" : "Approved"}</p>
+          <p>{userData.role === "librarian" ? "Exit" : "Rejected"}</p>
           <p>Pending</p>
-          <p>1</p>
-          <p className="lib-starus-border">23</p>
-          <p className="lib-starus-border">567</p>
-          <p className="lib-starus-border">0</p>
+          <p>{dashboardInfo.libraryRequestsCount}</p>
+          <p className="lib-starus-border">
+            {userData.role === "librarian"
+              ? dashboardInfo.entryStatus
+              : dashboardInfo.approvedLibraryRequests}
+          </p>
+          <p className="lib-starus-border">
+            {userData.role === "librarian"
+              ? dashboardInfo.exitStatus
+              : dashboardInfo.rejectedLibraryRequests}
+          </p>
+          <p className="lib-starus-border">
+            {userData.role === "librarian"
+              ? dashboardInfo.pendingStatus
+              : dashboardInfo.pendingLibraryRequests}
+          </p>
         </div>
         <div className="library-request-delay-summary">
           <div>
@@ -184,14 +168,34 @@ const LibraryRequests = () => {
           </div>
           <p>Overtime Students</p>
           <p>Avarage Delay per Week</p>
-          <p>00</p>
-          <p className="lib-starus-border">2</p>
+          <p>{dashboardInfo.delayedLibraryEntry}</p>
+          <p className="lib-starus-border">{dashboardInfo.averageDelay}</p>
         </div>
       </div>
 
       <div className="library-request-filters">
-        <div className="library-filter-1">
-          <div className="lib-filter-1-grp">
+        <div
+          className="library-filter-1"
+          style={
+            userData.role === "librarian"
+              ? {
+                  flex: "1",
+                }
+              : {}
+          }
+        >
+          <div
+            className="lib-filter-1-grp"
+            style={
+              userData.role === "librarian"
+                ? {
+                    flex: "1",
+                    display: "flex",
+                    alignItems: "center",
+                  }
+                : {}
+            }
+          >
             <FontAwesomeIcon icon={faMagnifyingGlass} />
             &nbsp;
             <input
@@ -199,6 +203,17 @@ const LibraryRequests = () => {
               name="library-search"
               id="library-search"
               placeholder="Search by id"
+              value={sortby.id}
+              style={
+                userData.role === "librarian"
+                  ? {
+                      flex: "1",
+                    }
+                  : {}
+              }
+              onChange={(e) =>
+                setSortby((prev) => ({ ...prev, id: e.target.value }))
+              }
             />
           </div>
           <div className="lib-filter-1-grp">
@@ -209,12 +224,23 @@ const LibraryRequests = () => {
               name="academicYear"
               id="academicYear"
               placeholder="Academic Year"
+              value={sortby.academicYear}
+              onChange={(e) =>
+                setSortby((prev) => ({ ...prev, academicYear: e.target.value }))
+              }
             />
           </div>
           <div className="lib-filter-1-grp">
             <FontAwesomeIcon icon={faAddressCard} />
             &nbsp;
-            <select name="department-filter" id="department-filter">
+            <select
+              name="department-filter"
+              id="department-filter"
+              value={sortby.department}
+              onChange={(e) =>
+                setSortby((prev) => ({ ...prev, department: e.target.value }))
+              }
+            >
               <option value="">Department</option>
               <optgroup label="Bachelor's Degrees">
                 <option value="B.Tech">B.Tech</option>
@@ -266,21 +292,37 @@ const LibraryRequests = () => {
               &nbsp; Delay Filter
             </label>
             &nbsp;
-            <input type="checkbox" name="delay-filter" id="delay-filter" />
+            <input
+              type="checkbox"
+              name="delay-filter"
+              id="delay-filter"
+              checked={sortby.delayList}
+              onChange={(e) =>
+                setSortby((prev) => ({ ...prev, delayList: !prev.delayList }))
+              }
+            />
           </div>
         </div>
-        <div className="library-filter-2">
-          <div className="lib-filter-2-approve">
-            <FontAwesomeIcon icon={faCheck} />
-            &nbsp;
-            <span>Approve All</span>
+        {userData.role !== "librarian" && (
+          <div className="library-filter-2">
+            <div
+              className="lib-filter-2-approve"
+              onClick={() => handleLibraryRequest("all", "approved")}
+            >
+              <FontAwesomeIcon icon={faCheck} />
+              &nbsp;
+              <span>Approve All</span>
+            </div>
+            <div
+              className="lib-filter-2-reject"
+              onClick={() => handleLibraryRequest("all", "rejected")}
+            >
+              <FontAwesomeIcon icon={faXmark} />
+              &nbsp;
+              <span>Reject All</span>
+            </div>
           </div>
-          <div className="lib-filter-2-reject">
-            <FontAwesomeIcon icon={faXmark} />
-            &nbsp;
-            <span>Reject All</span>
-          </div>
-        </div>
+        )}
       </div>
 
       <div className="library-request-table">
@@ -311,10 +353,24 @@ const LibraryRequests = () => {
                 <FontAwesomeIcon icon={faClock} />
                 &nbsp;Library Entry Time
               </th>
+              {sortby.delayList && (
+                <th>
+                  <FontAwesomeIcon icon={faHourglassEnd} />
+                  &nbsp;Delayed Time
+                </th>
+              )}
+              <th>
+                <FontAwesomeIcon icon={faClock} />
+                &nbsp;IN Time
+              </th>
+              <th>
+                <FontAwesomeIcon icon={faClock} />
+                &nbsp;OUT Time
+              </th>
             </tr>
           </thead>
           <tbody>
-            {libraryRequests.map((request) => (
+            {filterRequest().map((request) => (
               <tr key={request.requestId}>
                 <td>{request.studentId}</td>
                 <td>
@@ -340,7 +396,37 @@ const LibraryRequests = () => {
                     hour12: true,
                   })}
                 </td>
-                {userData.role === "warden" ? (
+                {userData.role === "librarian" ? (
+                  request.in ? (
+                    <>
+                      {request.out ? (
+                        <td>Student Left</td>
+                      ) : (
+                        <td>
+                          <button
+                            className="lib-btn lib-reject"
+                            onClick={() =>
+                              handleLibraryRequest(request.requestId, "out")
+                            }
+                          >
+                            OUT
+                          </button>
+                        </td>
+                      )}
+                    </>
+                  ) : (
+                    <td>
+                      <button
+                        className="lib-btn lib-approve"
+                        onClick={() =>
+                          handleLibraryRequest(request.requestId, "in")
+                        }
+                      >
+                        IN
+                      </button>
+                    </td>
+                  )
+                ) : userData.role === "warden" ? (
                   <>
                     {request.wardenApproval ? (
                       <td
@@ -411,7 +497,34 @@ const LibraryRequests = () => {
                     )}
                   </>
                 )}
-                <td>{calcEntryTime(request.SROApproval?.time)}</td>
+                <td>
+                  {request.SROApproval?.status === "approved"
+                    ? calcEntryTime(request.SROApproval?.time)
+                    : "-"}
+                </td>
+                {sortby.delayList && (
+                  <>
+                    <td>{calcDelayTime(request.delayTime)}</td>
+                  </>
+                )}
+                <td>
+                  {request.in
+                    ? new Date(request.in.time).toLocaleString("en-GB", {
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                      })
+                    : "-"}
+                </td>
+                <td>
+                  {request.out
+                    ? new Date(request.out.time).toLocaleString("en-GB", {
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                      })
+                    : "-"}
+                </td>
               </tr>
             ))}
           </tbody>
