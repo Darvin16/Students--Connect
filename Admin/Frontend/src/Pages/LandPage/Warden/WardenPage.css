@@ -1,15 +1,39 @@
 .admin-dashboard {
   padding: 20px;
   font-family: Arial, sans-serif;
-  background-color: #f4f4f9;
 }
 
 .admin-dashboard h2 {
-  text-align: center;
-  color: #333;
+  color: #fff;
+  margin-bottom: 10px;
+  text-shadow: 0px 0px 5px black;
+}
+
+.admin-dashboard h1,
+.admin-dashboard h2,
+.admin-dashboard h3 {
+  font-family: var(--font-family-1);
+}
+
+.dashboard-greeting {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
 }
 
+.dashboard-greeting span {
+  border-radius: 5px;
+  padding: 5px;
+  background-color: black;
+  color: white;
+}
+
+.dashboard-insights {
+  background-color: #844cb9;
+  padding: 10px;
+  border-radius: 10px;
+}
 .dashboard-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 150px));
@@ -21,7 +45,7 @@
 .card {
   background-color: #fff;
   border-radius: 10px;
-  padding: 20px;
+  padding: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   font-size: 18px;
@@ -29,6 +53,9 @@
   min-height: 100px;
 }
 
+.card p {
+  margin: 0;
+}
 .entry-box {
   background-color: #fff;
   padding: 20px;
@@ -37,16 +64,30 @@
   margin-bottom: 20px;
 }
 
+.staff-record-container {
+  padding: 10px;
+  background-color: #4c516d;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.staff-records {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
 .staff-records h3 {
   margin-top: 20px;
+  color: white;
+  text-shadow: 0px 0px 5px black;
 }
 
 .btn {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
-  background-color: #4caf50;
-  color: #fff;
+  background-color: #aaa !important;
+  color: #fff !important;
   cursor: pointer;
   margin-right: 10px;
 }
@@ -56,29 +97,30 @@
 }
 
 .add-staff {
-    color: white;
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
 }
-.add-staff p{
-    padding: 10px;
-    border-radius: 5px;
-    width: fit-content;
+.add-staff p {
+  padding: 10px;
+  border-radius: 5px;
+  width: fit-content;
 }
 
-.add-staff .Activated{
-    background-color: #4caf50;
+.add-staff .Activated {
+  background-color: #4caf50;
 }
-.add-staff .Duplicate{
-    background-color: #f44336;
+.add-staff .Duplicate {
+  background-color: #f44336;
 }
-.add-staff .Error{
-    background-color: gray;
+.add-staff .Error {
+  background-color: gray;
 }
 
 .add-staff-btn {
   margin-top: 10px;
+  font-weight: 500 !important;
 }
 
 .input-field {
@@ -92,6 +134,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  background-color: white;
 }
 
 .add-staff-table th,

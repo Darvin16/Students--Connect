@@ -1,6 +1,9 @@
 import React, { useContext, useState } from "react";
 import { AppContext } from "../../../Context/AppContext";
 import { useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
+import "./WardenPage.css";
 
 function WardenPage() {
   const [entryBox, setEntryBox] = useState(false);
@@ -75,100 +78,119 @@ function WardenPage() {
 
   return (
     <div className="admin-dashboard">
-      <em>
-        <h2>{userData?.role === "warden" ? "Warden" : "SRO"} Dashboard</h2>
-      </em>
-      <div className="dashboard-cards">
-        <div className="card">
-          Leave Request<p>{dashboardInfo.leaveRequestsCount}</p>
-        </div>
-        <div className="card">
-          Student Enrolled<p>{dashboardInfo.studentActiveCount}</p>
-        </div>
-        <div className="card">
-          Library Requests<p>{dashboardInfo.libraryRequestsCount}</p>
-        </div>
-        <div className="card">
-          Total Student List<p>{dashboardInfo.studentCount}</p>
+      <div className="dashboard-greeting">
+        <em>
+          <h1>{userData?.role === "warden" ? "Warden" : "SRO"} Dashboard</h1>
+        </em>
+        <span>
+          {new Date()
+            .toLocaleString("en-Gb", {
+              month: "short",
+              day: "numeric",
+            })
+            .replace(" ", "-")}
+          &nbsp;
+          <FontAwesomeIcon icon={faCalendarDays} />
+        </span>
+      </div>
+      <div className="dashboard-insights">
+        <h2>View Insights</h2>
+
+        <div className="dashboard-cards">
+          <div className="card">
+            Leave Request<p>{dashboardInfo.leaveRequestsCount}</p>
+          </div>
+          <div className="card">
+            Student Enrolled<p>{dashboardInfo.studentActiveCount}</p>
+          </div>
+          <div className="card">
+            Library Requests<p>{dashboardInfo.libraryRequestsCount}</p>
+          </div>
+          <div className="card">
+            Total Student List<p>{dashboardInfo.studentCount}</p>
+          </div>
         </div>
       </div>
-
-      {entryBox && (
-        <div className="entry-box">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setEntryBox(false);
+      <div className="staff-record-container">
+        <div className="staff-records">
+          <h3>Student Records</h3>
+          <button
+            className="btn add-staff-btn"
+            onClick={() => {
+              setEntryBox((prev) => !prev);
+              setStudentEntryCount(0);
+              setAddStudent([]);
+              setAddStudentResult([]);
             }}
           >
-            <label htmlFor="noOfEntries">No. of Entries : </label>
-            <input
-              type="number"
-              id="noOfEntries"
-              name="noOfEntries"
-              value={studentEntryCount}
-              onChange={(e) => setStudentEntryCount(e.target.value)}
-              required
-              min={1}
-            />
-            <button type="submit" className="btn">
-              Enter
-            </button>
-            <button
-              type="reset"
-              className="btn cancel"
-              onClick={() => setEntryBox(false)}
-            >
-              Cancel
-            </button>
-          </form>
+            + Add Student Entry
+          </button>
         </div>
-      )}
-      <div className="staff-records">
-        <h3>Student Records</h3>
-        <button
-          className="btn add-staff-btn"
-          onClick={() => {
-            setEntryBox((prev) => !prev);
-            setStudentEntryCount(0);
-            setAddStudent([]);
-            setAddStudentResult([]);
-          }}
-        >
-          + Add Student Entry
-        </button>
-      </div>
-      {studentEntryCount > 0 && !entryBox && (
-        <form onSubmit={(e) => handleAddStudent(e)}>
-          <table className="add-staff-table">
-            <thead>
-              <tr>
-                <th>Student Entry</th>
-                <th>Student ID</th>
-                <th>Created On</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>{genInputBox()}</tbody>
-          </table>
-          <div className="form-buttons">
-            <button type="submit" className="btn">
-              Add
-            </button>
-            <button
-              type="reset"
-              className="btn cancel"
-              onClick={() => {
-                setStudentEntryCount(0);
-                setAddStudent([]);
-                setAddStudentResult([]);
+
+        {entryBox && (
+          <div className="entry-box">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setEntryBox(false);
               }}
             >
-              Close
-            </button>
+              <label htmlFor="noOfEntries">No. of Entries : </label>
+              <input
+                type="number"
+                id="noOfEntries"
+                name="noOfEntries"
+                value={studentEntryCount}
+                onChange={(e) => setStudentEntryCount(e.target.value)}
+                required
+                min={1}
+              />
+              <button type="submit" className="btn">
+                Enter
+              </button>
+              <button
+                type="reset"
+                className="btn cancel"
+                onClick={() => setEntryBox(false)}
+              >
+                Cancel
+              </button>
+            </form>
           </div>
-        </form>
-      )}
+        )}
+
+        {studentEntryCount > 0 && !entryBox && (
+          <form onSubmit={(e) => handleAddStudent(e)}>
+            <table className="add-staff-table">
+              <thead>
+                <tr>
+                  <th>Student Entry</th>
+                  <th>Student ID</th>
+                  <th>Created On</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>{genInputBox()}</tbody>
+            </table>
+            <div className="form-buttons">
+              <button type="submit" className="btn">
+                Add
+              </button>
+              <button
+                type="reset"
+                className="btn cancel"
+                onClick={() => {
+                  setStudentEntryCount(0);
+                  setAddStudent([]);
+                  setAddStudentResult([]);
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

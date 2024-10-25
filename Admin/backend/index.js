@@ -35,8 +35,6 @@ const studentImagePath = path.join(
   "/Student/backend/Uploads"
 );
 
-console.log(studentImagePath)
-
 app.use(express.static(studentImagePath));
 
 mongoose
@@ -496,7 +494,7 @@ app.post("/fetch/library/requests", async (req, res) => {
           .send({ success: false, message: "User not found" });
       }
 
-      let libraryRequests;
+      let libraryRequests =[];
 
       if (user.role === "SRO") {
         libraryRequests = await libraryRequest.find({
@@ -735,7 +733,7 @@ app.post("/update/library/requests", async (req, res) => {
             message: "Student is already in the library",
           });
         }
-        const currentHour = new Date().getHours();
+        const currentHour = new Date(request.SROApproval.time).getHours();
 
         let resttime;
         if (currentHour < 21) {

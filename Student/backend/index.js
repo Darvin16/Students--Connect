@@ -355,6 +355,15 @@ app.post("/library/request", async (req, res) => {
     });
   }
 
+  const student = await studentsData.findOne({ studentId: req.user.studentId });
+
+  if (!student) {
+    return res.status(404).send({
+      success: false,
+      message: "Student not found",
+    });
+  }
+
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
 
@@ -375,6 +384,7 @@ app.post("/library/request", async (req, res) => {
     .create({
       requestId: generateUniqueId(12),
       studentId: req.user.studentId,
+      studentImage: student.studentImage,
       studentName: name,
       studentBlockName: blockName,
       studentRoomNumber: roomNumber,
@@ -410,10 +420,10 @@ app.post("/library/request/cancel", async (req, res) => {
       });
     }
 
-    if (Object.keys(request.in).length > 0) {
+    if (request.in.time) {
       return res.status(409).send({
         success: false,
-        message: "Request is can't be cancelled.",
+        message: "Request  can't be cancelled.",
       });
     }
 

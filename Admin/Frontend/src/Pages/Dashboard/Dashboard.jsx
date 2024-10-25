@@ -31,19 +31,24 @@ function Dashboard() {
 
   useEffect(() => {
     function showLogout() {
-      setTimeout(()=>{ if (window.innerWidth >= 992) {
-        setShowDesktopLogout(true);
-      } else {
-        setShowDesktopLogout(false);
-      }},0)
-     
+      setTimeout(() => {
+        if (window.innerWidth >= 992) {
+          setShowDesktopLogout(true);
+        } else {
+          setShowDesktopLogout(false);
+        }
+      }, 0);
     }
 
-    window.addEventListener("resize", showLogout)
-    
-    return () => {
-      window.removeEventListener("resize", showLogout)
+    if (window.innerWidth < 992) {
+      setShowDesktopLogout(false);
     }
+
+    window.addEventListener("resize", showLogout);
+
+    return () => {
+      window.removeEventListener("resize", showLogout);
+    };
   }, []);
 
   return (
@@ -223,7 +228,7 @@ function Dashboard() {
                 </>
               )}
 
-              {showMenu && (
+              {showMenu && !showDesktopLogout && (
                 <li className="nav-item">
                   <button className="logout-btn" onClick={() => logout()}>
                     Logout

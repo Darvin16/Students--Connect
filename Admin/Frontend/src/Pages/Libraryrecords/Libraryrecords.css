@@ -2,67 +2,250 @@
 
 /* General styles */
 .library-requests-container {
-    padding: 1rem;
+  padding: 1rem;
 }
 
 /* Styling for the card */
 .card {
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 }
 
 /* Responsive table */
 .table {
-    border-collapse: collapse;
+  border-collapse: collapse;
 }
 
 /* Table headers */
 .table th {
-    background-color: #007bff; /* Bootstrap primary color */
-    color: white; /* White text for headers */
+  background-color: #007bff; /* Bootstrap primary color */
+  color: white; /* White text for headers */
 }
 
 /* Responsive styling for mobile devices */
 @media (max-width: 576px) {
-    /* Stack table rows on mobile */
-    .table tbody tr {
-        display: block; /* Make rows block elements */
-        margin-bottom: 15px; /* Add space between rows */
-        border: 1px solid #ddd; /* Border around each row */
-        border-radius: 5px; /* Rounded corners */
-        background-color: #f8f9fa; /* Light background */
-    }
+  /* Stack table rows on mobile */
+  .table tbody tr {
+    display: block; /* Make rows block elements */
+    margin-bottom: 15px; /* Add space between rows */
+    border: 1px solid #ddd; /* Border around each row */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #f8f9fa; /* Light background */
+  }
 
-    /* Hide headers on mobile and display them in a custom format */
-    .table thead {
-        display: none; /* Hide thead for better mobile UX */
-    }
+  /* Hide headers on mobile and display them in a custom format */
+  .table thead {
+    display: none; /* Hide thead for better mobile UX */
+  }
 
-    .table td {
-        display: flex; /* Use flexbox for cell content */
-        justify-content: space-between; /* Space between label and value */
-        padding: 0.5rem; /* Padding for cells */
-        border-bottom: 1px solid #ddd; /* Border at the bottom */
-    }
+  .table td {
+    display: flex; /* Use flexbox for cell content */
+    justify-content: space-between; /* Space between label and value */
+    padding: 0.5rem; /* Padding for cells */
+    border-bottom: 1px solid #ddd; /* Border at the bottom */
+  }
 
-    .table td:before {
-        content: attr(data-label); /* Use data-label attribute */
-        font-weight: bold; /* Make label bold */
-        flex: 1; /* Make label take full width */
-        text-align: left; /* Align label to left */
-    }
+  .table td:before {
+    content: attr(data-label); /* Use data-label attribute */
+    font-weight: bold; /* Make label bold */
+    flex: 1; /* Make label take full width */
+    text-align: left; /* Align label to left */
+  }
 
-    /* Style buttons on mobile */
-    .btn {
-        width: 100%; /* Full width buttons for easier interaction */
-        margin-top: 5px; /* Space between buttons */
-    }
+  /* Style buttons on mobile */
+  .btn {
+    width: 100%; /* Full width buttons for easier interaction */
+    margin-top: 5px; /* Space between buttons */
+  }
 }
 
-.download-file-btn{
-    background-color: #007bff;
-    color: white;
-    padding: 5px;
-    border: none;
-    border-radius: 5px;
+/* New Design */
+
+.library-requests-page * {
+  margin: 0;
+  padding: 0;
+}
+.library-requests-page hr {
+  margin: 10px 0;
+  color: hsl(240, 100%, 30%);
+}
+.library-requests-page h3,
+.library-requests-page th {
+  font-family: var(--font-family-1);
+}
+
+.library-request-greeting {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  align-items: center;
+  font-family: var(--font-family-1);
+  margin-top: 10px;
+}
+.library-request-greeting span {
+  padding: 5px;
+  color: white;
+  background-color: black;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.library-requests-insights {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  flex-wrap: wrap;
+}
+
+.library-request-status,
+.library-request-delay-summary {
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px hsl(140, 100%, 30%);
+  padding: 10px;
+  line-height: 2.5;
+}
+.library-request-status {
+  flex: 1.5;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+.library-request-status p,
+.library-request-delay-summary p {
+  text-align: center;
+}
+.library-request-status h3 {
+  grid-column: span 4;
+}
+
+.lib-starus-border {
+  border-left: 1px solid;
+}
+
+.library-request-delay-summary {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.library-request-delay-summary > div {
+  display: flex;
+  align-items: center;
+  grid-column: span 2;
+}
+.library-request-delay-summary img {
+  width: 36px;
+  height: 36px;
+}
+.library-request-delay-summary h3 {
+  display: inline;
+}
+
+.library-request-filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 10px;
+  align-items: center;
+  gap: 10px;
+}
+.library-filter-1,
+.library-filter-2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.lib-filter-1-grp {
+  box-shadow: 0px 0px 5px hsl(280, 100%, 50%);
+  padding: 10px;
+  border-radius: 5px;
+}
+.lib-filter-1-grp input:not([type="checkbox"]),
+.lib-filter-1-grp select {
+  border: none;
+  outline: none;
+  padding: 0 2px;
+}
+.lib-filter-2-approve,
+.lib-filter-2-reject {
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+.lib-filter-2-approve {
+  color: hsl(120, 100%, 30%);
+  box-shadow: 0px 0px 5px hsl(120, 100%, 30%);
+}
+.lib-filter-2-approve:hover {
+  color: white;
+  background-color: hsl(120, 100%, 30%);
+}
+.lib-filter-2-reject {
+  color: red;
+  box-shadow: 0px 0px 5px hsl(0, 100%, 50%);
+}
+.lib-filter-2-reject:hover {
+  color: white;
+  background-color: red;
+}
+
+.library-request-table {
+  padding: 10px;
+}
+.library-request-table table {
+  width: 100%;
+  text-align: center;
+}
+.library-request-table th {
+  border: 1px solid;
+  padding: 10px;
+  color: white;
+  background-color: hsl(240, 100%, 50%);
+}
+.library-request-table td {
+  border: 1px solid black;
+  padding: 5px;
+}
+.library-request-table td img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.download-file-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  width: 50px;
+  font-size: 18px;
+}
+
+.lib-btn {
+  border: none;
+  padding: 2px 5px;
+  font-size: 18px;
+  color: white;
+  border-radius: 5px;
+  transition: all 0.15s;
+}
+.lib-approve {
+  background-color: hsl(120, 100%, 30%);
+  margin-right: 10px;
+}
+.lib-approve:hover {
+  background-color: hsl(120, 100%, 100%);
+  color: hsl(120, 100%, 30%);
+  outline:1px solid hsl(120, 100%, 30%);
+}
+.lib-reject {
+  background-color: hsl(0, 100%, 50%);
+}
+.lib-reject:hover {
+  background-color: hsl(120, 100%, 100%);
+  color: hsl(0, 100%, 50%);
+  outline:1px solid hsl(0, 100%, 30%);
 }

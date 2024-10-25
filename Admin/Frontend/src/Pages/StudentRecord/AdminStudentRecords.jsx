@@ -21,7 +21,6 @@ function AdminStudentRecords() {
     yearFrom: "",
     yearTo: "",
   });
-  const [academicYear, setAcademicYear] = useState(0);
   const [filterby, setFilterby] = useState("");
   const [sortType, setSortType] = useState("");
 
@@ -303,6 +302,7 @@ function AdminStudentRecords() {
             <select
               name="sortby-name"
               id="sortby-name"
+              value={sortby.nameOrder}
               onChange={(e) =>
                 setSortby((prev) => ({ ...prev, nameOrder: e.target.value }))
               }
@@ -316,6 +316,7 @@ function AdminStudentRecords() {
             <select
               name="sortby-year"
               id="sortby-year"
+              value={sortby.yearOrder}
               onChange={(e) =>
                 setSortby((prev) => ({ ...prev, yearOrder: e.target.value }))
               }
