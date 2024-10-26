@@ -32,6 +32,7 @@ function LeaveTracker() {
   const [cancelReason, setCancelReason] = useState("");
 
   const setDynamicHeight = () => {
+    console.log("called");
     setTimeout(() => {
       if (divElement.current) {
         const height = divElement.current.offsetHeight + 20;
@@ -41,7 +42,7 @@ function LeaveTracker() {
           span.style.setProperty("--auto-height", `${height}px`)
         );
       }
-    }, 0);
+    }, 10);
   };
 
   useLayoutEffect(() => {
@@ -61,6 +62,8 @@ function LeaveTracker() {
     setDynamicHeight();
   }, [containerElement.current?.clientWidth]);
 
+  setDynamicHeight();
+
   useEffect(() => {
     if (leaveRequests.length === 0) {
       fetchLeaveRequests();
@@ -74,7 +77,10 @@ function LeaveTracker() {
       );
       setRequest(selectedRequest || {});
     } else {
-      setRequest({});
+      const selectedRequest = leaveRequests.sort(
+        (a, b) => a.requestDate - b.requestDate
+      )[0];
+      setRequest(selectedRequest || {});
     }
   }, [option, leaveRequests]);
 
@@ -83,13 +89,15 @@ function LeaveTracker() {
       <div className="leave-tracker-header">
         <h2>Application Status</h2>
         <div className="leave-tracker-selecter">
-          <label htmlFor="leave-tracker-option">Select Request:</label>
+          <label htmlFor="leave-tracker-option">
+            <strong>Select Request:</strong>
+          </label>
           <select
             name="leave-tracker-option"
             id="leave-tracker-option"
+            value={request.from}
             onChange={(e) => setOption(e.target.value)}
           >
-            <option value="">None</option>
             {leaveRequestOption.map((op, index) => (
               <option key={index} value={op.value}>
                 {op.option}
@@ -290,7 +298,7 @@ function LeaveTracker() {
           </div>
         ) : (
           <div className="empty-leave-tracker">
-            <h3>No Request Selected</h3>
+            <h3>&nbsp;No Request Selected</h3>
           </div>
         )}
 

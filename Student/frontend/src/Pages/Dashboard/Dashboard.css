@@ -38,14 +38,15 @@
     text-wrap: nowrap;
   }
 }
-.dashboard-nav-link img{
-  width: 25px;
-  height: 25px;
-}
 .dashboard-nav a {
   color: white;
   text-decoration: none;
   padding: 10px;
+  display: flex;
+  align-items: center;
+}
+.dashboard-nav-link a svg{
+  flex-basis: 10%;
 }
 .dashboard-nav a:hover {
   background-color: white;
@@ -57,7 +58,7 @@
   padding: 10px;
   margin: 10px;
   border-radius: 5px;
-  margin-top: 20vh;
+  margin-top: 18vh;
 }
 .dashboard-components {
   flex: 1;
@@ -66,7 +67,7 @@
 @media (max-width: 750px) {
   .dashboard-header {
     position: sticky;
-    top:0;
+    top: 0;
     background-color: white;
     z-index: 2;
   }
@@ -76,7 +77,6 @@
   }
   .dashboard-nav {
     width: auto !important;
-    
   }
   .dashboard-nav-link {
     position: sticky !important;
@@ -89,14 +89,14 @@
     animation: nav-op2 0.5s ease;
   }
   @keyframes nav-op2 {
-    from{
+    from {
       height: 0;
     }
-    to{
+    to {
       height: 50px;
     }
   }
-  .dashboard-nav button{
+  .dashboard-nav button {
     margin: 10px;
     padding: 2px 5px;
   }

@@ -4,20 +4,22 @@ import LibraryRequest from "../LibraryRequest/LibraryRequest";
 import LandingPage from "./LandingPage";
 import "./Dashboard.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faBookOpenReader,
+  faUserGraduate,
+  faShapes,
+  faRocket,
+  faPaperPlane,
+  faSignOut,
+} from "@fortawesome/free-solid-svg-icons";
+import { faWpforms } from "@fortawesome/free-brands-svg-icons";
 import { AppContext } from "../../Context/AppContext";
 import LibraryRequestTracker from "../LibraryRequest/LibraryRequestTracker";
 import RequestForm from "../LibraryRequest/RequestForm";
 import Profile from "../Profile/Profile";
 import LeaveRequest from "../LeaveRequest/LeaveRequest";
 import LeaveTracker from "../LeaveRequest/LeaveTracker";
-import dashboardIcon from "../../Asset/dashboard.gif";
-import libraryRequestIcon from "../../Asset/library-request.gif";
-import libraryTrackerIcon from "../../Asset/library-tracker.gif";
-import leaveRequestIcon from "../../Asset/leave-request.gif";
-import leaveTrackerIcon from "../../Asset/leave-tracker.gif";
-import profileIcon from "../../Asset/profile.gif";
-import logoutIcon from "../../Asset/logout.gif";
 
 function Dashboard() {
   const [showMenu, setShowMenu] = React.useState(false);
@@ -36,31 +38,31 @@ function Dashboard() {
           <div className="dashboard-nav">
             <div className="dashboard-nav-link">
               <Link to="/dashboard/">
-                <img src={dashboardIcon} alt="library request Icon" />
+                <FontAwesomeIcon icon={faShapes} />
                 &nbsp;Dashboard
               </Link>
               <Link to="/dashboard/library/request">
-                <img src={libraryRequestIcon} alt="library request Icon" />
+                <FontAwesomeIcon icon={faBookOpenReader} />
                 &nbsp;Library Request
               </Link>
               <Link to="/dashboard/library/request/tracker">
-                <img src={libraryTrackerIcon} alt="library tracker Icon" />
-                &nbsp; Library Tracker
+                <FontAwesomeIcon icon={faRocket} />
+                &nbsp;Library Tracker
               </Link>
               <Link to="/dashboard/leave/request">
-                <img src={leaveRequestIcon} alt="library tracker Icon" />
+                <FontAwesomeIcon icon={faWpforms} />
                 &nbsp;Leave Request
               </Link>
               <Link to="/dashboard/leave/request/tracker">
-                <img src={leaveTrackerIcon} alt="library tracker Icon" />
+                <FontAwesomeIcon icon={faPaperPlane} />
                 &nbsp;Leave Tracker
               </Link>
               <Link to="/dashboard/profile">
-                <img src={profileIcon} alt="library tracker Icon" />
+                <FontAwesomeIcon icon={faUserGraduate} />
                 &nbsp;Profile
               </Link>
               <button onClick={() => Logout()}>
-                <img src={logoutIcon} alt="library tracker Icon" />
+                <FontAwesomeIcon icon={faSignOut} />
                 &nbsp;Logout
               </button>
             </div>
