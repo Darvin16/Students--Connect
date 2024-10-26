@@ -282,6 +282,13 @@ router.post("/generate/pdf", async (req, res) => {
       });
     }
 
+    if (!request.wardenApproval.status || !request.SROApproval.status) {
+      return res.status(400).send({
+        success: false,
+        message: "Request is not approved, can't download PDF",
+      });
+    }
+
     const filename = request.studentId
       ? `Request-${request.studentId}.pdf`
       : "Request-Unknown.pdf";

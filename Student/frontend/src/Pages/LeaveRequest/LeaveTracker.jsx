@@ -206,7 +206,8 @@ function LeaveTracker() {
                   <p>
                     Request Rejected.
                     <br />
-                    Your leave request has not been granted. Warden has rejected your request
+                    Your leave request has not been granted. Warden has rejected
+                    your request
                   </p>
                   <button className="tracker-rejected">Rejected</button>
                 </>
@@ -253,8 +254,27 @@ function LeaveTracker() {
                 </>
               )}
             </div>
+            <div className="leave-tracker-note">
+              <p>
+                <strong>Note:</strong> You can download the request pdf , Only
+                after it has been approved.
+              </p>
+            </div>
             <div className="leave-tracker-btn">
-              <button onClick={() => generatePDF(request.requestId)}>
+              <button
+                className={
+                  !request.wardenApproval || !request.SROApproval
+                    ? "leave-tracker-download-btn"
+                    : ""
+                }
+                title={
+                  !request.wardenApproval || !request.SROApproval
+                    ? "Not Ready"
+                    : ""
+                }
+                disabled={!request.wardenApproval || !request.SROApproval}
+                onClick={() => generatePDF(request.requestId)}
+              >
                 Download PDF
               </button>
               <button

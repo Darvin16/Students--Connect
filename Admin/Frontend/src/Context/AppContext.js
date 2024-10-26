@@ -193,8 +193,22 @@ export const AppProvider = ({ children }) => {
       })
       .catch((err) => {
         console.log(err);
-        if (err.response && err.response.data && err.response.data.message) {
-          alert(err.response.data.message);
+        if (err.response && err.response.data) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            try {
+              const errorData = JSON.parse(reader.result);
+              if (errorData.message) {
+                alert(errorData.message);
+              } else {
+                alert("An error occurred while generating the PDF.");
+              }
+            } catch (e) {
+              alert("An error occurred while generating the PDF.");
+            }
+          };
+
+          reader.readAsText(err.response.data);
         } else {
           alert("An error occurred while generating the PDF.");
         }

@@ -38,6 +38,10 @@
     text-wrap: nowrap;
   }
 }
+.dashboard-nav-link img{
+  width: 25px;
+  height: 25px;
+}
 .dashboard-nav a {
   color: white;
   text-decoration: none;

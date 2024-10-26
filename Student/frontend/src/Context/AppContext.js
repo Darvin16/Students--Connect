@@ -225,6 +225,7 @@ export const AppProvider = ({ children }) => {
         {
           headers: {
             authToken: authToken,
+            "Content-Type": "application/json",
           },
           responseType: "blob",
         }
@@ -243,8 +244,23 @@ export const AppProvider = ({ children }) => {
       })
       .catch((err) => {
         console.log(err);
-        if (err.response && err.response.data && err.response.data.message) {
-          alert(err.response.data.message);
+        if (err.response && err.response.data ) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            try {
+              console.log(reader.result)
+              const errorData = JSON.parse(reader.result);
+              if (errorData.message) {
+                alert(errorData.message); // Display the error message from the server
+              } else {
+                alert("An error occurred in generating PDF");
+              }
+            } catch (e) {
+              alert("An error occurred in generating PDF");
+            }
+          };
+          
+          reader.readAsText(err.response.data);
         } else {
           alert("An error occurred in generating PDF");
         }
