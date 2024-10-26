@@ -1,11 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./LeaveRequest.css";
 import { AppContext } from "../../Context/AppContext";
 import ToastMessage from "./ToastMessage";
 
 function LeaveRequest() {
-  const { handleLeaveRequest, imageAccessURL, userData, showToast } =
-    useContext(AppContext);
+  const { handleLeaveRequest, userData, showToast } = useContext(AppContext);
   const [requestData, setRequestDate] = useState({
     terms_conditions: false,
     studentId: "",
@@ -13,6 +12,16 @@ function LeaveRequest() {
     studentName: "",
   });
 
+  useEffect(() => {
+    if (showToast) {
+      setRequestDate({
+        terms_conditions: false,
+        studentId: "",
+        studentBlockName: "",
+        studentName: "",
+      });
+    }
+  }, [showToast]);
   if (!userData) {
     return <div>Loading</div>;
   }
@@ -255,16 +264,25 @@ function LeaveRequest() {
                 terms_conditions: !prev.terms_conditions,
               }))
             }
-          />&nbsp;
+          />
+          &nbsp;
           <label htmlFor="terms_conditions">
-            I acknowledge that my academic details are added to this request details
+            I acknowledge that my academic details are added to this request
+            details
           </label>
         </div>
         <div className="leave-request-body-group-btn">
           <button type="submit">Submit</button>
           <button
             type="reset"
-            onClick={() => setRequestDate({ terms_conditions: false })}
+            onClick={() =>
+              setRequestDate({
+                terms_conditions: false,
+                studentId: "",
+                studentBlockName: "",
+                studentName: "",
+              })
+            }
           >
             Cancel
           </button>
