@@ -9,6 +9,7 @@ function LibraryRequestTracker() {
     authToken,
     cancelLibraryRequest,
     navigate,
+    userData,
   } = useContext(AppContext);
 
   const [cancelRequest, setCancelRequest] = useState(false);
@@ -20,10 +21,42 @@ function LibraryRequestTracker() {
     }
   }, [authToken, libraryRequestForm]);
 
-  if (!libraryRequestForm) {
+  if (libraryRequestForm) {
     return (
-      <div className="empty-library-request">
-        <h2>Here you see your library request prograss</h2>
+      <div className="library-request-tracker-page">
+        <h1>Application Tracking Status</h1>
+        <h5>Student ID: {userData?.studentId}</h5>
+        {/* Progress Bar */}
+        <div className="progress-bar-container">
+          <div className={`progress-step`}>
+            ⚪<p>Seek Request</p>
+          </div>
+          <div className={`progress-step`}>
+            ⚪<p> Warden Approval</p>
+          </div>
+          <div className={`progress-step`}>
+            ⚪<p>SRO Approval</p>
+          </div>
+          <div className={`progress-step`}>
+            ⚪<p>Success</p>
+          </div>
+        </div>
+
+        <div className="request-details">
+          <div className="request-tracker-timeline">
+            <div className="tracher-head">
+              <h2>Timeline:-</h2>
+              <h5>
+                Date:&nbsp;
+                {new Date().toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </h5>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -234,8 +267,8 @@ function LibraryRequestTracker() {
               <>
                 <div className="tracker-request-approved">
                   <label htmlFor="view">Form Approved</label>
-                <button
-                  id="view"
+                  <button
+                    id="view"
                     onClick={() =>
                       navigate("dashboard/library/request/form", {
                         state: libraryRequestForm,
