@@ -100,20 +100,28 @@ router.post("/leave-request/raise", async (req, res) => {
       });
     }
 
-    const sourcePath = path.join(IMAGE_SOURCE_FOLDER, student.studentImage);
-    const destinationPath = path.join(
-      IMAGE_DESTINATION_FOLDER,
-      student.studentImage
-    );
+    if (student.studentImage) {
+      const sourcePath = path.join(IMAGE_SOURCE_FOLDER, student.studentImage);
+      const destinationPath = path.join(
+        IMAGE_DESTINATION_FOLDER,
+        student.studentImage
+      );
 
-    fs.copyFile(sourcePath, destinationPath, (err) => {
-      if (err) {
-        console.error(err);
-        return res
-          .status(500)
-          .send({ success: false, message: "Error in uploading image" });
-      }
-    });
+      fs.copyFile(sourcePath, destinationPath, (err) => {
+        if (err) {
+          console.error(err);
+          return res
+            .status(500)
+            .send({ success: false, message: "Error in uploading image" });
+        }
+      });
+    } else {
+      return res.status(400).send({
+        success: false,
+        message:
+          "Student image is required, Please updates your image in the profile",
+      });
+    }
 
     const ack = await leaveRequest.create({
       requestId: generateUniqueId(),
