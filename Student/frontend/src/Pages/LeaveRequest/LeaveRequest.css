@@ -2,6 +2,9 @@
 
 .leave-request-page {
   padding: 10px;
+  box-shadow: 0px 0px 5px;
+  margin: 10px;
+  border-radius: 10px;
 }
 .leave-request-header {
   display: flex;
