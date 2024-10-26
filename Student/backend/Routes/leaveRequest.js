@@ -20,32 +20,23 @@ router.post("/leave-request/raise", async (req, res) => {
   try {
     const {
       studentId,
-      studentImage,
       studentName,
       studentBlockName,
-      studentRoomNumber,
-      studentDepartment,
-      studentBranchName,
-      studentAcademicYear,
       parentContactNo,
       reason,
       leaveType,
       from,
       to,
       oneDayLeave,
+      terms_conditions,
     } = req.body;
 
     const startOfDay = new Date().setHours(0, 0, 0, 0);
 
     if (
       !studentId ||
-      !studentImage ||
       !studentName ||
       !studentBlockName ||
-      !studentRoomNumber ||
-      !studentDepartment ||
-      !studentBranchName ||
-      !studentAcademicYear ||
       !parentContactNo ||
       !reason ||
       !leaveType ||
@@ -55,6 +46,12 @@ router.post("/leave-request/raise", async (req, res) => {
       return res
         .status(400)
         .send({ success: true, message: `Please fill all the fields` });
+    }
+    if (!terms_conditions) {
+      return res.status(400).send({
+        success: false,
+        message: "Please accept the terms and conditions",
+      });
     }
     const student = await studentsData.findOne({ studentId: studentId });
 
@@ -103,8 +100,11 @@ router.post("/leave-request/raise", async (req, res) => {
       });
     }
 
-    const sourcePath = path.join(IMAGE_SOURCE_FOLDER, studentImage);
-    const destinationPath = path.join(IMAGE_DESTINATION_FOLDER, studentImage);
+    const sourcePath = path.join(IMAGE_SOURCE_FOLDER, student.studentImage);
+    const destinationPath = path.join(
+      IMAGE_DESTINATION_FOLDER,
+      student.studentImage
+    );
 
     fs.copyFile(sourcePath, destinationPath, (err) => {
       if (err) {
@@ -118,13 +118,13 @@ router.post("/leave-request/raise", async (req, res) => {
     const ack = await leaveRequest.create({
       requestId: generateUniqueId(),
       studentId: studentId,
-      studentImage: studentImage,
+      studentImage: student.studentImage,
       studentName: studentName,
       studentBlockName: studentBlockName,
-      studentRoomNumber: studentRoomNumber,
-      studentDepartment: studentDepartment,
-      studentBranchName: studentBranchName,
-      studentAcademicYear: studentAcademicYear,
+      studentRoomNumber: student.roomNumber,
+      studentDepartment: student.department,
+      studentBranchName: student.branchName,
+      studentAcademicYear: student.academicYear,
       studentContectNo: student.phone,
       parentContactNo: parentContactNo,
       requestDate: Date.now(),
