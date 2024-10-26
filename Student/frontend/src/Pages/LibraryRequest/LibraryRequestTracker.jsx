@@ -21,7 +21,7 @@ function LibraryRequestTracker() {
     }
   }, [authToken, libraryRequestForm]);
 
-  if (libraryRequestForm) {
+  if (!libraryRequestForm) {
     return (
       <div className="library-request-tracker-page">
         <h1>Application Tracking Status</h1>
