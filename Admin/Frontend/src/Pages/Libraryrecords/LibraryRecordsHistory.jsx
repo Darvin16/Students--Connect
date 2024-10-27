@@ -105,9 +105,9 @@ function LibraryRecordsHistory() {
                 <TableCell>{record.studentRoomNumber}</TableCell>
                 <TableCell>{record.studentBranchName}</TableCell>
                 <TableCell>
-                  Status: {record.wardenApproval?.status} <br />
-                  By: {record.wardenApproval?.by} <br />
-                  Time:{" "}
+                  Status:&nbsp;{record.wardenApproval?.status} <br />
+                  By:&nbsp;{record.wardenApproval?.by} <br />
+                  Time:&nbsp;
                   {record.wardenApproval
                     ? new Date(record.wardenApproval?.time).toLocaleString(
                         "en-GB",
@@ -118,9 +118,9 @@ function LibraryRecordsHistory() {
                     : ""}
                 </TableCell>
                 <TableCell>
-                  Status: {record.SROApproval?.status} <br />
-                  By: {record.SROApproval?.by} <br />
-                  Time:{" "}
+                  Status:&nbsp;{record.SROApproval?.status} <br />
+                  By:&nbsp;{record.SROApproval?.by} <br />
+                  Time:&nbsp;
                   {record.SROApproval
                     ? new Date(record.SROApproval?.time).toLocaleString(
                         "en-GB",
