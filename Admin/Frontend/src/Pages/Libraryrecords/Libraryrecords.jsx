@@ -384,7 +384,7 @@ const LibraryRequests = () => {
                   <button
                     title="Download PDF"
                     className="download-file-btn"
-                    onClick={() => generatePDF(request.requestId)}
+                    onClick={() => generatePDF(request.requestId,"library")}
                   >
                     <FontAwesomeIcon icon={faFileArrowDown} />
                   </button>

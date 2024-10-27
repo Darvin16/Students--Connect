@@ -26,6 +26,23 @@ function LibraryRecordsHistory() {
     }
   }, [libraryRecords]);
 
+  const calcDelayTime = (time) => {
+    if (!time) {
+      return "-";
+    }
+
+    const seconds = Math.floor(time / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    return `${hours > 0 ? `${hours} hour${hours > 1 ? "s" : ""}` : ``} ${
+      remainingMinutes > 0
+        ? `${remainingMinutes} minute${remainingMinutes > 1 ? "s" : ""}`
+        : ""
+    }`;
+  };
+
   return (
     <Container>
       <Typography variant="h4" gutterBottom align="center">
@@ -34,20 +51,48 @@ function LibraryRecordsHistory() {
 
       <TableContainer component={Paper}>
         <Table>
-          <TableHead>
+          <TableHead
+            style={{
+              backgroundColor: "blue",
+            }}
+          >
             <TableRow>
-              <TableCell>Request ID</TableCell>
-              <TableCell>Student Name</TableCell>
-              <TableCell>Block Name</TableCell>
-              <TableCell>Room Number</TableCell>
-              <TableCell>Branch</TableCell>
-              <TableCell>Warden Approval</TableCell>
-              <TableCell>SRO Approval</TableCell>
-              <TableCell>In Time</TableCell>
-              <TableCell>Out Time</TableCell>
-              <TableCell>Delay Time</TableCell>
-              <TableCell>Request Cancelled</TableCell>
-              <TableCell>Download File</TableCell>
+              <TableCell style={{ color: "white", fontWeight: "bold" }}>
+                Request ID
+              </TableCell>
+              <TableCell style={{ color: "white", fontWeight: "bold" }}>
+                Student Name
+              </TableCell>
+              <TableCell style={{ color: "white", fontWeight: "bold" }}>
+                Block Name
+              </TableCell>
+              <TableCell style={{ color: "white", fontWeight: "bold" }}>
+                Room Number
+              </TableCell>
+              <TableCell style={{ color: "white", fontWeight: "bold" }}>
+                Branch
+              </TableCell>
+              <TableCell style={{ color: "white", fontWeight: "bold" }}>
+                Warden Approval
+              </TableCell>
+              <TableCell style={{ color: "white", fontWeight: "bold" }}>
+                SRO Approval
+              </TableCell>
+              <TableCell style={{ color: "white", fontWeight: "bold" }}>
+                In Time
+              </TableCell>
+              <TableCell style={{ color: "white", fontWeight: "bold" }}>
+                Out Time
+              </TableCell>
+              <TableCell style={{ color: "white", fontWeight: "bold" }}>
+                Delay Time
+              </TableCell>
+              <TableCell style={{ color: "white", fontWeight: "bold" }}>
+                Request Cancelled
+              </TableCell>
+              <TableCell style={{ color: "white", fontWeight: "bold" }}>
+                Download File
+              </TableCell>
             </TableRow>
           </TableHead>
 
@@ -62,27 +107,52 @@ function LibraryRecordsHistory() {
                 <TableCell>
                   Status: {record.wardenApproval?.status} <br />
                   By: {record.wardenApproval?.by} <br />
-                  Time: {new Date(record.wardenApproval?.time).toLocaleString()}
+                  Time:{" "}
+                  {record.wardenApproval
+                    ? new Date(record.wardenApproval?.time).toLocaleString(
+                        "en-GB",
+                        {
+                          hour12: true,
+                        }
+                      )
+                    : ""}
                 </TableCell>
                 <TableCell>
                   Status: {record.SROApproval?.status} <br />
                   By: {record.SROApproval?.by} <br />
-                  Time: {new Date(record.SROApproval?.time).toLocaleString()}
+                  Time:{" "}
+                  {record.SROApproval
+                    ? new Date(record.SROApproval?.time).toLocaleString(
+                        "en-GB",
+                        {
+                          hour12: true,
+                        }
+                      )
+                    : ""}
                 </TableCell>
                 <TableCell>
-                  {new Date(record.in?.time).toLocaleString()}
+                  {record.in
+                    ? new Date(record.in?.time).toLocaleString("en-GB", {
+                        hour12: true,
+                      })
+                    : "-"}
                 </TableCell>
                 <TableCell>
-                  {new Date(record.out?.time).toLocaleString()}
+                  {record.out
+                    ? new Date(record.out?.time).toLocaleString("en-GB", {
+                        hour12: true,
+                      })
+                    : "-"}
                 </TableCell>
-                <TableCell>
-                  {(record.delayTime / (1000 * 60)).toFixed(2)} minutes
-                </TableCell>
+                <TableCell>{calcDelayTime(record.delayTime)}</TableCell>
                 <TableCell>
                   {record.cancelRequest?.status ? (
                     <>
                       Cancelled at{" "}
-                      {new Date(record.cancelRequest?.time).toLocaleString()}{" "}
+                      {new Date(record.cancelRequest?.time).toLocaleString(
+                        "en-GB",
+                        { hour12: true }
+                      )}{" "}
                       <br />
                       Reason: {record.cancelRequest?.reason}
                     </>
@@ -93,7 +163,7 @@ function LibraryRecordsHistory() {
                 <TableCell>
                   <button
                     className="download-file-btn"
-                    onClick={() => generatePDF(record.requestId)}
+                    onClick={() => generatePDF(record.requestId, "library")}
                   >
                     <FontAwesomeIcon icon={faFileArrowDown} />
                   </button>

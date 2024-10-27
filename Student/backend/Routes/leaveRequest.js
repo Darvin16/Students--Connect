@@ -133,7 +133,7 @@ router.post("/leave-request/raise", async (req, res) => {
       studentDepartment: student.department,
       studentBranchName: student.branchName,
       studentAcademicYear: student.academicYear,
-      studentContectNo: student.phone,
+      studentContactNo: student.phone,
       parentContactNo: parentContactNo,
       requestDate: Date.now(),
       reason: reason,
@@ -454,6 +454,22 @@ router.post("/generate/pdf", async (req, res) => {
       .text(status, {
         align: "center",
       });
+
+    if (request.cancelRequest.status) {
+      doc
+        .fontSize(14)
+        .fillColor("red")
+        .text(
+          `Request has been Cancelled by you on ${new Date(
+            request.cancelRequest.time
+          ).toLocaleString("en-Gb", {
+            hour12: true,
+          })}`,
+          {
+            align: "center",
+          }
+        );
+    }
 
     doc
       .moveDown()

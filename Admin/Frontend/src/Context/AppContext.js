@@ -168,12 +168,13 @@ export const AppProvider = ({ children }) => {
       });
   }
 
-  function generatePDF(requestId) {
+  function generatePDF(requestId,type) {
     axios
       .post(
         "http://localhost:9000/generate/pdf",
         {
           requestId: requestId,
+          type:type,
         },
         {
           headers: { authToken: authToken },

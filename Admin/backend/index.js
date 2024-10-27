@@ -387,12 +387,8 @@ app.post("/fetch/dashboard/info", async (req, res) => {
         "SROApproval.status": "approved",
         "cancelRequest.status": false,
       });
-      const entryStatus = libraryRequests.filter(
-        (request) => request.in.by
-      );
-      const exitStatus = libraryRequests.filter(
-        (request) => request.out.by 
-      );
+      const entryStatus = libraryRequests.filter((request) => request.in.by);
+      const exitStatus = libraryRequests.filter((request) => request.out.by);
       const totalVisits = libraryRequests.filter(
         (request) => request.in.by && request.out.by
       );
@@ -712,7 +708,7 @@ app.post("/fetch/library/requests", async (req, res) => {
 
 app.post("/generate/pdf", async (req, res) => {
   try {
-    const { requestId } = req.body;
+    const { requestId, type } = req.body;
 
     if (!requestId) {
       return res.status(400).send({
@@ -720,84 +716,248 @@ app.post("/generate/pdf", async (req, res) => {
         message: "Request ID is required",
       });
     }
+    if (type === "library") {
+      const request = await libraryRequest.findOne({
+        requestId: requestId,
+      });
 
-    const request = await libraryRequest.findOne({
-      requestId: requestId,
-    });
+      if (!request) {
+        return res.status(404).send({
+          success: false,
+          message: "Request not found",
+        });
+      }
 
-    if (!request) {
-      return res.status(404).send({
+      const filename = request.studentId
+        ? `Request-${request.studentId}.pdf`
+        : `Request-Unknown.pdf`;
+
+      res.header("Access-Control-Expose-Headers", "Content-Disposition"); // Expose Content-Disposition header
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+
+      const doc = new PDFDocument();
+
+      doc.pipe(res);
+
+      doc
+        .fontSize(16)
+        .text(`Library Request from Student ID: ${request.studentId}`, {
+          align: "center",
+        });
+
+      doc
+        .moveDown()
+        .fontSize(12)
+        .text(`Student Name: ${request.studentName}`, {
+          align: "left",
+        })
+        .text(`Academic Year: ${request.studentAcademicYear}`, {
+          align: "left",
+        })
+        .text(`Contact No: ${request.studentContactNo}`, {
+          align: "left",
+        })
+        .text(`Department: ${request.studentDepartment}`, {
+          align: "left",
+        })
+        .text(`Branch: ${request.studentBranchName}`, {
+          align: "left",
+        })
+        .text(`Block Name: ${request.studentBlockName}`, {
+          align: "left",
+        })
+        .text(`Room Number: ${request.studentRoomNumber}`, {
+          align: "left",
+        })
+        .text(
+          `Request Date & Time:${new Date(request.requestDate).toLocaleString(
+            "en-GB",
+            {
+              year: "numeric",
+              month: "long",
+              day: "2-digit",
+              weekday: "long",
+              hour12: true,
+              hour: "numeric",
+              minute: "numeric",
+              second: "numeric",
+            }
+          )}`,
+          {
+            align: "left",
+          }
+        )
+        .text(`Request Reason: ${request.description}`, {
+          align: "left",
+        });
+
+      doc.end();
+    } else if (type === "leave") {
+      const request = await leaveRequest.findOne({ requestId: requestId });
+
+      if (!request) {
+        return res.status(404).send("Leave Request Not Found");
+      }
+
+      const filename = request.studentId
+        ? `Request-${request.studentId}.pdf`
+        : `Request-Unknown.pdf`;
+      const status =
+        request.wardenApproval.status && request.SROApproval.status
+          ? request.wardenApproval.status === "approved" &&
+            request.SROApproval.status === "approved"
+            ? "(Approved)"
+            : "(Rejected)"
+          : "(Pending)";
+      const reason = `On ${new Date(request.requestDate).toLocaleString(
+        "en-GB",
+        {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }
+      )}, ${request.studentName} have submitted a leave request for the ${
+        request.oneDayLeave
+          ? `date of ${new Date(request.from).toLocaleString("en-GB", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}`
+          : `period of ${new Date(request.from).toLocaleString("en-GB", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })} to ${new Date(request.to).toLocaleString("en-GB", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}`
+      } for the reason "${request.reason}"`;
+
+      const imagePath = path.join(
+        __dirname,
+        "../../",
+        "Student/backend/Uploads/LeaveImages/",
+        request.studentImage
+      );
+
+      res.header("Access-Control-Expose-Headers", "Content-Disposition");
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
+
+      const doc = new PDFDocument();
+
+      doc.pipe(res);
+
+      doc
+        .fontSize(24)
+        .text(`Leave Request From ${request.studentId}`, {
+          align: "center",
+        })
+        .fontSize(12)
+        .fillColor(
+          `${
+            status === "(Pending)"
+              ? "gray"
+              : status === "(Approved)"
+              ? "green"
+              : "red"
+          }`
+        )
+        .text(status, {
+          align: "center",
+        });
+
+      if (request.cancelRequest.status) {
+        doc
+          .fontSize(14)
+          .fillColor("red")
+          .text(
+            `Request has been Cancelled by the Student on ${new Date(
+              request.cancelRequest.time
+            ).toLocaleString("en-Gb", {
+              hour12: true,
+            })}`, {
+              align: "center",
+            }
+          );
+      }
+
+      doc
+        .moveDown()
+        .fontSize(14)
+        .fillColor("black")
+        .text(`Name: ${request.studentName}`, {
+          align: "left",
+          lineGap: 10,
+        })
+        .text(`Student Id: ${request.studentId}`, {
+          align: "left",
+          lineGap: 10,
+        })
+        .text(`Block: ${request.studentBlockName}`, {
+          align: "left",
+          lineGap: 10,
+        })
+        .text(`Room no: ${request.studentRoomNumber}`, {
+          align: "left",
+          lineGap: 10,
+        })
+        .text(`Department: ${request.studentDepartment}`, {
+          align: "left",
+          lineGap: 10,
+        })
+        .text(`Branch: ${request.studentBranchName}`, {
+          align: "left",
+          lineGap: 10,
+        })
+        .text(`Academic Year: ${request.studentAcademicYear}`, {
+          align: "left",
+          lineGap: 10,
+        })
+        .text(`Student Contact No: ${request.studentContactNo}`, {
+          align: "left",
+          lineGap: 10,
+        })
+        .text(`Parent Contact No: ${request.parentContactNo}`, {
+          align: "left",
+          lineGap: 10,
+        })
+        .text(`Reason: ${request.leaveType.replace(/_/g, " ")}`, {
+          align: "left",
+          lineGap: 10,
+        })
+        .text(`${reason}`, {
+          align: "left",
+          indent: 30,
+          lineGap: 10,
+        })
+        .moveDown()
+        .moveDown()
+        .text(`Warden Status: ${request.wardenApproval.status || "pending"}`, {
+          align: "left",
+          lineGap: 10,
+        })
+        .text(`SRO Status: ${request.SROApproval.status || "pending"}`, {
+          align: "left",
+          lineGap: 10,
+        });
+
+      doc.image(imagePath, 400, 125, {
+        width: 150,
+        height: 150,
+      });
+
+      doc.end();
+    } else {
+      return res.status(400).send({
         success: false,
-        message: "Request not found",
+        message: "Invalid request type",
       });
     }
-
-    const filename = request.studentId
-      ? `Request-${request.studentId}.pdf`
-      : `Request-Unknown.pdf`;
-
-    res.header("Access-Control-Expose-Headers", "Content-Disposition"); // Expose Content-Disposition header
-
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
-
-    const doc = new PDFDocument();
-
-    doc.pipe(res);
-
-    doc
-      .fontSize(16)
-      .text(`Library Request for Student ID: ${request.studentId}`, {
-        align: "center",
-      });
-
-    doc
-      .moveDown()
-      .fontSize(12)
-      .text(`Student Name: ${request.studentName}`, {
-        align: "left",
-      })
-      .text(`Academic Year: ${request.studentAcademicYear}`, {
-        align: "left",
-      })
-      .text(`Contact No: ${request.studentContactNo}`, {
-        align: "left",
-      })
-      .text(`Department: ${request.studentDepartment}`, {
-        align: "left",
-      })
-      .text(`Branch: ${request.studentBranchName}`, {
-        align: "left",
-      })
-      .text(`Block Name: ${request.studentBlockName}`, {
-        align: "left",
-      })
-      .text(`Room Number: ${request.studentRoomNumber}`, {
-        align: "left",
-      })
-      .text(
-        `Request Date & Time:${new Date(request.requestDate).toLocaleString(
-          "en-GB",
-          {
-            year: "numeric",
-            month: "long",
-            day: "2-digit",
-            weekday: "long",
-            hour12: true,
-            hour: "numeric",
-            minute: "numeric",
-            second: "numeric",
-          }
-        )}`,
-        {
-          align: "left",
-        }
-      )
-      .text(`Request Reason: ${request.description}`, {
-        align: "left",
-      });
-
-    doc.end();
   } catch (err) {
     console.log(err);
     return res.status(500).send({
