@@ -138,7 +138,7 @@ const LibraryRequests = () => {
                 color: "green",
               }}
             />
-            &nbsp; Approval Status
+            &nbsp;Approval Status
           </h3>
           <p>Requested</p>
           <p>{userData.role === "librarian" ? "Entry" : "Approved"}</p>
@@ -339,7 +339,7 @@ const LibraryRequests = () => {
               </th>
               <th>
                 <FontAwesomeIcon icon={faWpforms} />
-                &nbsp; Request Details
+                &nbsp;Request Details
               </th>
               <th>
                 <FontAwesomeIcon icon={faClock} />

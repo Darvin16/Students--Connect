@@ -39,6 +39,7 @@ export const AppProvider = ({ children }) => {
   const [dashboardInfo, setDashboardInfo] = useState({});
   const imageAccessURL = "http://localhost:9000/StaffImages/";
   const studentUploadsURL = "http://localhost:9000/StudentImage/";
+  const LeaveImagesURL = "http://localhost:9000/LeaveImages/";
   const [editProfile, setEditProfile] = useState({});
   const [leaveRequests, setLeaveRequests] = useState([]);
   const [leaveRecords, setLeaveRecords] = useState([]);
@@ -270,11 +271,11 @@ export const AppProvider = ({ children }) => {
       });
   }
 
-  function handleLeaveRequest(id, status) {
+  function handleLeaveRequest(id, status,updateMany={}) {
     axios
       .post(
         "http://localhost:9000/leave-request/update",
-        { id, status },
+        { id, status, updateMany },
         {
           headers: {
             authToken: authToken,
@@ -605,6 +606,7 @@ export const AppProvider = ({ children }) => {
         leaveRequests,
         leaveRecords,
         studentUploadsURL,
+        LeaveImagesURL,
       }}
     >
       {children}
