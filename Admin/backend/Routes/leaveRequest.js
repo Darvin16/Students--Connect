@@ -32,6 +32,16 @@ router.post("/leave-request/update", async (req, res) => {
         });
       }
 
+      if (
+        new Date(updateMany.from) < new Date() ||
+        new Date(updateMany.to) < new Date()
+      ) {
+        return res.status(400).send({
+          success: false,
+          message: "Invalid Date, Please Provide Date in the future",
+        });
+      }
+
       const approvalData = {
         status: status,
         by: staff.employeeId,

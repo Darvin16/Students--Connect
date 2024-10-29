@@ -356,6 +356,10 @@ app.post("/fetch/dashboard/info", async (req, res) => {
   try {
     const { user } = req;
     const startOfDay = new Date().setHours(0, 0, 0, 0);
+    const startOfYear = new Date();
+    startOfYear.setMonth(0, 1);
+    startOfYear.setHours(0, 0, 0, 0);
+
     if (user.role === "admin") {
       const staffs = await staffData.find({});
       const students = await studentsData.find({});
@@ -365,7 +369,8 @@ app.post("/fetch/dashboard/info", async (req, res) => {
         requestDate: { $gte: startOfDay },
       });
       const leaveRequests = await leaveRequest.find({
-        "wardenApproval.status": { $exists: false },
+        requestDate: { $gte: startOfYear },
+        "cancelRequest.status": false,
       });
 
       return res.status(200).send({
@@ -525,9 +530,48 @@ app.post("/fetch/dashboard/info", async (req, res) => {
       const leaveRequests = await leaveRequest.find({
         studentBlockName: staff.blockName,
         wardenApproval: { $exists: true },
-        SROApproval: { $exists: false },
+        requestDate: { $gte: startOfYear },
         "cancelRequest.status": false,
       });
+      const unattendedLeaveRequests = leaveRequests.filter(
+        (request) => request.from < startOfDay
+      );
+      const leaveRequestsInsights = await leaveRequest.aggregate([
+        {
+          $match: {
+            studentBlockName: staff.blockName,
+            from: { $gte: startOfDay },
+          },
+        },
+        {
+          $group: {
+            _id: "$SROApproval.status",
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            approved: {
+              $sum: { $cond: [{ $eq: ["$_id", "approved"] }, "$count", 0] },
+            },
+            rejected: {
+              $sum: { $cond: [{ $eq: ["$_id", "rejected"] }, "$count", 0] },
+            },
+            pending: {
+              $sum: { $cond: [{ $eq: ["$_id", null] }, "$count", 0] },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            approved: 1,
+            rejected: 1,
+            pending: 1,
+          },
+        },
+      ]);
 
       return res.status(200).send({
         success: true,
@@ -536,12 +580,16 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           studentCount: studentCount.length,
           studentActiveCount: studentActiveCount.length,
           libraryRequestsCount: libraryRequests.length,
-          leaveRequestsCount: leaveRequests.length,
           approvedLibraryRequests: approvedLibraryRequests.length,
           rejectedLibraryRequests: rejectedLibraryRequests.length,
           pendingLibraryRequests: pendingLibraryRequests.length,
           delayedLibraryEntry: delayedLibraryEntry.length,
           averageDelay: avgDelayCount,
+          leaveRequestsCount: leaveRequests.length,
+          approvedLeaveRequests: leaveRequestsInsights[0].approved,
+          rejectedLeaveRequests:
+            leaveRequestsInsights[0].rejected + unattendedLeaveRequests.length,
+          pendingLeaveRequests: leaveRequestsInsights[0].pending,
         },
       });
     } else {
@@ -611,9 +659,48 @@ app.post("/fetch/dashboard/info", async (req, res) => {
 
       const leaveRequests = await leaveRequest.find({
         studentBlockName: staff.blockName,
-        wardenApproval: { $exists: false },
+        requestDate: { $gte: startOfYear },
         "cancelRequest.status": false,
       });
+      const unattendedLeaveRequests = leaveRequests.filter(
+        (request) => request.from < startOfDay
+      );
+      const leaveRequestsInsights = await leaveRequest.aggregate([
+        {
+          $match: {
+            studentBlockName: staff.blockName,
+            from: { $gte: startOfDay },
+          },
+        },
+        {
+          $group: {
+            _id: "$wardenApproval.status",
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $group: {
+            _id: null,
+            approved: {
+              $sum: { $cond: [{ $eq: ["$_id", "approved"] }, "$count", 0] },
+            },
+            rejected: {
+              $sum: { $cond: [{ $eq: ["$_id", "rejected"] }, "$count", 0] },
+            },
+            pending: {
+              $sum: { $cond: [{ $eq: ["$_id", null] }, "$count", 0] },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            approved: 1,
+            rejected: 1,
+            pending: 1,
+          },
+        },
+      ]);
 
       return res.status(200).send({
         success: true,
@@ -622,12 +709,16 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           studentCount: studentCount.length,
           studentActiveCount: studentActiveCount.length,
           libraryRequestsCount: libraryRequests.length,
-          leaveRequestsCount: leaveRequests.length,
           approvedLibraryRequests: approvedLibraryRequests.length,
           rejectedLibraryRequests: rejectedLibraryRequests.length,
           pendingLibraryRequests: pendingLibraryRequests.length,
           delayedLibraryEntry: delayedLibraryEntry.length,
           averageDelay: avgDelayCount,
+          leaveRequestsCount: leaveRequests.length,
+          approvedLeaveRequests: leaveRequestsInsights[0].approved,
+          rejectedLeaveRequests:
+            leaveRequestsInsights[0].rejected + unattendedLeaveRequests.length,
+          pendingLeaveRequests: leaveRequestsInsights[0].pending,
         },
       });
     }
@@ -880,7 +971,8 @@ app.post("/generate/pdf", async (req, res) => {
               request.cancelRequest.time
             ).toLocaleString("en-Gb", {
               hour12: true,
-            })}`, {
+            })}`,
+            {
               align: "center",
             }
           );
