@@ -27,3 +27,7 @@ code {
   --accent-4: #7EACB5;
 
 }
+
+.landing-page{
+  min-height: 100vh;
+}

@@ -65,10 +65,15 @@ const Login = () => {
             </button>
           </form>
 
-          <p className="login-divider">Or Sign Up Using</p>
+          {/* <p className="login-divider">Or Sign Up Using</p> */}
 
-          <p className="signup-link">
+          <p className="signup-link mt-3">
             <Link to="/signup">Sign Up</Link>
+          </p>
+          <p className="signup-link mt-3 mb-0">
+            <Link to="/">
+              ←Back
+            </Link>
           </p>
         </div>
       </div>

@@ -14,12 +14,155 @@ function RootDirect() {
   useEffect(() => {
     if (authToken) {
       navigate("/dashboard");
-    } else {
-      navigate("/login");
     }
   }, [authToken, navigate]);
 
-  return null;
+  return (
+    <div className="bg-body-secondary landing-page p-3">
+      <div className="bg-light rounded-2 pb-3">
+        <nav className="navbar navbar-expand-lg">
+          <div className="container-fluid">
+            <a class="navbar-brand" href="#">
+              StudentConnect
+            </a>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    Home
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#about">
+                    About us
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#features">
+                    Features
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">
+                    Contact us
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => navigate("/login")}
+                  >
+                    Login / SignUp
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+        <hr className="m-0" />
+        <div
+          className="container bg-info mt-3 position-relative rounded-2 banner"
+          style={{ height: "50vh" }}
+        >
+          <div className="text-light position-absolute bottom-0">
+            <h1>Student Connect</h1>
+            <p>
+              A mordern, easy-to-use system that helps you manage your student
+              housing community.
+            </p>
+          </div>
+        </div>
+        <div id="about" className="container mt-3">
+          <h2>About us</h2>
+          <p>
+            Student Connect is your go-to platform for managing hostel life
+            efficiently and effortlessly. Designed to bridge the gap between
+            students and administrators, our innovative web application
+            simplifies key processes such as leave requests, library
+            permissions, and more – all in real-time. Student Connect is here to
+            make student administration smarter, more transparent, and more
+            efficient for both students and administrators. Join us today and
+            experience the future of hostel management!
+          </p>
+          <p>
+            <b>For Students and administrators</b>
+          </p>
+          <p>
+            Manage your hostel life with ease. Submit leave requests, get
+            library permissions, and track your approvals – all from one place.
+            Streamline your management tasks. Review, approve, and monitor
+            student requests, and maintain clear and organized records.
+          </p>
+        </div>
+        <div id="features" className="container mt-3 ">
+          <h2>Features</h2>
+          <div className="row gap-2">
+            <div className="col-sm-12 col-md-5 col-lg card">
+              <img src="" className="card-img-top" alt="" />
+              <div className="card-body">
+                <h5 className="card-title">Card title</h5>
+                <p className="card-text">
+                  Some quick example text to build on the card title and make up
+                  the bulk of the card's content.
+                </p>
+              </div>
+            </div>
+            <div className="col-sm-12 col-md-5 col-lg card">
+              <img src="" className="card-img-top" alt="" />
+              <div className="card-body">
+                <h5 className="card-title">Card title</h5>
+                <p className="card-text">
+                  Some quick example text to build on the card title and make up
+                  the bulk of the card's content.
+                </p>
+              </div>
+            </div>
+            <div className="col-sm-12 col-md-5 col-lg card">
+              <img src="" className="card-img-top" alt="" />
+              <div className="card-body">
+                <h5 className="card-title">Card title</h5>
+                <p className="card-text">
+                  Some quick example text to build on the card title and make up
+                  the bulk of the card's content.
+                </p>
+              </div>
+            </div>
+            <div className="col-sm-12 col-md-5 col-lg card">
+              <img src="" className="card-img-top" alt="" />
+              <div className="card-body">
+                <h5 className="card-title">Card title</h5>
+                <p className="card-text">
+                  Some quick example text to build on the card title and make up
+                  the bulk of the card's content.
+                </p>
+              </div>
+            </div>
+            <div className="col-sm-12 col-md-5 col-lg card">
+              <img src="" className="card-img-top" alt="" />
+              <div className="card-body">
+                <h5 className="card-title">Card title</h5>
+                <p className="card-text">
+                  Some quick example text to build on the card title and make up
+                  the bulk of the card's content.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function App() {
