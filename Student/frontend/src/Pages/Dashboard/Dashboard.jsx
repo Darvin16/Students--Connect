@@ -23,7 +23,7 @@ import LeaveTracker from "../LeaveRequest/LeaveTracker";
 
 function Dashboard() {
   const [showMenu, setShowMenu] = React.useState(false);
-  const { Logout } = useContext(AppContext);
+  const { Logout, userData, imageAccessURL } = useContext(AppContext);
 
   return (
     <div className="dashboard-page">
@@ -37,6 +37,18 @@ function Dashboard() {
         {showMenu && (
           <div className="dashboard-nav">
             <div className="dashboard-nav-link">
+              <Link to="/dashboard/profile" className="d-block text-center pb-0">
+                <img
+                  src={
+                    userData.studentImage
+                      ? imageAccessURL + userData.studentImage
+                      : "https://picsum.photos/200/200"
+                  }
+                  alt={userData.name + "'s Image"}
+                  className="dashboard-image rounded-circle border border-white"
+                />
+                <span className="fw-bold d-block">{userData.studentId}</span>
+              </Link>
               <Link to="/dashboard/">
                 <FontAwesomeIcon icon={faShapes} />
                 &nbsp;Dashboard
