@@ -22,11 +22,12 @@
   position: fixed;
   left: 0;
   width: 200px;
+  height: 90vh;
   display: flex;
   flex-direction: column;
   animation: nav-op 0.5s ease;
   gap: 10px;
-  overflow: hidden;
+  overflow-y: scroll;
 }
 @keyframes nav-op {
   from {
@@ -58,14 +59,13 @@
   padding: 10px;
   margin: 10px;
   border-radius: 5px;
-  margin-top: 18vh;
 }
 .dashboard-components {
   flex: 1;
 }
 .dashboard-image{
-  width: 50%;
-  height: 50%;
+  width: 100px;
+  height: 100px
 }
 
 @media (max-width: 750px) {
@@ -103,5 +103,9 @@
   .dashboard-nav button {
     margin: 10px;
     padding: 2px 5px;
+  }
+  .dashboard-image{
+    width: 50px;
+    height: 50px;
   }
 }

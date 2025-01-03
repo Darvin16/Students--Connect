@@ -1,4 +1,13 @@
 {
+  "scripts": {
+    "pull": "git pull origin master",
+    "start-student": "start bash -c 'cd Student/frontend; bash -c \"npm  start\"' && start bash -c 'cd Student/backend; bash -c \"node index.js\"'",
+    "pull-start-student": "git pull origin master && start bash -c 'cd Student/frontend; bash -c \"npm  start\"' && start bash -c 'cd Student/backend; bash -c \"node index.js\"'",
+    "start-admin": "start bash -c 'cd Admin/frontend; bash -c \"npm  start\"' && start bash -c 'cd Admin/backend; bash -c \"node index.js\"'",
+    "pull-start-admin": "git pull origin master && start bash -c 'cd Admin/frontend; bash -c \"npm  start\"' && start bash -c 'cd Admin/backend; bash -c \"node index.js\"'",
+    "start": "start bash -c 'cd Student/frontend;bash -c \"npm  start\"' && start bash -c 'cd Student/backend;bash -c \"node index.js\"' && start bash -c 'cd Admin/frontend;bash -c \"npm  start\"' && start bash -c 'cd Admin/backend;bash -c \"node index.js\"'",
+    "pull-start": "git pull origin master && start bash -c 'cd Student/frontend;bash -c \"npm  start\"' && start bash -c 'cd Student/backend;bash -c \"node index.js\"' && start bash -c 'cd Admin/frontend;bash -c \"npm  start\"' && start bash -c 'cd Admin/backend;bash -c \"node index.js\"'"
+  },
   "dependencies": {
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
