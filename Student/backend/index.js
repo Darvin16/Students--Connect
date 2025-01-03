@@ -13,6 +13,7 @@ import { fileURLToPath } from "url";
 import ResetPassword from "./Routes/resetPassword.js";
 import generateUniqueId from "./Functions/generateUniqueId.js";
 import LeaveRequest from "./Routes/leaveRequest.js";
+import LatePermissionsHandler from "./Routes/latePermission.js";
 import upload from "./Functions/upload.js";
 
 const app = express();
@@ -261,6 +262,7 @@ app.use((req, res, next) => {
 });
 
 app.use(LeaveRequest);
+app.use(LatePermissionsHandler);
 
 app.post("/fetch/user", (req, res) => {
   const { user } = req;
