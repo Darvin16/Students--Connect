@@ -2,6 +2,11 @@ import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import fileDownload from "js-file-download";
+import {
+  fetchLatePermission,
+  cancelLatePermission,
+  raiseLatePermission
+} from "./Functions/latePermission";
 
 export const AppContext = createContext();
 
@@ -26,6 +31,7 @@ export const AppProvider = ({ children }) => {
   const [showToast, setShowToast] = useState(false);
   const [leaveRequests, setLeaveRequests] = useState([]);
   const [leaveRequestOption, setLeaveRequestOption] = useState([]);
+  const [latePermission, setLatePermission] = useState({});
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -37,8 +43,20 @@ export const AppProvider = ({ children }) => {
     if (authToken) {
       fetchLibraryRequestForm();
       fetchLeaveRequests();
+      fetchLatePermission(authToken, setLatePermission);
     }
   }, [authToken]);
+
+  function handleLatePermissionCancel(id) {
+    cancelLatePermission(id, authToken)
+      .then(() => fetchLatePermission(authToken, setLatePermission));
+  }
+
+  function handleLatePermissionRequest(data) {
+    raiseLatePermission(data, authToken).then(() =>
+      fetchLatePermission(authToken, setLatePermission)
+    );
+  }
 
   function fetchUser() {
     axios
@@ -244,11 +262,10 @@ export const AppProvider = ({ children }) => {
       })
       .catch((err) => {
         console.log(err);
-        if (err.response && err.response.data ) {
+        if (err.response && err.response.data) {
           const reader = new FileReader();
           reader.onload = () => {
             try {
-              console.log(reader.result)
               const errorData = JSON.parse(reader.result);
               if (errorData.message) {
                 alert(errorData.message); // Display the error message from the server
@@ -259,7 +276,7 @@ export const AppProvider = ({ children }) => {
               alert("An error occurred in generating PDF");
             }
           };
-          
+
           reader.readAsText(err.response.data);
         } else {
           alert("An error occurred in generating PDF");
@@ -426,6 +443,10 @@ export const AppProvider = ({ children }) => {
         leaveRequests,
         leaveRequestOption,
         generatePDF,
+        fetchLatePermission,
+        latePermission,
+        handleLatePermissionCancel,
+        handleLatePermissionRequest,
       }}
     >
       {children}

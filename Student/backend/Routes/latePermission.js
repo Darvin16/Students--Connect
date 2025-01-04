@@ -25,7 +25,7 @@ router.get("/late-permission/fetch", async (req, res) => {
       .send({
         success: true,
         message: "Requests Fetched",
-        request: requests[0],
+        request: requests[0] || {},
       });
   } catch (error) {
     console.error("Error: ", error.message, error);

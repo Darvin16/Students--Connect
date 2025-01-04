@@ -20,6 +20,7 @@ import RequestForm from "../LibraryRequest/RequestForm";
 import Profile from "../Profile/Profile";
 import LeaveRequest from "../LeaveRequest/LeaveRequest";
 import LeaveTracker from "../LeaveRequest/LeaveTracker";
+import LatePermission from "../LatePermission/LatePermission";
 
 function Dashboard() {
   const [showMenu, setShowMenu] = React.useState(false);
@@ -37,7 +38,10 @@ function Dashboard() {
         {showMenu && (
           <div className="dashboard-nav">
             <div className="dashboard-nav-link">
-              <Link to="/dashboard/profile" className="d-block text-center pb-0">
+              <Link
+                to="/dashboard/profile"
+                className="d-block text-center pb-0"
+              >
                 <img
                   src={
                     userData.studentImage
@@ -69,6 +73,10 @@ function Dashboard() {
                 <FontAwesomeIcon icon={faPaperPlane} />
                 &nbsp;Leave Tracker
               </Link>
+              <Link to="/dashboard/late-permission">
+                <FontAwesomeIcon icon={faPaperPlane} />
+                &nbsp;Late Permission
+              </Link>
               <Link to="/dashboard/profile">
                 <FontAwesomeIcon icon={faUserGraduate} />
                 &nbsp;Profile
@@ -91,6 +99,7 @@ function Dashboard() {
             <Route path="/library/request/form" element={<RequestForm />} />
             <Route path="/leave/request" element={<LeaveRequest />} />
             <Route path="/leave/request/tracker" element={<LeaveTracker />} />
+            <Route path="/late-permission" element={<LatePermission />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>
