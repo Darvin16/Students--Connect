@@ -72,6 +72,7 @@ function LatePermission() {
           onChange={(e) =>
             setRequest((prev) => ({ ...prev, id: e.target.value }))
           }
+          placeholder="eg: RS1232234424"
           required
         />
         <label htmlFor="student-name" className="form-label">
@@ -86,6 +87,7 @@ function LatePermission() {
           onChange={(e) =>
             setRequest((prev) => ({ ...prev, name: e.target.value }))
           }
+          placeholder="eg: John Doe"
           required
         />
         <label htmlFor="out-time" className="form-label">
@@ -127,6 +129,7 @@ function LatePermission() {
           onChange={(e) =>
             setRequest((prev) => ({ ...prev, reason: e.target.value }))
           }
+          placeholder="eg: Need permission for 'xyz' from '10:00 pm' to '11:00 pm'"
           required
         ></textarea>
         <button type="submit" className="btn btn-primary mt-3">

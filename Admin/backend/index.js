@@ -17,6 +17,7 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import leaveRequestFile from "./Routes/leaveRequest.js";
 import leaveRequest from "./Models/LeaveRequest.js";
+import latePermission from "./Routes/latePermission.js";
 
 const app = express();
 app.use(express.json());
@@ -298,6 +299,7 @@ app.use((req, res, next) => {
 });
 
 app.use(leaveRequestFile);
+app.use(latePermission);
 
 app.post("/fetch/user", (req, res) => {
   const { user } = req;
@@ -586,10 +588,10 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           delayedLibraryEntry: delayedLibraryEntry.length,
           averageDelay: avgDelayCount,
           leaveRequestsCount: leaveRequests.length,
-          approvedLeaveRequests: leaveRequestsInsights[0].approved,
+          approvedLeaveRequests: leaveRequestsInsights[0]?.approved || 0,
           rejectedLeaveRequests:
-            leaveRequestsInsights[0].rejected + unattendedLeaveRequests.length,
-          pendingLeaveRequests: leaveRequestsInsights[0].pending,
+            leaveRequestsInsights[0]?.rejected || 0 + unattendedLeaveRequests.length || 0,
+          pendingLeaveRequests: leaveRequestsInsights[0]?.pending || 0,
         },
       });
     } else {
@@ -679,28 +681,62 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           },
         },
         {
-          $group: {
-            _id: null,
-            approved: {
-              $sum: { $cond: [{ $eq: ["$_id", "approved"] }, "$count", 0] },
-            },
-            rejected: {
-              $sum: { $cond: [{ $eq: ["$_id", "rejected"] }, "$count", 0] },
-            },
-            pending: {
-              $sum: { $cond: [{ $eq: ["$_id", null] }, "$count", 0] },
-            },
+          $facet: {
+            result: [
+              {
+                $group: {
+                  _id: null,
+                  approved: {
+                    $sum: {
+                      $cond: [{ $eq: ["$_id", "approved"] }, "$count", 0],
+                    },
+                  },
+                  rejected: {
+                    $sum: {
+                      $cond: [{ $eq: ["$_id", "rejected"] }, "$count", 0],
+                    },
+                  },
+                  pending: {
+                    $sum: { $cond: [{ $eq: ["$_id", null] }, "$count", 0] },
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  approved: 1,
+                  rejected: 1,
+                  pending: 1,
+                },
+              },
+            ],
+            default: [
+              {
+                $project: {
+                  _id: 0,
+                  approved: { $literal: 0 },
+                  rejected: { $literal: 0 },
+                  pending: { $literal: 0 },
+                },
+              },
+            ],
           },
         },
         {
           $project: {
-            _id: 0,
-            approved: 1,
-            rejected: 1,
-            pending: 1,
+            result: {
+              $cond: {
+                if: { $gt: [{ $size: "$result" }, 0] },
+                then: { $arrayElemAt: ["$result", 0] },
+                else: { $arrayElemAt: ["$default", 0] },
+              },
+            },
           },
         },
       ]);
+
+
+      console.log(leaveRequestsInsights);
 
       return res.status(200).send({
         success: true,
@@ -715,10 +751,10 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           delayedLibraryEntry: delayedLibraryEntry.length,
           averageDelay: avgDelayCount,
           leaveRequestsCount: leaveRequests.length,
-          approvedLeaveRequests: leaveRequestsInsights[0].approved,
+          approvedLeaveRequests: leaveRequestsInsights[0]?.approved || 0,
           rejectedLeaveRequests:
-            leaveRequestsInsights[0].rejected + unattendedLeaveRequests.length,
-          pendingLeaveRequests: leaveRequestsInsights[0].pending,
+            leaveRequestsInsights[0]?.rejected || 0 + unattendedLeaveRequests.length,
+          pendingLeaveRequests: leaveRequestsInsights[0]?.pending || 0,
         },
       });
     }

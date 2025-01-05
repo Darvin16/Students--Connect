@@ -79,13 +79,13 @@ router.post("/generate", async (req, res) => {
 router.post("/regenerate", async (req, res) => {
   try {
     const { userId } = req.body;
-    const user = await staffData.findOne({ employeeId: userId });
-    const otp = generateOTP();
     if (!userId) {
       return res
         .status(400)
         .send({ success: false, message: "Require user id" });
     }
+    const user = await staffData.findOne({ employeeId: userId });
+    const otp = generateOTP();
     if (!user) {
       return res.status(404).send({
         success: false,
