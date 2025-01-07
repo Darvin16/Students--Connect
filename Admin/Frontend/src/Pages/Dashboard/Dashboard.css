@@ -25,10 +25,6 @@
 }
 
 /* Adjust the logout button */
-.dashboard-page .btn {
-  background-color: transparent; /* Optional styling */
-  color: #007bff; /* Bootstrap primary color */
-}
 
 .logout-btn{
     border: none;

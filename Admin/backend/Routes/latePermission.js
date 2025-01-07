@@ -6,31 +6,42 @@ const router = express.Router();
 
 router.get("/late-permission/fetch", async (req, res) => {
   try {
-    const { employeeId } = req.user;
+    const { employeeId, role } = req.user;
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
     if (!employeeId) {
       throw new Error("Error in Authentication");
     }
 
-    const user = await staffData.findOne({ employeeId: employeeId });
-    if (!user) {
-      return res.status(401).send({ success: false, message: "Unauthorized" });
+    let requests = [];
+    let records = [];
+    if (role === "admin") {
+      records = await LatePermissions.find({});
+    } else {
+      const user = await staffData.findOne({ employeeId: employeeId });
+      if (!user) {
+        return res
+          .status(401)
+          .send({ success: false, message: "Unauthorized" });
+      }
+
+      records = await LatePermissions.find({
+        studentBlockName: user.blockName,
+      });
+
+      requests = await LatePermissions.find({
+        studentBlockName: user.blockName,
+        date: { $gte: startOfDay },
+        "status.status": "pending",
+      });
     }
 
-    const requests = await LatePermissions.find({
-      studentBlockName: user.blockName,
-      date: { $gte: startOfDay },
-      "status.status": { $ne: "cancelled" },
+    return res.status(200).send({
+      success: true,
+      message: "Late permissins Fetched successfully",
+      requests,
+      records: records.reverse(),
     });
-
-    return res
-      .status(200)
-      .send({
-        success: true,
-        message: "Late permissins Fetched successfully",
-        requests,
-      });
   } catch (error) {
     console.error("Error: ", error.message, error);
     return res
@@ -48,6 +59,9 @@ router.put("/late-permission/update", async (req, res) => {
       return res
         .status(400)
         .json({ success: false, message: "Missing required fields" });
+    }
+    if (status !== "accepted" && status !== "rejected") {
+      throw new Error("Not a Valid Status");
     }
     if (!employeeId) {
       throw new Error("Error in Authentication");

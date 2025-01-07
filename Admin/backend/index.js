@@ -735,9 +735,6 @@ app.post("/fetch/dashboard/info", async (req, res) => {
         },
       ]);
 
-
-      console.log(leaveRequestsInsights);
-
       return res.status(200).send({
         success: true,
         message: "Dashboard Info Fetched Successfully",

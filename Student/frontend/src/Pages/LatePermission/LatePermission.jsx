@@ -24,7 +24,7 @@ function LatePermission() {
             Status:{" "}
             <span
               className={`text-capitalize ${
-                latePermission.status.status === "approved" && "text-success"
+                latePermission.status.status === "accepted" && "text-success"
               } ${
                 latePermission.status.status === "rejected" && "text-danger"
               }`}

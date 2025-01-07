@@ -1,0 +1,23 @@
+@media (max-width: 1000px) {
+  .late-permission-requests {
+    overflow-x: scroll;
+  }
+}
+.late-permission-requests > table {
+  min-width: 800px;
+}
+
+.late-permission-record-img {
+  width: 35px;
+  height: 35px;
+}
+
+#late-permission-dialog {
+  width: fit-content;
+}
+#late-permission-dialog img {
+  height: 150px;
+}
+.late-permission-reason {
+  text-indent: 30px;
+}

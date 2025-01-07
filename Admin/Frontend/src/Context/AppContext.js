@@ -43,6 +43,9 @@ export const AppProvider = ({ children }) => {
   const [editProfile, setEditProfile] = useState({});
   const [leaveRequests, setLeaveRequests] = useState([]);
   const [leaveRecords, setLeaveRecords] = useState([]);
+  const [latePermissionRequests, setLatePermissionRequests] = useState([]);
+  const [latePermissionRecords, setLatePermissionRecords] = useState([]);
+  const URL = "http://localhost:9000";
 
   useEffect(() => {
     if (authToken && !userData) {
@@ -56,8 +59,52 @@ export const AppProvider = ({ children }) => {
       fetchLibraryRequests();
       fetchLeaveRequests();
       fetchDashboardInfo();
+      fetchLatePermission();
     }
   }, [authToken]);
+
+  async function fetchLatePermission() {
+    try {
+      const result = await axios.get(`${URL}/late-permission/fetch`, {
+        headers: {
+          authToken: authToken,
+        },
+      });
+
+      if (result.status === 200) {
+        setLatePermissionRequests(result.data.requests);
+        setLatePermissionRecords(result.data.records);
+      }
+    } catch (error) {
+      console.error("Error: ", error.message, error);
+    }
+  }
+
+  async function updateLatePermission(id, status) {
+    try {
+      const result = await axios.put(
+        `${URL}/late-permission/update`,
+        { id, status },
+        {
+          headers: {
+            authToken: authToken,
+          },
+        }
+      );
+
+      if (result.status === 200) {
+        fetchLatePermission();
+        alert(result.data.message);
+      }
+    } catch (error) {
+      console.error("Error: ", error.message, error);
+      if (error.response && error.response.data && error.response.data.message) {
+        alert(error.response.data.message);
+      } else {
+        alert("Error ouccred white updating status");
+      }
+    }
+  }
 
   function fetchUser() {
     axios
@@ -169,13 +216,13 @@ export const AppProvider = ({ children }) => {
       });
   }
 
-  function generatePDF(requestId,type) {
+  function generatePDF(requestId, type) {
     axios
       .post(
         "http://localhost:9000/generate/pdf",
         {
           requestId: requestId,
-          type:type,
+          type: type,
         },
         {
           headers: { authToken: authToken },
@@ -271,7 +318,7 @@ export const AppProvider = ({ children }) => {
       });
   }
 
-  function handleLeaveRequest(id, status,updateMany={}) {
+  function handleLeaveRequest(id, status, updateMany = {}) {
     axios
       .post(
         "http://localhost:9000/leave-request/update",
@@ -607,6 +654,9 @@ export const AppProvider = ({ children }) => {
         leaveRecords,
         studentUploadsURL,
         LeaveImagesURL,
+        latePermissionRecords,
+        latePermissionRequests,
+        updateLatePermission,
       }}
     >
       {children}
