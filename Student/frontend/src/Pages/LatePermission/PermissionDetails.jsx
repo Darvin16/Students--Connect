@@ -85,8 +85,7 @@ function PermissionDetails() {
               <b className="border-bottom border-3 border-primary">Reason:</b>
             </p>
             <p className="permission-reason">
-              {latePermission.reason} Lorem ipsum dolor sit amet, consectetur
-              adipisicing elit. Dolorum exercitationem fugit tempore.
+              {latePermission.reason}
             </p>
           </div>
           <div>
