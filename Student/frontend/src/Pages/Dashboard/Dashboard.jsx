@@ -21,6 +21,7 @@ import Profile from "../Profile/Profile";
 import LeaveRequest from "../LeaveRequest/LeaveRequest";
 import LeaveTracker from "../LeaveRequest/LeaveTracker";
 import LatePermission from "../LatePermission/LatePermission";
+import RaiseComplaints from "../Complaints/RaiseComplaints";
 
 function Dashboard() {
   const [showMenu, setShowMenu] = React.useState(false);
@@ -44,14 +45,14 @@ function Dashboard() {
               >
                 <img
                   src={
-                    userData.studentImage
+                    userData?.studentImage
                       ? imageAccessURL + userData.studentImage
                       : "https://picsum.photos/200/200"
                   }
-                  alt={userData.name + "'s Image"}
+                  alt={userData?.name + "'s Image"}
                   className="dashboard-image rounded-circle border border-white"
                 />
-                <span className="fw-bold d-block">{userData.studentId}</span>
+                <span className="fw-bold d-block">{userData?.studentId}</span>
               </Link>
               <Link to="/dashboard/">
                 <FontAwesomeIcon icon={faShapes} />
@@ -77,6 +78,10 @@ function Dashboard() {
                 <FontAwesomeIcon icon={faPaperPlane} />
                 &nbsp;Late Permission
               </Link>
+              <Link to="/dashboard/raise-complaints">
+                <FontAwesomeIcon icon={faPaperPlane} />
+                &nbsp;Raise Complaints
+              </Link>
               <Link to="/dashboard/profile">
                 <FontAwesomeIcon icon={faUserGraduate} />
                 &nbsp;Profile
@@ -100,6 +105,7 @@ function Dashboard() {
             <Route path="/leave/request" element={<LeaveRequest />} />
             <Route path="/leave/request/tracker" element={<LeaveTracker />} />
             <Route path="/late-permission" element={<LatePermission />} />
+            <Route path="/raise-complaints" element={<RaiseComplaints />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>

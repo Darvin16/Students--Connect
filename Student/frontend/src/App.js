@@ -7,6 +7,7 @@ import Dashboard from "./Pages/Dashboard/Dashboard";
 import ProtectRoutes from "./Component/ProtectRoutes";
 import ForgotPassword from "./Pages/ResetPassword/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword/ResetPassword";
+import PermissionDetails from "./Pages/LatePermission/PermissionDetails";
 
 function RootDirect() {
   const { authToken, navigate } = useContext(AppContext);
@@ -36,7 +37,10 @@ function RootDirect() {
             >
               <span className="navbar-toggler-icon"></span>
             </button>
-            <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <div
+              className="collapse navbar-collapse"
+              id="navbarSupportedContent"
+            >
               <ul className="navbar-nav ms-auto">
                 <li className="nav-item">
                   <a className="nav-link" href="#">
@@ -176,6 +180,10 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password/:token" element={<ResetPassword />} />
+            <Route
+              path="/late-permission/details/:id"
+              element={<PermissionDetails />}
+            />
             <Route element={<ProtectRoutes />}>
               <Route path="/dashboard/*" element={<Dashboard />} />
             </Route>

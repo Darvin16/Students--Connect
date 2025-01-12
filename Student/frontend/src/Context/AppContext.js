@@ -74,11 +74,6 @@ export const AppProvider = ({ children }) => {
       })
       .catch((err) => {
         console.log(err);
-        if (err.response && err.response.data && err.response.data.message) {
-          alert(err.response.data.message);
-        } else {
-          alert("An error occurred in fetch user");
-        }
       });
   }
 

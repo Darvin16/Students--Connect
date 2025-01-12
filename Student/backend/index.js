@@ -15,6 +15,7 @@ import generateUniqueId from "./Functions/generateUniqueId.js";
 import LeaveRequest from "./Routes/leaveRequest.js";
 import LatePermissionsHandler from "./Routes/latePermission.js";
 import upload from "./Functions/upload.js";
+import fetchLatePermission from "./Routes/fetchLatePermission.js";
 
 const app = express();
 app.use(express.json());
@@ -240,6 +241,8 @@ app.post("/login", (req, res) => {
       });
     });
 });
+
+app.use(fetchLatePermission);
 
 app.use(ResetPassword);
 

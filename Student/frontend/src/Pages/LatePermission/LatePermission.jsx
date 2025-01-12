@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import QRCode from "react-qr-code";
 import { AppContext } from "../../Context/AppContext";
 
 function LatePermission() {
@@ -16,6 +17,8 @@ function LatePermission() {
   });
 
   if (Object.keys(latePermission).length > 0) {
+    console.log(latePermission._id);
+
     return (
       <div className="container-fluid">
         <div className="row mb-3">
@@ -33,6 +36,14 @@ function LatePermission() {
             </span>
           </h5>
         </div>
+        {latePermission.status.status === "accepted" && (
+          <div>
+            <QRCode
+              value={`http://localhost:3000/late-permission/details/${latePermission._id}`}
+              size={200}
+            />
+          </div>
+        )}
         <div className="row">
           <h4>Details:-</h4>
           <p>
@@ -59,7 +70,7 @@ function LatePermission() {
   return (
     <div className="container-fluid">
       <h1 className="text-center">Late Permission</h1>
-      <form onSubmit={() => handleLatePermissionRequest(request)}>
+      <form onSubmit={() => handleLatePermissionRequest(request)} method="post">
         <label htmlFor="student-id" className="form-label">
           Id:
         </label>
