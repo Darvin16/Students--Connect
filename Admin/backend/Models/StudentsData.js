@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const studentsDataSchema = new mongoose.Schema({
   studentId: String,
   studentImage: String,
@@ -18,5 +17,4 @@ const studentsDataSchema = new mongoose.Schema({
 });
 
 const studentsData = mongoose.model("studentsData", studentsDataSchema);
-
 export default studentsData;
