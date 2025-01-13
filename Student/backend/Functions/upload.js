@@ -13,8 +13,22 @@ const storage = multer.diskStorage({
   },
 });
 
+const complaintStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "Uploads/ComplaintImages");
+  },
+  filename: (req, file, cb) => {
+    cb(null, "Complaint-" + Date.now() + path.extname(file.originalname));
+  },
+});
+
 const upload = multer({
   storage: storage,
 }).single("studentImage");
 
+const uploadComplaint = multer({
+  storage: complaintStorage,
+}).single("photo");
+
 export default upload;
+export { uploadComplaint };

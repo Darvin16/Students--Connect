@@ -5,7 +5,7 @@ import fileDownload from "js-file-download";
 import {
   fetchLatePermission,
   cancelLatePermission,
-  raiseLatePermission
+  raiseLatePermission,
 } from "./Functions/latePermission";
 
 export const AppContext = createContext();
@@ -48,14 +48,45 @@ export const AppProvider = ({ children }) => {
   }, [authToken]);
 
   function handleLatePermissionCancel(id) {
-    cancelLatePermission(id, authToken)
-      .then(() => fetchLatePermission(authToken, setLatePermission));
+    cancelLatePermission(id, authToken).then(() =>
+      fetchLatePermission(authToken, setLatePermission)
+    );
   }
 
   function handleLatePermissionRequest(data) {
     raiseLatePermission(data, authToken).then(() =>
       fetchLatePermission(authToken, setLatePermission)
     );
+  }
+
+  async function handleComplaintSubmit(data) {
+    const dataToSend = new FormData();
+    for (const key in data) {
+      dataToSend.append(key, data[key]);
+    }
+
+    try {
+      const response = await axios.post(`${URL}/raise/complaint`, dataToSend, {
+        headers: {
+          authToken: authToken,
+        },
+      });
+
+      if (response.status === 200) {
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error: ", error.message, error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        alert(error.response.data.message);
+      } else {
+        alert("An error occurred, Try again please");
+      }
+    }
   }
 
   function fetchUser() {
@@ -442,6 +473,7 @@ export const AppProvider = ({ children }) => {
         latePermission,
         handleLatePermissionCancel,
         handleLatePermissionRequest,
+        handleComplaintSubmit,
       }}
     >
       {children}

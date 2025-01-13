@@ -126,11 +126,11 @@ router.patch("/late-permission/cancel", async (req, res) => {
         .send({ success: false, message: "Request Not Found" });
     }
 
-    if (request.status.status != "pending") {
-      return res
-        .status(400)
-        .send({ success: false, message: "Request already Resolved" });
-    }
+    // if (request.status.status != "pending") {
+    //   return res
+    //     .status(400)
+    //     .send({ success: false, message: "Request already Resolved" });
+    // }
 
     const status = {
       status: "cancelled",

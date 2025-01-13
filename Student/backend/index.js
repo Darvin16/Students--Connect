@@ -16,6 +16,7 @@ import LeaveRequest from "./Routes/leaveRequest.js";
 import LatePermissionsHandler from "./Routes/latePermission.js";
 import upload from "./Functions/upload.js";
 import fetchLatePermission from "./Routes/fetchLatePermission.js";
+import Complaint from "./Routes/complaint.js";
 
 const app = express();
 app.use(express.json());
@@ -266,6 +267,7 @@ app.use((req, res, next) => {
 
 app.use(LeaveRequest);
 app.use(LatePermissionsHandler);
+app.use(Complaint);
 
 app.post("/fetch/user", (req, res) => {
   const { user } = req;
