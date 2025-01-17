@@ -25,6 +25,7 @@ import LeaveRecords from "../LeaveRequests/LeaveRecords";
 import LeaveRequests from "../LeaveRequests/LeaveRequests";
 import LatePermission from "../LatePermission/LatePermission";
 import LatePermissionHistory from "../LatePermission/LatePermissionHistory";
+import SupervisorPage from "../LandPage/Supervisor/SupervisorPage";
 
 function Dashboard() {
   const { userData, logout } = useContext(AppContext);
@@ -328,6 +329,39 @@ function Dashboard() {
                   </li>
                 </>
               )}
+              {userData?.role === "supervisor" && (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/dashboard/">
+                      <FontAwesomeIcon icon={faPenToSquare} /> Dashboard
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link"
+                      to="/dashboard/supervisor/complients"
+                    >
+                      <FontAwesomeIcon icon={faAddressBook} /> New Complaits
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link"
+                      to="/dashboard/supervisor/complaints/records"
+                    >
+                      <FontAwesomeIcon icon={faBookAtlas} /> Complaint Records
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link"
+                      to="/dashboard/supervisor/profile"
+                    >
+                      <FontAwesomeIcon icon={faCircleInfo} /> Profile
+                    </Link>
+                  </li>
+                </>
+              )}
 
               {showMenu && !showDesktopLogout && (
                 <li className="nav-item">
@@ -426,6 +460,12 @@ function Dashboard() {
                 element={<Libraryrecords />}
               />
               <Route path="/librarian/profile" element={<Profile />} />
+            </>
+          )}
+          {userData?.role === "supervisor" && (
+            <>
+              <Route path="/" element={<SupervisorPage />} />
+              <Route path="/supervisor/profile" element={<Profile />} />
             </>
           )}
         </Routes>

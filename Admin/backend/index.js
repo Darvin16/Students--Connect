@@ -18,6 +18,9 @@ import { fileURLToPath } from "url";
 import leaveRequestFile from "./Routes/leaveRequest.js";
 import leaveRequest from "./Models/LeaveRequest.js";
 import latePermission from "./Routes/latePermission.js";
+import ComplaintRoute from "./Routes/complaint.js";
+import complaint from "./Models/Complaint.js";
+import { measureMemory } from "vm";
 
 const app = express();
 app.use(express.json());
@@ -590,11 +593,13 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           leaveRequestsCount: leaveRequests.length,
           approvedLeaveRequests: leaveRequestsInsights[0]?.approved || 0,
           rejectedLeaveRequests:
-            leaveRequestsInsights[0]?.rejected || 0 + unattendedLeaveRequests.length || 0,
+            leaveRequestsInsights[0]?.rejected ||
+            0 + unattendedLeaveRequests.length ||
+            0,
           pendingLeaveRequests: leaveRequestsInsights[0]?.pending || 0,
         },
       });
-    } else {
+    } else if (user.role === "warden") {
       const staff = await staffData.findOne({
         employeeId: user.employeeId,
       });
@@ -750,9 +755,40 @@ app.post("/fetch/dashboard/info", async (req, res) => {
           leaveRequestsCount: leaveRequests.length,
           approvedLeaveRequests: leaveRequestsInsights[0]?.approved || 0,
           rejectedLeaveRequests:
-            leaveRequestsInsights[0]?.rejected || 0 + unattendedLeaveRequests.length,
+            leaveRequestsInsights[0]?.rejected ||
+            0 + unattendedLeaveRequests.length,
           pendingLeaveRequests: leaveRequestsInsights[0]?.pending || 0,
         },
+      });
+    } else if (user.role === "supervisor") {
+      const totalStudents = (await studentsData.find({})).length;
+      const raisedComplaints = (await complaint.find({})).length;
+      const pendingComplaints = (
+        await complaint.find({
+          "status.status": "pending",
+        })
+      ).length;
+      const resolvedComplaints = (
+        await complaint.find({
+          "status.status": "resolved",
+        })
+      ).length;
+
+      return res.status(200).send({
+        success: true,
+        message: "Insight Fetched Successfully",
+        dashboardInfo: {
+          totalStudents,
+          raisedComplaints,
+          pendingComplaints,
+          resolvedComplaints,
+        },
+      });
+    } else {
+      return res.status(401).send({
+        success: false,
+        message: "Role not recognized",
+        dashboardInfo: {},
       });
     }
   } catch (err) {
