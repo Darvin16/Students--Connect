@@ -8,27 +8,38 @@ router.get("/fetch/complaints", async (req, res) => {
   try {
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
-    const { employeeId } = req.user;
+    const { employeeId, role } = req.user;
 
     const complaints = await complaint.find({
       requestDate: { $gte: startOfDay },
     });
     const complaintRecords = await complaint.find({});
 
-    const staff = await staffData.findOne({ employeeId: employeeId });
+    if (role !== "admin") {
+      const staff = await staffData.findOne({ employeeId: employeeId });
 
-    if (!staff) {
-      return res.status(401).send({ success: false, message: "Unauthorized" });
+      if (!staff) {
+        return res
+          .status(401)
+          .send({ success: false, message: "Unauthorized" });
+      }
+      
+      if (staff.role !== "supervisor") {
+        return res.status(200).send({
+          success: true,
+          message: "Complaints Fetched Successfully",
+          complaints: [],
+          complaintRecords: [],
+        });
+      }
     }
 
-    return res
-      .status(200)
-      .send({
-        success: true,
-        message: "Complaints Fetched Successfully",
-        complaints,
-        complaintRecords,
-      });
+    return res.status(200).send({
+      success: true,
+      message: "Complaints Fetched Successfully",
+      complaints,
+      complaintRecords,
+    });
   } catch (error) {
     console.error("Error: ", error.message, error);
     return res

@@ -9,6 +9,7 @@ import {
   faAddressBook,
   faLayerGroup,
   faUsers,
+  faUserCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import StaffRecord from "../StaffRecord/StaffRecord";
 import { AppContext } from "../../Context/AppContext";
@@ -26,6 +27,8 @@ import LeaveRequests from "../LeaveRequests/LeaveRequests";
 import LatePermission from "../LatePermission/LatePermission";
 import LatePermissionHistory from "../LatePermission/LatePermissionHistory";
 import SupervisorPage from "../LandPage/Supervisor/SupervisorPage";
+import Complaints from "../Complaints/Complaints";
+import ComplaintsRecords from "../Complaints/ComplaintsRecords";
 
 function Dashboard() {
   const { userData, logout } = useContext(AppContext);
@@ -92,7 +95,7 @@ function Dashboard() {
                   <li className="nav-item dropdown">
                     <Link
                       className="nav-link dropdown-toggle"
-                      href="#"
+                      to=""
                       role="button"
                       data-bs-toggle="dropdown"
                       aria-expanded="false"
@@ -123,6 +126,23 @@ function Dashboard() {
                         >
                           <FontAwesomeIcon icon={faLayerGroup} /> Late
                           Permission Records
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="dropdown-item"
+                          to="/dashboard/complaints"
+                        >
+                          <FontAwesomeIcon icon={faUserCheck} /> Complaints
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="dropdown-item"
+                          to="/dashboard/complaints/records"
+                        >
+                          <FontAwesomeIcon icon={faUserCheck} /> Complaint
+                          Records
                         </Link>
                       </li>
                     </ul>
@@ -339,9 +359,9 @@ function Dashboard() {
                   <li className="nav-item">
                     <Link
                       className="nav-link"
-                      to="/dashboard/supervisor/complients"
+                      to="/dashboard/supervisor/complaints"
                     >
-                      <FontAwesomeIcon icon={faAddressBook} /> New Complaits
+                      <FontAwesomeIcon icon={faUserCheck} /> New Complaits
                     </Link>
                   </li>
                   <li className="nav-item">
@@ -349,7 +369,7 @@ function Dashboard() {
                       className="nav-link"
                       to="/dashboard/supervisor/complaints/records"
                     >
-                      <FontAwesomeIcon icon={faBookAtlas} /> Complaint Records
+                      <FontAwesomeIcon icon={faUserCheck} /> Complaint Records
                     </Link>
                   </li>
                   <li className="nav-item">
@@ -395,6 +415,11 @@ function Dashboard() {
               <Route
                 path="/record/late-permission"
                 element={<LatePermissionHistory />}
+              />
+              <Route path="/complaints" element={<Complaints />} />
+              <Route
+                path="/complaints/records"
+                element={<ComplaintsRecords />}
               />
             </>
           )}
@@ -465,6 +490,11 @@ function Dashboard() {
           {userData?.role === "supervisor" && (
             <>
               <Route path="/" element={<SupervisorPage />} />
+              <Route path="/supervisor/complaints" element={<Complaints />} />
+              <Route
+                path="/supervisor/complaints/records"
+                element={<ComplaintsRecords />}
+              />
               <Route path="/supervisor/profile" element={<Profile />} />
             </>
           )}

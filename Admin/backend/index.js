@@ -303,6 +303,7 @@ app.use((req, res, next) => {
 
 app.use(leaveRequestFile);
 app.use(latePermission);
+app.use(ComplaintRoute);
 
 app.post("/fetch/user", (req, res) => {
   const { user } = req;

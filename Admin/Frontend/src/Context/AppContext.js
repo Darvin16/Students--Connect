@@ -45,6 +45,8 @@ export const AppProvider = ({ children }) => {
   const [leaveRecords, setLeaveRecords] = useState([]);
   const [latePermissionRequests, setLatePermissionRequests] = useState([]);
   const [latePermissionRecords, setLatePermissionRecords] = useState([]);
+  const [complaints, setComplaints] = useState([]);
+  const [complaintRecords, setComplaintRecords] = useState([]);
   const URL = "http://localhost:9000";
 
   useEffect(() => {
@@ -60,8 +62,26 @@ export const AppProvider = ({ children }) => {
       fetchLeaveRequests();
       fetchDashboardInfo();
       fetchLatePermission();
+      fetchComplaints();
     }
   }, [authToken]);
+
+  async function fetchComplaints() {
+    try {
+      const response = await axios.get(`${URL}/fetch/complaints`, {
+        headers: {
+          authToken: authToken,
+        },
+      });
+
+      if (response.status === 200) {
+        setComplaints(response.data.complaints);
+        setComplaintRecords(response.data.complaintRecords);
+      }
+    } catch (error) {
+      console.error("Error: ", error.message, error);
+    }
+  }
 
   async function fetchLatePermission() {
     try {
@@ -98,7 +118,11 @@ export const AppProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Error: ", error.message, error);
-      if (error.response && error.response.data && error.response.data.message) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
         alert(error.response.data.message);
       } else {
         alert("Error ouccred white updating status");
@@ -657,6 +681,8 @@ export const AppProvider = ({ children }) => {
         latePermissionRecords,
         latePermissionRequests,
         updateLatePermission,
+        complaints,
+        complaintRecords,
       }}
     >
       {children}
