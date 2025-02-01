@@ -6,6 +6,7 @@
     "start-admin": "start bash -c 'cd Admin/frontend; bash -c \"npm  start\"' && start bash -c 'cd Admin/backend; bash -c \"nodemon index.js\"'",
     "pull-start-admin": "git pull origin master && start bash -c 'cd Admin/frontend; bash -c \"npm  start\"' && start bash -c 'cd Admin/backend; bash -c \"nodemon index.js\"'",
     "start": "start bash -c 'cd Student/frontend;bash -c \"npm  start\"' && start bash -c 'cd Student/backend;bash -c \"nodemon index.js\"' && start bash -c 'cd Admin/frontend;bash -c \"npm  start\"' && start bash -c 'cd Admin/backend;bash -c \"nodemon index.js\"'",
+    "install-start": "start bash -c 'cd Student/frontend;bash -c \"npm  i\"' && start bash -c 'cd Student/backend;bash -c \"npm i\"' && start bash -c 'cd Admin/frontend;bash -c \"npm  i\"' && start bash -c 'cd Admin/backend;bash -c \"npm i\"'",
     "pull-start": "git pull origin master && start bash -c 'cd Student/frontend;bash -c \"npm  start\"' && start bash -c 'cd Student/backend;bash -c \"nodemon index.js\"' && start bash -c 'cd Admin/frontend;bash -c \"npm  start\"' && start bash -c 'cd Admin/backend;bash -c \"nodemon index.js\"'",
     "setup": "start bash -c 'cd Student/frontend; bash -c \"npm i\"' && start bash -c 'cd Student/backend; bash -c \"npm i\"' && start bash -c 'cd Admin/frontend; bash -c \"npm i\"' && start bash -c 'cd Admin/backend; bash -c \"npm i\"'"
   },
