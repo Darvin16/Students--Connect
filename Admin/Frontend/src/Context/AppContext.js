@@ -83,6 +83,80 @@ export const AppProvider = ({ children }) => {
     }
   }
 
+  async function updateComplaint(status, requestId) {
+    try {
+      const response = await axios.patch(
+        `${URL}/update/complaint`,
+        { status, requestId },
+        {
+          headers: {
+            authToken: authToken,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        fetchComplaints();
+        alert(response.data.message);
+      }
+    } catch (error) {
+      console.error("Error: ", error.message, error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        alert(error.response.data.message);
+      } else {
+        alert("Error ouccred white updating status");
+      }
+    }
+  }
+
+  async function compliantPDF(requestId) {
+    try {
+      const response = await axios.post(
+        `${URL}/download/complaint/pdf`,
+        { requestId },
+        {
+          headers: { authToken: authToken },
+          responseType: "blob",
+        }
+      );
+
+      if (response.status === 200) {
+        const filename = response.headers["content-disposition"]
+          ? response.headers["content-disposition"]
+              .split("filename=")[1]
+              .replace(/"/g, "")
+          : "Request-Unkown.pdf";
+
+        fileDownload(response.data, filename);
+      }
+    } catch (error) {
+      console.error("Error: ", error.message, error);
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const errorData = JSON.parse(reader.result);
+            if (errorData.message) {
+              alert(errorData.message);
+            } else {
+              alert("Error occurred while downloading PDF");
+            }
+          } catch (error) {
+            alert("An error occurred while generating the PDF.");
+          }
+        };
+      }
+    }
+  }
+
   async function fetchLatePermission() {
     try {
       const result = await axios.get(`${URL}/late-permission/fetch`, {
@@ -125,7 +199,7 @@ export const AppProvider = ({ children }) => {
       ) {
         alert(error.response.data.message);
       } else {
-        alert("Error ouccred white updating status");
+        alert("Error ouccred while updating status");
       }
     }
   }
@@ -683,6 +757,8 @@ export const AppProvider = ({ children }) => {
         updateLatePermission,
         complaints,
         complaintRecords,
+        updateComplaint,
+        compliantPDF,
       }}
     >
       {children}

@@ -194,7 +194,7 @@ function ComplaintsRecords() {
                       </svg>
                     </button>
                   </td>
-                  <td className="text-capitalize">{complaint.status.status}</td>
+                  <td className="text-capitalize">{complaint.status.status.replace('_p'," P")}</td>
                 </tr>
               );
             })}

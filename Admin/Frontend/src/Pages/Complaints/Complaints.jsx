@@ -3,7 +3,8 @@ import "./complaints.css";
 import { AppContext } from "../../Context/AppContext";
 
 function Complaints() {
-  const { complaints } = useContext(AppContext);
+  const { complaints, userData, updateComplaint, compliantPDF } =
+    useContext(AppContext);
   const [filters, setFilters] = useState({
     id: "",
     issueType: "",
@@ -133,7 +134,10 @@ function Complaints() {
                   <td>{complaint.studentRoomNumber}</td>
                   <td>{complaint.issue}</td>
                   <td className="d-flex justify-content-center">
-                    <button className="bg-primary text-white border-0 p-2 fs-6 rounded-circle d-flex align-items-center">
+                    <button
+                      onClick={() => compliantPDF(complaint.requestId)}
+                      className="bg-primary text-white border-0 p-2 fs-6 rounded-circle d-flex align-items-center"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -147,7 +151,27 @@ function Complaints() {
                       </svg>
                     </button>
                   </td>
-                  <td className="text-capitalize">{complaint.status.status}</td>
+                  {userData.role === "supervisor" ? (
+                    <td>
+                      <select
+                        name="complaint_status"
+                        id="complaint_status"
+                        onChange={(e) => {
+                          updateComplaint(e.target.value, complaint.requestId);
+                        }}
+                        value={complaint.status.status}
+                        className="form-control"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="on_progress">On Progress</option>
+                        <option value="resolved">Resolved</option>
+                      </select>
+                    </td>
+                  ) : (
+                    <td className="text-capitalize">
+                      {complaint.status.status}
+                    </td>
+                  )}
                 </tr>
               );
             })}
