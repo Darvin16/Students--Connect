@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const complaintSchema = new mongoose.Schema({
+  requestId: String,
   studentId: String,
   studentName: String,
   studentEmail: String,

@@ -70,7 +70,10 @@ function LatePermission() {
   return (
     <div className="container-fluid">
       <h1 className="text-center">Late Permission</h1>
-      <form onSubmit={() => handleLatePermissionRequest(request)} method="post">
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        handleLatePermissionRequest(request)
+      }}>
         <label htmlFor="student-id" className="form-label">
           Id:
         </label>

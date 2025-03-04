@@ -3,6 +3,7 @@ import { uploadComplaint } from "../Functions/upload.js";
 import complaint from "../Models/Complaint.js";
 import studentsData from "../Models/StudentsData.js";
 import sendEMail from "../Functions/SendEMail.js";
+import generateUniqueId from "../Functions/generateUniqueId.js";
 
 const router = express.Router();
 
@@ -50,7 +51,10 @@ router.post("/raise/complaint", uploadComplaint, async (req, res) => {
       filename = req.file.filename;
     }
 
+    const complaintId = generateUniqueId();
+    
     await complaint.create({
+      requestId: complaintId,
       studentId: registrationNo,
       studentName: studentName,
       studentEmail: student.email,
