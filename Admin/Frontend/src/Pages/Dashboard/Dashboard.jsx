@@ -361,7 +361,7 @@ function Dashboard() {
                       className="nav-link"
                       to="/dashboard/supervisor/complaints"
                     >
-                      <FontAwesomeIcon icon={faUserCheck} /> New Complaits
+                      <FontAwesomeIcon icon={faUserCheck} /> New Complaints
                     </Link>
                   </li>
                   <li className="nav-item">

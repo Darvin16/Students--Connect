@@ -159,12 +159,12 @@ function ComplaintsRecords() {
       <div className="row m-0 complaint-table mt-3">
         <table>
           <thead>
-            <tr className="row m-0 row-cols-6 py-1 shadow bg-primary rounded-2 text-white text-center mb-2">
-              <th>Student Id</th>
-              <th>Block Name</th>
-              <th>Room no</th>
-              <th>Issue</th>
-              <th>Document</th>
+            <tr className="row m-0 row-cols-6 py-1 bg-success mb-2 rounded-2 text-white text-center">
+              <th className="border-end">Student Id</th>
+              <th className="border-end">Block Name</th>
+              <th className="border-end">Room no</th>
+              <th className="border-end">Issue</th>
+              <th className="border-end">Document</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -173,13 +173,19 @@ function ComplaintsRecords() {
               return (
                 <tr
                   key={complaint._id}
-                  className="row m-0 row-cols-6 py-1 shadow rounded-2 text-center mb-2 d-flex align-items-center"
+                  className="row m-0 row-cols-6 py-1 rounded-2 mb-2 text-center d-flex align-items-center"
                 >
-                  <td>{complaint.studentId}</td>
-                  <td>{complaint.studentBlockName}</td>
-                  <td>{complaint.studentRoomNumber}</td>
-                  <td>{complaint.issue}</td>
-                  <td className="d-flex justify-content-center">
+                  <td className="border-end border-dark">
+                    {complaint.studentId}
+                  </td>
+                  <td className="border-end border-dark">
+                    {complaint.studentBlockName}
+                  </td>
+                  <td className="border-end border-dark">
+                    {complaint.studentRoomNumber}
+                  </td>
+                  <td className="border-end border-dark">{complaint.issue}</td>
+                  <td className="d-flex justify-content-center border-end border-dark">
                     <button className="bg-primary text-white border-0 p-2 fs-6 rounded-circle d-flex align-items-center">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -194,7 +200,9 @@ function ComplaintsRecords() {
                       </svg>
                     </button>
                   </td>
-                  <td className="text-capitalize">{complaint.status.status.replace('_p'," P")}</td>
+                  <td className="text-capitalize">
+                    {complaint.status.status.replace("_p", " P")}
+                  </td>
                 </tr>
               );
             })}
